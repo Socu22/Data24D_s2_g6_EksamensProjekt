@@ -6,8 +6,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class Data24DS2G6EksamensProjektApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(Data24DS2G6EksamensProjektApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(Data24DS2G6EksamensProjektApplication.class, args);
+    }
 
 }
