@@ -2,10 +2,57 @@ DROP DATABASE IF EXISTS CarDatabase;
 CREATE DATABASE CarDatabase;
 USE CarDatabase;
 
-create table medArbejdere(medArbejder_Id int primary key auto_increment not null , navn varchar(50) not null, adgangskode varchar(50) not null , stilling varchar(50) not null );
-create table bilType(bilType_Id int primary key auto_increment not null,mærke varchar(50) not null , model varchar(50) not null, udstyrsniveau varchar(50) not null, stålPris double not null , afgift double not null , udledning_Co2 double not null );
-create table lager(lager_Id int primary key auto_increment not null ,navn varchar(50) not null ,adresse varchar(50) not null );
-create table bil(vognNummer varchar(7) primary key not null , stelNummer varchar(17) not null,bilType_Id int not null, lager_Id int not null ,status varchar(20) not null, unique (stelNummer), foreign key (bilType_Id) references bilType(bilType_Id), foreign key (lager_Id) references lager(lager_Id));
-create table kunde(kunde_Id int primary key auto_increment not null , navn varchar(50) not null );
-create table lejeAftaler(aftale_Id int primary key auto_increment not null , kunde_Id int not null , vognNummer varchar(7) not null , foreign key (kunde_Id) references kunde(kunde_Id), foreign key (vognNummer) references bil(vognNummer));
-create table notationer(notationer_id int primary key auto_increment not null, aftale_Id int not null , beskrivelse varchar(255) not null, pris double not null , foreign key (aftale_Id) references lejeAftaler(aftale_Id));
+CREATE TABLE medArbejdere(
+                             medArbejder_Id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+                             navn VARCHAR(50) NOT NULL,
+                             adgangskode VARCHAR(50) NOT NULL,
+                             stilling VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE bilType(
+                        bilType_Id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+                        mærke VARCHAR(50) NOT NULL,
+                        model VARCHAR(50) NOT NULL,
+                        udstyrsniveau VARCHAR(50) NOT NULL,
+                        stålPris DOUBLE NOT NULL,
+                        afgift DOUBLE NOT NULL,
+                        udledning_Co2 DOUBLE NOT NULL
+);
+
+CREATE TABLE lager(
+                      lager_Id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+                      navn VARCHAR(50) NOT NULL,
+                      adresse VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE bil(
+                    vognNummer VARCHAR(7) PRIMARY KEY NOT NULL,
+                    stelNummer VARCHAR(17) NOT NULL,
+                    bilType_Id INT NOT NULL,
+                    lager_Id INT NOT NULL,
+                    status VARCHAR(20) NOT NULL,
+                    UNIQUE (stelNummer),
+                    FOREIGN KEY (bilType_Id) REFERENCES bilType(bilType_Id),
+                    FOREIGN KEY (lager_Id) REFERENCES lager(lager_Id)
+);
+
+CREATE TABLE kunde(
+                      kunde_Id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+                      navn VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE lejeAftaler(
+                            aftale_Id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+                            kunde_Id INT NOT NULL,
+                            vognNummer VARCHAR(7) NOT NULL,
+                            FOREIGN KEY (kunde_Id) REFERENCES kunde(kunde_Id),
+                            FOREIGN KEY (vognNummer) REFERENCES bil(vognNummer)
+);
+
+CREATE TABLE notationer(
+                           notationer_id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+                           aftale_Id INT NOT NULL,
+                           beskrivelse VARCHAR(255) NOT NULL,
+                           pris DOUBLE NOT NULL,
+                           FOREIGN KEY (aftale_Id) REFERENCES lejeAftaler(aftale_Id)
+);
