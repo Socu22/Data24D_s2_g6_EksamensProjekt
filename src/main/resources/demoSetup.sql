@@ -58,7 +58,7 @@ CREATE TABLE notationer(
 );
 
 INSERT INTO medArbejdere (navn, adgangskode, stilling)
-VALUES ('demo1','demo1','reg'), ('demo2','demo2','ska'), ('demo3','demo3','for');
+VALUES ('demo1','demo1','Dataregistrering'), ('demo2','demo2','Skade_&_Udbedring'), ('demo3','demo3','Forretningsudviklere');
 
 INSERT INTO bilType (mærke, model, udstyrsniveau, stålPris, afgift, udledning_Co2)
 VALUES
