@@ -1,0 +1,4 @@
+DROP DATABASE IF EXISTS CarDatabase;
+CREATE DATABASE CarDatabase;
+USE CarDatabase;
+
