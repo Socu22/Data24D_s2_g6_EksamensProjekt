@@ -25,7 +25,7 @@ public class LagerController {
     public String postNytLager(@RequestParam("navn") String navn, @RequestParam("adresse") String adresse){
         Lager nytLager = new Lager(navn,adresse);
         lagerRepository.nytLagerLogik(nytLager);
-        return "index"; //skal ændres
+        return "redirect:/"; //skal ændres
     }
 
 

@@ -6,6 +6,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public class LagerRepository {
 
@@ -26,6 +28,28 @@ public class LagerRepository {
         String sql = "INSERT into lager (navn, adresse) values (?,?)";
         jdbcTemplate.update(sql, nytLager.getNavn(),nytLager.getAdresse());
     }
+   public List<Lager> samleLagerIListeLogik(){
+        List<Lager> lagerList = jdbcTemplate.query("select * from lager",rowMapper);
+        System.out.println(lagerList);
+        return lagerList;
+   }
+   public Lager tagFatILageret(String navn){
+       List<Lager> lagerList= jdbcTemplate.query("select * from lager where navn=?",rowMapper,navn);
+        if (lagerList.size()==1){
+            return lagerList.getFirst();
+        }
+        return null;
+   }
+    public boolean sletLageret(String navn){
+        int value= jdbcTemplate.update("delete from lager where navn=?",navn);
+        if (value==1){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
 
 
 }
