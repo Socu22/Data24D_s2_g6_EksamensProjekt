@@ -1,6 +1,6 @@
-DROP DATABASE IF EXISTS CarDatabase;
-CREATE DATABASE CarDatabase;
-USE CarDatabase;
+DROP DATABASE IF EXISTS bilAbonnementDatabase;
+CREATE DATABASE bilAbonnementDatabase;
+USE bilAbonnementDatabase;
 
 CREATE TABLE medArbejdere(
                              medArbejder_Id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
