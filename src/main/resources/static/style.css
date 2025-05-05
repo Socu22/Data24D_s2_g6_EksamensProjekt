@@ -1,31 +1,36 @@
 :root {
-    --primær-farve:          #0081fd;
-    --primær-farve-mørk:     #0060b0;
     --primær-farve-baggrund: white;
-    --primær-farve-obs:      red;
+    --primær-farve:          cornflowerblue;/* #0081fd; */
+    --primær-farve-mørk:     royalblue; /* #0060b0; */
+    --primær-farve-obs:      indianred;
+    --primær-farve-obs-mørk: firebrick;
     --primær-padding:        1.5rem;
 
-    --kort-kant-farve: #666666;
-
     --box-kant-farve: black;
-    --box-skygge: 0 4px 8px rgba(0,0,0,0.1);
+    --box-skygge: 0 4px 8px rgba(0,0,0,0.5);
     --box-radius: 0.5rem;
 
-    --border-color: #e0e0e0;
-
+    --kort-kant-farve: #CCCCCC;
 }
 
 body {}
 
-main, header, footer, button {
+main, header, footer, section, li, button {
     border-style: solid;
     border-width: thin;
-    border-radius: var(--box-radius);
-    border-color: var(--box-kant-farve);
+
+    border-color: var(--kort-kant-farve);
     background-color: var(--primær-farve-baggrund);
     padding: var(--primær-padding);
     margin: var(--primær-padding);
     box-shadow: var(--box-skygge);
+}
+
+main, header, footer, section, button {
+    border-radius: var(--box-radius);
+    border-color: var(--box-kant-farve);
+    padding: var(--primær-padding);
+    margin: var(--primær-padding);
 }
 
 header div, footer div {
@@ -50,10 +55,41 @@ main {
     margin-right: var(--ekstra);
 }
 
+ul {
+    list-style-type: none;
+}
+
+li:hover {
+    background-color: var(--kort-kant-farve);
+}
+
 button {
-    height: 2rem;
+    height: 3rem; /* todo: 'typer' af button */
+    width: 4rem;
     margin: initial;
+    padding: initial;
     border-width: medium;
-    border-color: var(--primær-farve-obs);
+    border-color: var(--primær-farve-mørk);
+    background-color: var(--primær-farve);
+    align-items: center;
     text-align: center;
+    filter: brightness(1.3);
+}
+
+button.logud {
+    border-color: var(--primær-farve-obs-mørk);
+    background-color: white;
+}
+
+button.annuller {
+    border-color: var(--primær-farve-obs-mørk);
+    background-color: var(--primær-farve-obs);
+}
+
+button:hover {
+    filter: brightness(1.4);
+    /*
+        --buffer: attr(border-color color);
+        background-color: rgba(var(--buffer), 0.2);
+     */
 }
