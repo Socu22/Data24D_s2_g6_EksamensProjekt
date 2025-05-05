@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" th:href="@{style.css}">
+    <title>Title</title>
+</head>
+
+<!-- Venlist ikke lav lokal styling for ting som kunne gå igen i andre html -->
+<style></style>
+
+<body>
+<header th:insert="~{fragments :: header}"></header>
+<main>
+    <form th:action="@{/laverNytLager}" method="get">
+        <label >Navn:</label>
+        <input type="text" name="navn" placeholder="text" autofocus="autofocus" required/> <br/>
+        <label >Adresse:</label>
+        <input type="text" name="adresse" placeholder="text" required /> <br/>
+        <input type="submit" value="Bekræft lager" />
+    </form>
+</main>
+<footer>
+    <!-- skriv side-specific footer her -->
+</footer>
+</body>
+</html>
