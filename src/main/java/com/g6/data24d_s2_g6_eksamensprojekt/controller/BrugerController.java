@@ -13,16 +13,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 public class BrugerController {
 
+    static String stilling = "Dataregistrering";
     @Autowired
     BrugerRepository brugerRepository;
 
     @GetMapping("/")
-    public String hjemmeSide(HttpServletRequest request) {
-        HttpSession session = request.getSession(false);
-        if(session == null){
-            return "redirect:/Logind";
-        }
-
+    public String hjemmeSide(HttpServletRequest request, Model model) {
+        HttpSession session = faaSession(request, model);
+        if(session == null) return "redirect:/Logind";
         return "index";
     }
     @GetMapping("/Logind")
@@ -39,25 +37,105 @@ public class BrugerController {
 
     @GetMapping("/OmdirigerLogind")
     public String omdirigerLogindSide(HttpServletRequest request, Model model) {
-        String brugernavn = request.getParameter("brugernavn");
+        String navn = request.getParameter("navn");
         String adgangskode = request.getParameter("adgangskode");
-        HttpSession session = request.getSession(false);
-        if(brugernavn != null && adgangskode != null){
-            Bruger bruger = brugerRepository.faaBruger(brugernavn, adgangskode);
+        if(navn != null && adgangskode != null){
+            Bruger bruger = brugerRepository.faaBruger(navn, adgangskode);
             if(bruger != null){
-                saetSession(request, bruger);
-                return "redirect:/";
+                saetSession(request, bruger, model);
+                //return "redirect:/";
+                return "redirect:/Registrer";
             }
-           // model.addAttribute("brugerIkkeFundet", true);
             return "redirect:/Logind?d=true";
         }
-
         return "redirect:/Logind";
     }
-    private void saetSession(HttpServletRequest request, Bruger bruger){
+    @GetMapping("/LogUd")
+    public String logUdSide(HttpServletRequest request, Model model) {
+        request.getSession().invalidate();
+        return "redirect:/Logind";
+    }
+    @GetMapping("/Registrer")
+    public String registrerSide(HttpServletRequest request, Model model) {
+        HttpSession session = faaSession(request, model);
+        if(session == null) return "redirect:/Logind";
 
+
+        model.addAttribute("registrerBesked", session.getAttribute("registrerBesked"));
+        session.setAttribute("registrerBesked", "");
+        model.addAttribute("stilling", session.getAttribute("stilling"));
+
+        return "registrer";
+    }
+    @GetMapping("/OmdirigerRegistrer")
+    public String omdirigerRegistrer(HttpServletRequest request, Model model) {
+        HttpSession session = faaSession(request, model);
+        if(session == null) return "redirect:/Logind";
+
+        String navn = request.getParameter("navn");
+        String adgangskode = request.getParameter("adgangskode");
+        String adgangskode2 = request.getParameter("adgangskode2");
+        String stilling = request.getParameter("stilling");
+        if(navn != null && adgangskode != null  && adgangskode2 != null && stilling != null){
+            if(!adgangskode.equals(adgangskode2)){
+                session.setAttribute("registrerBesked", "Verificer Adgangskode er ikke det samme som Adgangskode");
+            }
+            else if(brugerRepository.brugerEksisterer(navn)){
+                session.setAttribute("registrerBesked", "Bruger med samme navn eksisterer allerede");
+            }
+            else{
+                session.setAttribute("registrerBesked", "Ny bruger lavet");
+                brugerRepository.lavBruger(navn, adgangskode, stilling);
+            }
+
+            return "redirect:/Registrer";
+        }
+
+        return "redirect:/Registrer";
+    }
+
+    @GetMapping("/Dataregistrering")
+    public String dataregistreringStilling(HttpServletRequest request, Model model) {
+        HttpSession session = faaSession(request, model);
+        if(session == null) return "redirect:/Logind";
+
+        sætStilling("Dataregistrering",  session, request, model);
+        return "redirect:/Registrer";
+    }
+    @GetMapping("/Skade_og_Udbedring")
+    public String Skade_UdbedringStilling(HttpServletRequest request, Model model) {
+        HttpSession session = faaSession(request, model);
+        if(session == null) return "redirect:/Logind";
+
+        sætStilling("Skade & Udbedring",  session, request, model);
+        return "redirect:/Registrer";
+    }
+    @GetMapping("/Forretningsudvikler")
+    public String ForretningsudviklerStilling(HttpServletRequest request, Model model) {
+        HttpSession session = faaSession(request, model);
+        if(session == null) return "redirect:/Logind";
+
+        sætStilling("Forretningsudvikler", session, request, model);
+        return "redirect:/Registrer";
+    }
+    private void sætStilling(String stilling, HttpSession session, HttpServletRequest request, Model model) {
+        this.stilling = stilling;
+        session.setAttribute("stilling", stilling);
+        model.addAttribute(request.getParameter("navn"));
+        model.addAttribute(request.getParameter("adgangskode"));
+        model.addAttribute(request.getParameter("adgangskode2"));
+    }
+    private void saetSession(HttpServletRequest request, Bruger bruger, Model model) {
         HttpSession session = request.getSession();
         session.setMaxInactiveInterval(1200);
         session.setAttribute("aktivBruger", bruger);
+        model.addAttribute("aktivBruger", bruger);
+    }
+    static public HttpSession faaSession(HttpServletRequest request, Model model){
+        HttpSession session = request.getSession(false);
+        if(session != null)
+            model.addAttribute("aktivBruger",session.getAttribute("aktivBruger"));
+
+        return session;
     }
 }

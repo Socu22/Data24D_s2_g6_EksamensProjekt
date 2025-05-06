@@ -19,12 +19,24 @@ public class BrugerRepository {
 @Autowired
 private JdbcTemplate jdbcTemplate;
 
-    public Bruger faaBruger(String navn, String adganskode){
+    public Bruger faaBruger(String navn, String adgangskode){
         Bruger bruger = null;
-        String sql = "SELECT * FROM medArbejdere WHERE navn = '" + navn + "' AND adgangskode = '"+ adganskode + "';";
+        String sql = "SELECT * FROM medArbejdere WHERE navn = '" + navn + "' AND adgangskode = '"+ adgangskode + "';";
         List<Map<String, Object>> list = jdbcTemplate.queryForList(sql);
         if(!list.isEmpty())
              bruger = new Bruger((int)list.get(0).get("medArbejder_id"),(String) list.get(0).get("navn"), (String) list.get(0).get("adgangskode"), (String)list.get(0).get("stilling"));
         return bruger;
+    }
+    public boolean brugerEksisterer(String navn){
+        String sql = "SELECT * FROM medArbejdere WHERE navn = '" + navn + "';";
+        List<Map<String, Object>> list = jdbcTemplate.queryForList(sql);
+        if(list.isEmpty())
+            return false;
+        else
+            return true;
+    }
+    public void lavBruger(String navn, String adgangskode, String stilling){
+        String sql = "INSERT into medArbejdere(navn, adgangskode, stilling) VALUES ('"+ navn +"', '"+ adgangskode+"', '"+ stilling+"');";
+        jdbcTemplate.update(sql);
     }
 }

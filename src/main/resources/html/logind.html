@@ -18,19 +18,20 @@
 </style>
 <body>
 <header th:insert="~{fragments :: header}"></header>
-
-<div th:if="${brugerIkkeFundet}" class="fade-out">
-    <label style="color: darkred">forkert bruegrnavn eller adgangskode</label>
-</div>
-<div th:unless="${brugerIkkeFundet}" >
-    <br>
-</div>
-<form th:action="@{/OmdirigerLogind}" method="get">
-    <label >Brugernavn:</label>
-    <input type="text" name="brugernavn" placeholder="brugernavn" autofocus="autofocus" required/> <br/>
-    <label >Adgangskode:</label>
-    <input type="password" name="adgangskode" placeholder="adgangskode" required /> <br/>
-    <input type="submit" value="Log ind" />
-</form>
+<section>
+    <div th:if="${brugerIkkeFundet}" class="fade-out">
+        <label style="color: darkred">forkert brugernavn eller adgangskode</label>
+    </div>
+    <div th:unless="${brugerIkkeFundet}" >
+        <br>
+    </div>
+    <form th:action="@{/OmdirigerLogind}" method="get">
+        <label >Brugernavn:</label>
+        <input type="text" name="navn" placeholder="navn" autofocus="autofocus" required/> <br/>
+        <label >Adgangskode:</label>
+        <input type="password" name="adgangskode" placeholder="adgangskode" required /> <br/>
+        <input type="submit" value="Log ind" />
+    </form>
+</section>
 </body>
 </html>
