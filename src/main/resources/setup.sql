@@ -45,6 +45,9 @@ CREATE TABLE lejeAftaler(
                             aftale_Id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
                             kunde_Id INT NOT NULL,
                             vognNummer VARCHAR(7) NOT NULL,
+                            startDato date NOT NULL,
+                            slutDato DATE NOT NULL,
+                            detaljer varchar(255) not null,
                             FOREIGN KEY (kunde_Id) REFERENCES kunde(kunde_Id),
                             FOREIGN KEY (vognNummer) REFERENCES bil(vognNummer)
 );
