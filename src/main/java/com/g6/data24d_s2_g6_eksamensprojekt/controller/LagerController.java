@@ -15,14 +15,15 @@ public class LagerController {
     @Autowired
     LagerRepository lagerRepository;
 
-    @GetMapping("/lavNytLager")
+    @GetMapping("/nytLager")
     public String getNytLager(){
         //bruger logik, hvem kan lave et nyt lager?
 
         return "nytLager";
     }
     @GetMapping("laverNytLager")
-    public String postNytLager(@RequestParam("navn") String navn, @RequestParam("adresse") String adresse){
+    public String postNytLager(@RequestParam("navn") String navn,
+                               @RequestParam("adresse") String adresse){
         Lager nytLager = new Lager(navn,adresse);
         lagerRepository.nytLagerLogik(nytLager);
         return "redirect:/"; //skal ændres

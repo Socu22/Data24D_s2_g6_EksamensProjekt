@@ -14,9 +14,9 @@
 <main>
     <form th:action="@{/laverNytLager}" method="get">
         <label >Navn:</label>
-        <input type="text" name="navn" placeholder="text" autofocus="autofocus" required/> <br/>
+        <input type="text" name="navn" placeholder="text" autofocus="autofocus" maxlength="50" required/> <br/>
         <label >Adresse:</label>
-        <input type="text" name="adresse" placeholder="text" required /> <br/>
+        <input type="text" name="adresse" placeholder="text" maxlength="50" required /> <br/>
         <button th:action="@{/index}" value="Go to ?index?">Go to ?index?</button>
         <button type="submit" value="Bekræft lager">Bekræft lager</button>
     </form>

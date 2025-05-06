@@ -23,16 +23,20 @@ public class LagerRepository {
         lager.setAdresse(rs.getString("adresse"));
         return lager;
     };
-
+        //Laver et nyt lager og opdaterer databasen
     public void nytLagerLogik(Lager nytLager){
         String sql = "INSERT into lager (navn, adresse) values (?,?)";
         jdbcTemplate.update(sql, nytLager.getNavn(),nytLager.getAdresse());
     }
+
+    //Samler alle lager objekter sammen i en liste. ?brugbart?
    public List<Lager> samleLagerIListeLogik(){
         List<Lager> lagerList = jdbcTemplate.query("select * from lager",rowMapper);
         System.out.println(lagerList);
         return lagerList;
    }
+
+   //tager fat i lager ud fra et navn
    public Lager tagFatILageret(String navn){
        List<Lager> lagerList= jdbcTemplate.query("select * from lager where navn=?",rowMapper,navn);
         if (lagerList.size()==1){
@@ -40,15 +44,20 @@ public class LagerRepository {
         }
         return null;
    }
+
+   //sletter hvis der kun er en lager med samme navn
     public boolean sletLageret(String navn){
-        int value= jdbcTemplate.update("delete from lager where navn=?",navn);
-        if (value==1){
+        List <Lager> count= jdbcTemplate.query("select * from lager where navn=?",rowMapper,navn);
+        int value;
+        if (count.size()==1){
+            value= jdbcTemplate.update("delete from lager where navn=?",navn);
             return true;
         }
         else{
             return false;
         }
     }
+
 
 
 
