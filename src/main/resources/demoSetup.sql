@@ -55,9 +55,11 @@ CREATE TABLE lejeAftaler(
 CREATE TABLE notationer(
                            notationer_id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
                            aftale_Id INT NOT NULL,
+                           vognNummer varchar(7) NOT NULL,
                            beskrivelse VARCHAR(255) NOT NULL,
                            pris DOUBLE NOT NULL,
-                           FOREIGN KEY (aftale_Id) REFERENCES lejeAftaler(aftale_Id)
+                           FOREIGN KEY (aftale_Id) REFERENCES lejeAftaler(aftale_Id),
+                           FOREIGN KEY (vognNummer) references bil(vognNummer)
 );
 
 INSERT INTO medArbejdere (navn, adgangskode, stilling)
@@ -92,9 +94,10 @@ VALUES
     (1, 'EF56789', '2023-03-01', '2023-03-10', 'Second rental for John Doe');
 
 
-INSERT INTO notationer (aftale_Id, beskrivelse, pris)
+INSERT INTO notationer (aftale_Id, vognNummer, beskrivelse, pris)
 VALUES
-    (1, 'Extra insurance', 500),
-    (1, 'Additional driver', 300),
-    (2, 'GPS device', 100),
-    (3, 'Child seat', 75);
+    (1, 'CD67890', 'Extra insurance', 500),
+    (1, 'CD67890', 'Additional driver', 300),
+    (2, 'AB12345', 'GPS device', 100),
+    (3, 'EF56789', 'Child seat', 75);
+

@@ -55,7 +55,9 @@ CREATE TABLE lejeAftaler(
 CREATE TABLE notationer(
                            notationer_id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
                            aftale_Id INT NOT NULL,
+                           vognNummer varchar(7) NOT NULL,
                            beskrivelse VARCHAR(255) NOT NULL,
                            pris DOUBLE NOT NULL,
-                           FOREIGN KEY (aftale_Id) REFERENCES lejeAftaler(aftale_Id)
+                           FOREIGN KEY (aftale_Id) REFERENCES lejeAftaler(aftale_Id),
+                           FOREIGN KEY (vognNummer) references bil(vognNummer)
 );
