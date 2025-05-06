@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" th:href="@{style.css}">
+    <title>Title</title>
+</head>
+
+<!-- Venlist ikke lav lokal styling for ting som kunne gå igen i andre html -->
+<style></style>
+
+<body>
+<header th:insert="~{fragments :: header}"></header>
+<main>
+    <form th:action="@{/laverNyLejeAftale}" method="get">
+        <label>Kunde ID:</label>
+        <input type="number" name="kunde_Id" placeholder="Indtast kunde ID" required /> <br/>
+
+        <label>Vognnummer:</label>
+        <input type="text" name="vognNummer" placeholder="Indtast vognnummer" maxlength="7" required /> <br/>
+
+        <label>Startdato:</label>
+        <input type="date" name="startDato" required /> <br/>
+
+        <label>Slutdato:</label>
+        <input type="date" name="slutDato" required /> <br/>
+
+        <label>Detaljer:</label>
+        <input type="text" name="detaljer" placeholder="Valgfri detaljer" maxlength="255" /> <br/>
+
+        <button th:action="@{/index}" value="Go to ?index?">Go to ?index?</button>
+        <button type="submit">Bekræft lejeaftale</button>
+    </form>
+
+</main>
+<footer>
+    <!-- skriv side-specific footer her -->
+</footer>
+</body>
+</html>
