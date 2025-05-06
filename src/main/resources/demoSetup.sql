@@ -85,11 +85,12 @@ VALUES
     ('John Doe'),
     ('Jane Smith');
 
-INSERT INTO lejeAftaler (kunde_Id, vognNummer)
+INSERT INTO lejeAftaler (kunde_Id, vognNummer, startDato, slutDato, detaljer)
 VALUES
-    (1, 'CD67890'),
-    (2, 'AB12345'),
-    (1, 'EF56789');
+    (1, 'CD67890', '2023-01-01', '2023-01-15', 'Rental for John Doe'),
+    (2, 'AB12345', '2023-02-01', '2023-02-28', 'Rental for Jane Smith'),
+    (1, 'EF56789', '2023-03-01', '2023-03-10', 'Second rental for John Doe');
+
 
 INSERT INTO notationer (aftale_Id, beskrivelse, pris)
 VALUES
