@@ -3,12 +3,12 @@ package com.g6.data24d_s2_g6_eksamensprojekt.model;
 public class Bruger {
     private int medArbejder_Id;
     private String navn;
-    private String adganskode;
+    private String adgangskode;
     private String stilling;
-    public Bruger(int medArbejder_Id, String navn, String adganskode, String stilling) {
+    public Bruger(int medArbejder_Id, String navn, String adgangskode, String stilling) {
         this.medArbejder_Id = medArbejder_Id;
         this.navn = navn;
-        this.adganskode = adganskode;
+        this.adgangskode = adgangskode;
         this.stilling = stilling;
     }
 
@@ -28,12 +28,12 @@ public class Bruger {
         this.navn = navn;
     }
 
-    public String getAdganskode() {
-        return adganskode;
+    public String getAdgangskode() {
+        return adgangskode;
     }
 
-    public void setAdganskode(String adganskode) {
-        this.adganskode = adganskode;
+    public void setAdgangskode(String adgangskode) {
+        this.adgangskode = adgangskode;
     }
 
     public String getStilling() {
