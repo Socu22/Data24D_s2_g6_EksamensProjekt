@@ -43,4 +43,8 @@ public class Bil
     public void setStatus(String status) {
         this.status = status;
     }
+    public int getBilType_Id(){
+
+        return type.getBilTypeId();
+    }
 }

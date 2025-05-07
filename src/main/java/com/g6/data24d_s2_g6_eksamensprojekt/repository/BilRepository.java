@@ -32,4 +32,12 @@ public class BilRepository
         List<Bil> bilList = jdbcTemplate.query("select * from bil",rowMapper);
         return bilList;
     }
+    //tager fat i bil ud fra et vognNummer
+    public Bil tagFatIBil(String vognNummer){
+        List<Bil> bilList= jdbcTemplate.query("select * from bil where vognNummer=?",rowMapper,vognNummer);
+        if (bilList.size()==1){
+            return bilList.getFirst();
+        }
+        return null;
+    }
 }
