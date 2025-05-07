@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" th:href="@{style.css}">
+  <title>Title</title>
+</head>
+
+<!-- Venlist ikke lav lokal styling for ting som kunne gå igen i andre html -->
+<style></style>
+
+<body>
+<header th:insert="~{fragments :: header}"></header>
+<main style="align-items: center">
+  <header class="underHeader" th:unless="${LejeAftale}" th:insert="~{fragments :: bilKort}"></header>
+  <header class="underHeader" th:if="${LejeAftale}" th:insert="~{fragments :: aftaleKort}"></header>
+
+  <section>
+    <form th:action="@{/BekraeftNotation}" method="get">
+      <label for="detaljer">Detaljer:</label><br>
+      <textarea id="detaljer" placeholder="Beskriv Fejl/Mangler" maxlength="255" rows="4" cols="50" required></textarea>
+      <br/>
+      <label for="pris">Omkostning:</label><br>
+      <input type="number" id="pris" placeholder="pris" th:default="0" required/>
+      <br/>
+      <button class="annuller" th:action="@{/AnnullerNotation}">Annullér</button>
+      <button type="submit">Bekræft</button>
+    </form>
+  </section>
+</main>
+</body>
+</html>
