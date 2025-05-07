@@ -44,7 +44,7 @@ public class NotationRepository
     public List<Notation> getNotationer(Bil bil)
     {
         String sql = "SELECT * FROM notationer WHERE vognNummer = ?;";
-        List<Map<String, Object>> list = jdbcTemplate.queryForList(sql, bil.getVognNr());
+        List<Map<String, Object>> list = jdbcTemplate.queryForList(sql, bil.getVognNummer());
 
         return buildNotationer(list);
     }

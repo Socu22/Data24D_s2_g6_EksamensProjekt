@@ -2,20 +2,45 @@ package com.g6.data24d_s2_g6_eksamensprojekt.model;
 
 public class Bil
 {
-    private final String vognNr, stelNr;
+    private final String vognNummer, stelNummer;
     private final BilType type;
-    private int lagerId;
+    private int lager_Id;
     private String status;
 
-    public Bil(String vognNr, String stelNr, BilType type, int lagerId, String status)
-    {
-        this.vognNr = vognNr;
-        this.stelNr = stelNr;
+
+    public Bil(String vognNummer, String stelNummer, BilType type, int lager_Id, String status) {
+        this.vognNummer = vognNummer;
+        this.stelNummer = stelNummer;
         this.type = type;
+        this.lager_Id = lager_Id;
+        this.status = status;
     }
 
-    public String getVognNr()
-    {
-        return vognNr;
+    public String getVognNummer() {
+        return vognNummer;
+    }
+
+    public String getStelNummer() {
+        return stelNummer;
+    }
+
+    public BilType getType() {
+        return type;
+    }
+
+    public int getLager_Id() {
+        return lager_Id;
+    }
+
+    public void setLager_Id(int lager_Id) {
+        this.lager_Id = lager_Id;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

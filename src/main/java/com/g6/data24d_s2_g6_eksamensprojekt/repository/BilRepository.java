@@ -1,8 +1,11 @@
 package com.g6.data24d_s2_g6_eksamensprojekt.repository;
 
 import com.g6.data24d_s2_g6_eksamensprojekt.model.Bil;
+import com.g6.data24d_s2_g6_eksamensprojekt.model.BilType;
+import com.g6.data24d_s2_g6_eksamensprojekt.model.LejeAftale;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -14,8 +17,19 @@ public class BilRepository
     @Autowired
     JdbcTemplate jdbcTemplate;
 
+    private final RowMapper<Bil> rowMapper = (rs, rowNum) -> {
+        Bil bil = new Bil(
+                rs.getString("vognNummer"),
+                rs.getString("stelNummer"),
+                new BilType(rs.getInt("bilType_Id")),
+                rs.getInt("lager_Id"),
+                rs.getString("status"));
+        return bil;
+    };
+
     public List<Bil> getBiler()
     {
-        return new ArrayList<>();
+        List<Bil> bilList = jdbcTemplate.query("select * from bil",rowMapper);
+        return bilList;
     }
 }

@@ -39,7 +39,7 @@ public class AftaleRepository {
     }
 
     //tager fat i LejeAftale ud fra et id
-    public LejeAftale tagFatILageret(int aftale_Id){
+    public LejeAftale tagFatILejeAftale(int aftale_Id){
         List<LejeAftale> lejeAftaleList= jdbcTemplate.query("select * from lejeAftaler where aftale_Id=?",rowMapper,aftale_Id);
         if (lejeAftaleList.size()==1){
             return lejeAftaleList.getFirst();
