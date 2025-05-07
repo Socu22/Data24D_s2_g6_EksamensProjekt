@@ -24,7 +24,7 @@ public class LejeAftaleController {
     public String getNyLejeAftale(Model model){
         List<Bil> bilList = bilRepository.getBiler();
         Bil bil = bilList.getFirst();
-        model.addAttribute("list",bilList);
+        model.addAttribute("bilList",bilList);
         model.addAttribute("kunde", bil);
         model.addAttribute("bil", bil);
 

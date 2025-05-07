@@ -67,7 +67,7 @@
         <label>Vognnummer:</label>
         <label>
             <select name="vognNummer">
-                <option th:each="item : ${list}" th:value="${item.vognNummer}" th:text="${item.vognNummer}"></option>
+                <option th:each="bil : ${bilList}" th:value="${bil.vognNummer}" th:text="${bil.vognNummer}"></option>
             </select>
         </label> <br/>
 
