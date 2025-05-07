@@ -6,6 +6,8 @@ import com.g6.data24d_s2_g6_eksamensprojekt.model.LejeAftale;
 import com.g6.data24d_s2_g6_eksamensprojekt.repository.AftaleRepository;
 import com.g6.data24d_s2_g6_eksamensprojekt.repository.BilRepository;
 import com.g6.data24d_s2_g6_eksamensprojekt.repository.KundeRepository;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
+
+import static com.g6.data24d_s2_g6_eksamensprojekt.controller.BrugerController.faaSession;
 
 @Controller
 public class LejeAftaleController {
@@ -28,7 +32,10 @@ public class LejeAftaleController {
 
     //logikken når man trykke på vælg bil.
     @GetMapping("nyLejeAftale")
-    public String getNyLejeAftale(Model model){
+    public String getNyLejeAftale(Model model, HttpServletRequest request){
+        HttpSession session = faaSession(request, model);
+        if(session == null) return "redirect:/Logind";
+
         List<Bil> bilList = bilRepository.getBiler();
         Bil bil = bilList.getFirst(); //få igennem session når der trykkes "vælg bil"
         Kunde kunde = kundeRepository.tagFatIKunde(1); //
@@ -43,7 +50,10 @@ public class LejeAftaleController {
                                    @RequestParam("vognNummer") String vognNummer,
                                    @RequestParam("startDato") String startDato,
                                    @RequestParam("startDato") String slutDato,
-                                   @RequestParam("detaljer") String detaljer){
+                                   @RequestParam("detaljer") String detaljer,
+                                   HttpServletRequest request, Model model){
+        HttpSession session = faaSession(request, model);
+        if(session == null) return "redirect:/Logind";
 
         LejeAftale lejeAftale = new LejeAftale(kunde_Id,vognNummer,startDato,slutDato,detaljer);
 
