@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
@@ -25,37 +25,32 @@
     <div class="fade-out" th:if="${registrerBesked} == 'Ny bruger lavet'">
         <label style="color: green" th:text="${registrerBesked}"></label>
     </div>
-
-    <form th:action="@{/OmdirigerRegistrer}" method="get">
         <label >Brugernavn:</label>
-        <input type="text" name="navn" placeholder="navn" th:value="${navn}" autofocus="autofocus" required/> <br/>
+        <input type="text" name="navn" placeholder="navn" th:value="${navn}"  autofocus="autofocus" required form="OmReg" /> <br/>
         <label >Adgangskode:</label>
-        <input type="password" name="adgangskode" placeholder="adgangskode" th:value="${adgangskode}" required /> <br/>
+        <input type="password" name="adgangskode" placeholder="adgangskode" th:value="${adgangskode}"  required form="OmReg" /> <br/>
         <label >Verificer Adgangskode:</label>
-        <input type="password" name="adgangskode2" placeholder="adgangskode"th:value="${adgangskode2}"  required /> <br/>
+        <input type="password" name="adgangskode2" placeholder=" verificer adgangskode" th:value="${adgangskode2}"  required form="OmReg" /> <br/>
         <label >Stilling:</label>
-        <!--<input type="text" name="stilling" placeholder="stilling" required /> <br/>
-         <details>
-           <input type="text" name="stilling" placeholder="stilling" required /> <br/>
-       </details>-->
+
+
         <details >
             <summary th:text="${stilling}"></summary>
-            <form th:action="@{/Dataregistrering}" th:method="get">
-                <input hidden type="text" name="stilling" th:value="${stilling}">
-                <button type="submit">Dataregistrering</button>
+            <form th:action="@{/Stilling}" method="get"  >
+                <button type="submit" name="stilling" value="Dataregistrering" >Dataregistrering</button>
             </form>
-            <form th:action="@{/Skade_og_Udbedring}" th:method="get">
-                <input hidden type="text" name="stilling" th:value="${stilling}">
-                <button type="submit">Skade og Udbedring</button>
+            <form th:action="@{/Stilling}" method="get"   >
+                <button type="submit" name="stilling" value="Skade og Udbedring" >Skade og Udbedring</button>
             </form>
-            <form th:action="@{/Forretningsudvikler}" th:method="get">
-                <input hidden type="text" name="stilling" th:value="${stilling}">
-                <button type="submit">Forretningsudvikler</button>
+            <form th:action="@{/Stilling}" method="get"   >
+                <button type="submit" name="stilling" value="Forretningsudvikler" >Forretningsudvikler</button>
             </form>
         </details>
 
-       <input type="submit" value="Log ind" />
-   </form>
+    <form th:action="@{/OmdirigerRegistrer}" method="get" id="OmReg" >
+        <button type="submit" name="stilling" th:value="${stilling}">Registrer</button>
+    </form>
+
 </section>
 </body>
 </html>

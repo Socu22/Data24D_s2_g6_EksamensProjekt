@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 public class BrugerController {
 
-    static String stilling = "Dataregistrering";
     @Autowired
     BrugerRepository brugerRepository;
 
@@ -60,10 +59,25 @@ public class BrugerController {
         HttpSession session = faaSession(request, model);
         if(session == null) return "redirect:/Logind";
 
-
         model.addAttribute("registrerBesked", session.getAttribute("registrerBesked"));
         session.setAttribute("registrerBesked", "");
         model.addAttribute("stilling", session.getAttribute("stilling"));
+
+        String stilling = (String) session.getAttribute("stilling");
+        if(stilling == null)
+            stilling = "Dataregistrering";
+
+        model.addAttribute("navn", session.getAttribute("navn"));
+        model.addAttribute("adgangskode",session.getAttribute("adgangskode"));
+        model.addAttribute("adgangskode2",session.getAttribute("adgangskode2"));
+        model.addAttribute("stilling", stilling);
+
+        System.out.println(stilling + " , " + session.getAttribute("navn") + "  , " + session.getAttribute("adgangskode")+ " , " + session.getAttribute("adgangskode2") );
+
+        session.setAttribute("navn", "");
+        session.setAttribute("adgangskode", "");
+        session.setAttribute("adgangskode2", "");
+
 
         return "registrer";
     }
@@ -93,8 +107,21 @@ public class BrugerController {
 
         return "redirect:/Registrer";
     }
+    @GetMapping("/Stilling")
+    public String stillingSide(HttpServletRequest request, Model model) {
+        HttpSession session = faaSession(request, model);
+        if(session == null) return "redirect:/Logind";
 
-    @GetMapping("/Dataregistrering")
+        session.setAttribute("stilling", request.getParameter("stilling"));
+        session.setAttribute("navn", request.getParameter("navn"));
+        session.setAttribute("adgangskode", request.getParameter("adgangskode"));
+        session.setAttribute("adgangskode2",request.getParameter("adgangskode2"));
+        System.out.println("stilling: " + request.getParameter("stilling") + " , " + request.getParameter("navn") + " , "  + request.getParameter("adgangskode") + " , " +  request.getParameter("adgangskode2"));
+
+        return "redirect:/Registrer";
+    }
+
+    /*@GetMapping("/Dataregistrering")
     public String dataregistreringStilling(HttpServletRequest request, Model model) {
         HttpSession session = faaSession(request, model);
         if(session == null) return "redirect:/Logind";
@@ -121,10 +148,10 @@ public class BrugerController {
     private void sætStilling(String stilling, HttpSession session, HttpServletRequest request, Model model) {
         this.stilling = stilling;
         session.setAttribute("stilling", stilling);
-        model.addAttribute(request.getParameter("navn"));
-        model.addAttribute(request.getParameter("adgangskode"));
-        model.addAttribute(request.getParameter("adgangskode2"));
-    }
+        model.addAttribute("navn", request.getParameter("navn"));
+        model.addAttribute("adgangskode", request.getParameter("adgangskode"));
+        model.addAttribute("adgangskode2",request.getParameter("adgangskode2"));
+    }*/
     private void saetSession(HttpServletRequest request, Bruger bruger, Model model) {
         HttpSession session = request.getSession();
         session.setMaxInactiveInterval(1200);
