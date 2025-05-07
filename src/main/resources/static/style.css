@@ -4,7 +4,7 @@
     --primær-farve-mørk:     royalblue; /* #0060b0; */
     --primær-farve-obs:      indianred;
     --primær-farve-obs-mørk: firebrick;
-    --primær-padding:        1.5rem;
+    --primær-margin:        1.5rem;
 
     --box-kant-farve: black;
     --box-skygge: 0 4px 8px rgba(0,0,0,0.5);
@@ -21,8 +21,8 @@ main, header, footer, section, button, p.vognNr, li {
 
     border-color: var(--kort-kant-farve);
     background-color: var(--primær-farve-baggrund);
-    padding: var(--primær-padding);
-    margin: var(--primær-padding);
+    margin: var(--primær-margin);
+    padding: var(--primær-margin);
     box-shadow: var(--box-skygge);
 }
 
@@ -43,7 +43,14 @@ header {
 }
 
 header.underHeader {
+    padding: 0;
     top: 7rem;
+}
+
+section {
+    max-width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 footer {
@@ -52,9 +59,11 @@ footer {
 }
 
 main {
-    --ekstra: calc(var(--primær-padding) + 1rem);
+    --ekstra: calc(var(--primær-margin) + 1rem);
     margin-left:  var(--ekstra);
     margin-right: var(--ekstra);
+    padding: 0;
+    display: -ms-flexbox;
 }
 
 ul {
@@ -68,22 +77,24 @@ li:hover {
 
 button {
     cursor: pointer;
-    height: 3rem; /* todo: 'typer' af button */
-    width: 4rem;
-    margin: initial;
-    padding: initial;
+    padding: .5rem;
+    margin: .5rem;
     border-width: medium;
     border-color: var(--primær-farve-mørk);
     background-color: var(--primær-farve);
     background-image: linear-gradient(to bottom, rgba(0,0,0,0), rgba(0,0,0,0), rgba(0,0,0,45%));
     align-items: center;
     text-align: center;
+    font-weight: bold;
     filter: brightness(1.3);
 }
 
 button.logud {
     border-color: var(--primær-farve-obs-mørk);
     background-color: #EEEEEE;
+    height: 3rem;
+    width: 5rem;
+    margin: initial;
 }
 
 button.annuller {
@@ -99,8 +110,36 @@ button:hover {
      */
 }
 
+p {
+    margin: 0;
+    margin-right: var(--primær-margin);
+    margin-left: var(--primær-margin);
+}
+
 p.vognNr {
+    border-color: red;
     border-width: medium;
-    border-color: var(red);
+    padding: .15rem;
     cursor: pointer;
+    text-align: center;
+    font-weight: bold;
+    font-size: large;
+}
+
+p.stelNummer {
+    font-style: italic;
+    color: gray;
+}
+
+textarea{
+    resize: none;
+}
+
+div.kort {
+    justify-content: left;
+}
+
+div.kort div{
+    border-left: 1mm solid lightgray;
+    display: block;
 }
