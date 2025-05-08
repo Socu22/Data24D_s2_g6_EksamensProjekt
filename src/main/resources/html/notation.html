@@ -17,14 +17,14 @@
 
   <section>
     <form th:action="@{/BekraeftNotation}" method="get">
-      <label for="detaljer">Detaljer:</label><br>
-      <textarea id="detaljer" placeholder="Beskriv Fejl/Mangler" maxlength="255" rows="4" cols="50" required></textarea>
+      <label for="beskrivelse">beskrivelse:</label><br>
+      <textarea id="beskrivelse" name="beskrivelse" placeholder="Beskriv Fejl/Mangler" maxlength="255" rows="4" cols="50" required></textarea>
       <br/>
       <label for="pris">Omkostning:</label><br>
-      <input type="number" id="pris" placeholder="pris" th:default="0" required/>
+      <input type="number" id="pris" name="pris" placeholder="pris" required/>
       <br/>
-      <button class="annuller" th:action="@{/AnnullerNotation}">Annullér</button>
-      <button type="submit">Bekræft</button>
+      <button class="annuller" name="bekraeft" value="false">Annullér</button>
+      <button type="submit" name="bekraeft" value="true">Bekræft</button>
     </form>
   </section>
 </main>
