@@ -16,15 +16,17 @@ public class NotationRepository
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    public void addNotation(int vognNr, int aftaleId, String beskrivelse, double pris)
+    public void addNotation(String vognNr, Integer aftaleId, String beskrivelse, double pris)
     {
         String sql = "INSERT INTO notationer (vognNummer, aftale_Id, beskrivelse, pris) VALUES (?, ?, ?, ?);";
+
         jdbcTemplate.update(sql, vognNr, aftaleId, beskrivelse, pris);
     }
 
     public void updateNotation(Notation notation)
     {
         String sql = "UPDATE notationer SET vognNummer = ?, aftale_Id = ?, beskrivelse = ?, pris = ? WHERE notationer_Id = ?;";
+
         jdbcTemplate.update(sql,
                             notation.getVognNr(),
                             notation.getAftaleId(),
@@ -35,16 +37,32 @@ public class NotationRepository
 
     public List<Notation> getNotationer(LejeAftale aftale)
     {
+        return selectNotationer("aftale_Id", aftale.getAftale_Id());
+
+        /*
         String sql = "SELECT * FROM notationer WHERE aftale_Id = ?;";
         List<Map<String, Object>> list = jdbcTemplate.queryForList(sql, aftale.getAftale_Id());
 
         return buildNotationer(list);
+         */
     }
 
     public List<Notation> getNotationer(Bil bil)
     {
+        return selectNotationer("vognNummer", bil.getVognNummer());
+
+        /*
         String sql = "SELECT * FROM notationer WHERE vognNummer = ?;";
         List<Map<String, Object>> list = jdbcTemplate.queryForList(sql, bil.getVognNummer());
+
+        return buildNotationer(list);
+         */
+    }
+
+    private List<Notation> selectNotationer(String column, Object identifier)
+    {
+        String sql = "SELECT * FROM notationer WHERE "+column+" = ?;";
+        List<Map<String, Object>> list = jdbcTemplate.queryForList(sql, identifier);
 
         return buildNotationer(list);
     }
