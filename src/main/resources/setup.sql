@@ -47,17 +47,17 @@ CREATE TABLE lejeAftaler(
                             vognNummer VARCHAR(7) NOT NULL,
                             startDato date NOT NULL,
                             slutDato DATE NOT NULL,
-                            detaljer varchar(255) not null,
+                            detaljer varchar(255) NOT NULL,
                             FOREIGN KEY (kunde_Id) REFERENCES kunde(kunde_Id),
                             FOREIGN KEY (vognNummer) REFERENCES bil(vognNummer)
 );
 
 CREATE TABLE notationer(
                            notationer_id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
-                           aftale_Id INT NOT NULL,
+                           aftale_Id INT,
                            vognNummer varchar(7) NOT NULL,
                            beskrivelse VARCHAR(255) NOT NULL,
                            pris DOUBLE NOT NULL,
                            FOREIGN KEY (aftale_Id) REFERENCES lejeAftaler(aftale_Id),
-                           FOREIGN KEY (vognNummer) references bil(vognNummer)
+                           FOREIGN KEY (vognNummer) REFERENCES bil(vognNummer)
 );
