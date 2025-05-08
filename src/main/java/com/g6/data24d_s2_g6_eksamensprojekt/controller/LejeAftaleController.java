@@ -37,8 +37,8 @@ public class LejeAftaleController {
         if(session == null) return "redirect:/Logind";
 
         List<Bil> bilList = bilRepository.getBiler();
-        Bil bil = bilList.getFirst(); //få igennem session når der trykkes "vælg bil"
-        Kunde kunde = kundeRepository.tagFatIKunde(1); //
+        Bil bil = bilList.getFirst(); // todo: få igennem session når der trykkes "vælg bil"
+        Kunde kunde = kundeRepository.tagFatIKunde(1); //todo: smarter måde at få fart på en kunde
         model.addAttribute("bilList",bilList);
         model.addAttribute("kunde", kunde);
         model.addAttribute("bil", bil);
