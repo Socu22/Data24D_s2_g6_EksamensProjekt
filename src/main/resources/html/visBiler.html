@@ -12,6 +12,18 @@
 <body>
 <header th:insert="~{fragments :: header}"></header>
 <main>
+<section>
+  <form th:action="@{nyBil}">
+    <button>nyBil</button>
+  </form>
+  <form th:action="@{nytLager}">
+    <button>nytLager</button>
+  </form>
+  <form th:action="@{nyBilType}">
+    <button>nytLager</button>
+  </form>
+</section>
+
   <ul>
     <li th:each="bil : ${bilList} ">
       <ul>
@@ -42,6 +54,8 @@
 
     </li>
   </ul>
+
+
 </main>
 <footer>
   <!-- skriv side-specific footer her -->
