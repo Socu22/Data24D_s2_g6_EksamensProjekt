@@ -83,9 +83,12 @@
         <label>
             <textarea name="detaljer" placeholder="Beskriv Afhentningen" maxlength="255" rows="4" cols="50" required></textarea>
         </label> <br/>
-        <button class="annuller" th:action="@{/index}" value="Go to ?index?">Go to ?index?</button>
         <button type="submit">Bekræft lejeaftale</button>
     </form>
+    <form th:action="@{/}">
+        <button class="annuller"  value="Go to ?index?">Go to ?index?</button>
+    </form>
+
 </section>
 </main>
 <footer>

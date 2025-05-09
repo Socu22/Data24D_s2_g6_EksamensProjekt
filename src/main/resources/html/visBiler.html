@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" th:href="@{style.css}">
+  <title>Title</title>
+</head>
+
+<!-- Venlist ikke lav lokal styling for ting som kunne gå igen i andre html -->
+<style></style>
+
+<body>
+<header th:insert="~{fragments :: header}"></header>
+<main>
+  <ul>
+    <li th:each="bil : ${bilList} ">
+      <ul>
+        <li>
+          <table>
+            <tr>
+              <label>vognNummer - stelNummer - bilType_Id - lager_Id - status</label>
+            </tr>
+            <tr >
+              <td><p th:field="bil.vognNummer"th:text="${bil.vognNummer}"></p></td>
+              <td><p th:field="bil.stelNummer"th:text="${bil.stelNummer}"></p></td>
+              <td><p th:field="bil.getBilType_Id"th:text="${bil.getBilType_Id}"></p></td>
+              <td><p th:field="bil.lager_Id"th:text="${bil.Lager_Id}"></p></td>
+              <td><p th:field="bil.status"th:text="${bil.status}"></p></td>
+            </tr>
+            <tr>
+
+            </tr>
+          </table>
+
+
+
+
+
+        </li>
+      </ul>
+
+
+    </li>
+  </ul>
+</main>
+<footer>
+  <!-- skriv side-specific footer her -->
+</footer>
+</body>
+</html>

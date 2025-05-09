@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" th:href="@{style.css}">
+  <title>Title</title>
+</head>
+
+<!-- Venlist ikke lav lokal styling for ting som kunne gå igen i andre html -->
+<style></style>
+
+<body>
+<header th:insert="~{fragments :: header}"></header>
+<main>
+  <section>
+  <form th:action="@{/laverNyBilType}" method="get">
+    <label >Mærke:</label>
+    <input type="text" name="mærke" placeholder="text" autofocus="autofocus" required/> <br/>
+    <label >Model:</label>
+    <input type="text" name="model" placeholder="text" autofocus="autofocus" required/> <br/>
+    <label >Udstyrsniveau:</label>
+    <input type="text" name="udstyrsniveau" placeholder="text" autofocus="autofocus" required/> <br/>
+    <label >Stål pris:</label>
+    <input type="number" name="stålPris" placeholder="number" autofocus="autofocus" required/> <br/>
+    <label >Afgift:</label>
+    <input type="number" name="afgift" placeholder="number" autofocus="autofocus" required/> <br/>
+    <label >Udledning af Co2 %:</label>
+    <input type="number" name="udledning_Co2" placeholder="number" autofocus="autofocus" required/> <br/>
+
+    <br/>
+    <button type="submit" value="Bekræft BilType">Bekræft bilType</button>
+  </form>
+  <form th:action="@{/}">
+    <button class="annuller"  value="Go to ?index?">Go to ?index?</button>
+  </form>
+  </section>
+</main>
+<footer>
+  <!-- skriv side-specific footer her -->
+</footer>
+</body>
+</html>

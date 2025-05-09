@@ -2,16 +2,16 @@ package com.g6.data24d_s2_g6_eksamensprojekt.model;
 
 public class BilType
 {
-    private final int    bilTypeId;
+    private final int    bilType_Id;
     private String maerke, model, udstyr;
     private double staalPris, afgift, udledningCo2;
 
-    public BilType(int bilTypeId){this.bilTypeId = bilTypeId;}
+    public BilType(int bilType_Id){this.bilType_Id = bilType_Id;}
 
-    public BilType(int bilTypeId, String maerke, String model, String udstyr, double staalPris, double afgift,
+    public BilType(int bilType_Id, String maerke, String model, String udstyr, double staalPris, double afgift,
                    double udledningCo2)
     {
-        this.bilTypeId    = bilTypeId;
+        this.bilType_Id    = bilType_Id;
         this.maerke       = maerke;
         this.model        = model;
         this.udstyr       = udstyr;
@@ -20,9 +20,10 @@ public class BilType
         this.udledningCo2 = udledningCo2;
     }
 
-    public int getBilTypeId()
+
+    public int getBilType_Id()
     {
-        return bilTypeId;
+        return bilType_Id;
     }
     public String getMaerke()
     {
