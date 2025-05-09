@@ -23,8 +23,10 @@
       <label for="pris">Omkostning:</label><br>
       <input type="number" id="pris" name="pris" placeholder="pris" required/>
       <br/>
-      <button class="annuller" name="bekraeft" value="false">Annullér</button>
       <button type="submit" name="bekraeft" value="true">Bekræft</button>
+    </form>
+    <form th:action="@{/AnnullerNotation}" method="get">
+      <button class="annuller" name="bekraeft" value="false">Annullér</button>
     </form>
   </section>
 </main>
