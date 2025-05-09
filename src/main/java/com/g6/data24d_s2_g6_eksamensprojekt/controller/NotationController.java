@@ -6,15 +6,15 @@ import com.g6.data24d_s2_g6_eksamensprojekt.model.Notation;
 import com.g6.data24d_s2_g6_eksamensprojekt.repository.AftaleRepository;
 import com.g6.data24d_s2_g6_eksamensprojekt.repository.BilRepository;
 import com.g6.data24d_s2_g6_eksamensprojekt.repository.NotationRepository;
+
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -44,22 +44,22 @@ public class NotationController
             bil    = (Bil) session.getAttribute("Bil");
         }
 
-        aftale = aftaleRepository.tagFatILejeAftale(1); // ! udelukkende for testing !
-        bil = bilRepository.tagFatIBil(aftale.getVognNummer()); // ! udelukkende for testing !
-        model.addAttribute("Biler", bilRepository.getBiler());
+        if (bil == null || aftale == null) // ! udelukkende for testing !
+        {
+            aftale = aftaleRepository.tagFatILejeAftale(1); // ! udelukkende for testing !
+            bil = bilRepository.tagFatIBil(aftale.getVognNummer()); // ! udelukkende for testing !
+        }
 
         if (aftale != null)
         {
-            // ? liste = notationRepository.getNotationer(aftale);
-
             model.addAttribute("LejeAftale", aftale);
+            model.addAttribute("Bil", bil); // todo: hent bil gennem lejeaftalen!
         }
-        if (bil != null)
+        else // hvis ikke der er en lejeaftale, må man være kommet her fra en bil.
         {
-            // ? liste = notationRepository.getNotationer(bil);
-
             model.addAttribute("Bil", bil);
         }
+
 
         return "notation";
     }
@@ -73,15 +73,9 @@ public class NotationController
     }
 
     @GetMapping("/BekraeftNotation")
-    public String bekraeftNotation(@RequestParam("bekraeft") boolean bekraeft, HttpServletRequest request, Model model)
+    public String bekraeftNotation(HttpServletRequest request, Model model)
     {
         HttpSession session = BrugerController.faaSession(request, model);
-
-        if (bekraeft)
-        {
-            if (session.getAttribute("LejeAftale") != null) return "redirect:/"; // todo: LejeAftale-visning
-            return "redirect:/"; // todo: BilKatalog-visning
-        }
 
         Bil bil           = (Bil)        session.getAttribute("Bil");
         LejeAftale aftale = (LejeAftale) session.getAttribute("LejeAftale");
