@@ -26,6 +26,10 @@ public class BilRepository
                 rs.getString("status"));
         return bil;
     };
+    public void nyBilLogik(Bil bil){
+        String sql = "INSERT into bil(vognNummer, stelNummer, bilType_Id, lager_Id, status) values (?,?,?,?,?)";
+        jdbcTemplate.update(sql, bil.getVognNummer(),bil.getStelNummer(),bil.getBilType_Id(),bil.getLager_Id(),bil.getStatus());
+    }
 
     public List<Bil> getBiler()
     {
