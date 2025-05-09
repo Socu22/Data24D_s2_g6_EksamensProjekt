@@ -3,62 +3,57 @@
 <head>
   <meta charset="UTF-8">
   <link rel="stylesheet" th:href="@{style.css}">
-  <title>Title</title>
+  <title>Biloversigt</title>
 </head>
-
-<!-- Venlist ikke lav lokal styling for ting som kunne gå igen i andre html -->
-<style></style>
 
 <body>
 <header th:insert="~{fragments :: header}"></header>
+
 <main>
-<section>
-  <form th:action="@{nyBil}">
-    <button>nyBil</button>
-  </form>
-  <form th:action="@{nytLager}">
-    <button>nytLager</button>
-  </form>
-  <form th:action="@{nyBilType}">
-    <button>nytLager</button>
-  </form>
-</section>
+  <section>
+    <form th:action="@{nyBil}" method="post">
+      <button type="submit">Ny Bil</button>
+    </form>
+    <form th:action="@{nytLager}" method="post">
+      <button type="submit">Nyt Lager</button>
+    </form>
+    <form th:action="@{nyBilType}" method="post">
+      <button type="submit">Ny Biltype</button>
+    </form>
+  </section>
 
-  <ul>
-    <li th:each="bil : ${bilList} ">
-      <ul>
-        <li>
-          <table>
-            <tr>
-              <label>vognNummer - stelNummer - bilType_Id - lager_Id - status</label>
-            </tr>
-            <tr >
-              <td><p th:field="bil.vognNummer"th:text="${bil.vognNummer}"></p></td>
-              <td><p th:field="bil.stelNummer"th:text="${bil.stelNummer}"></p></td>
-              <td><p th:field="bil.getBilType_Id"th:text="${bil.getBilType_Id}"></p></td>
-              <td><p th:field="bil.lager_Id"th:text="${bil.Lager_Id}"></p></td>
-              <td><p th:field="bil.status"th:text="${bil.status}"></p></td>
-            </tr>
-            <tr>
-
-            </tr>
-          </table>
-
-
-
-
-
-        </li>
-      </ul>
-
-
-    </li>
-  </ul>
-
-
+  <section>
+    <table>
+      <thead>
+      <tr>
+        <th>Vognnummer</th>
+        <th>Stelnummer</th>
+        <th>Biltype ID</th>
+        <th>Lager ID</th>
+        <th>Status</th>
+        <th>Handling</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="bil : ${bilList}">
+        <td th:text="${bil.vognNummer}"></td>
+        <td th:text="${bil.stelNummer}"></td>
+        <td th:text="${bil.bilType_Id}"></td>
+        <td th:text="${bil.lager_Id}"></td>
+        <td th:text="${bil.status}"></td>
+        <td>
+          <a th:href="@{visBil(vognNummer=${bil.vognNummer})}">
+            <button type="button">Vis</button>
+          </a>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </section>
 </main>
+
 <footer>
-  <!-- skriv side-specific footer her -->
+  <!-- Skriv side-specifik footer her -->
 </footer>
 </body>
 </html>

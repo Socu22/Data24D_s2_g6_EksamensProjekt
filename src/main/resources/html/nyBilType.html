@@ -3,40 +3,58 @@
 <head>
   <meta charset="UTF-8">
   <link rel="stylesheet" th:href="@{style.css}">
-  <title>Title</title>
+  <title>Ny Biltype</title>
 </head>
-
-<!-- Venlist ikke lav lokal styling for ting som kunne gå igen i andre html -->
-<style></style>
 
 <body>
 <header th:insert="~{fragments :: header}"></header>
+
 <main>
   <section>
-  <form th:action="@{/laverNyBilType}" method="get">
-    <label >Mærke:</label>
-    <input type="text" name="mærke" placeholder="text" autofocus="autofocus" required/> <br/>
-    <label >Model:</label>
-    <input type="text" name="model" placeholder="text" autofocus="autofocus" required/> <br/>
-    <label >Udstyrsniveau:</label>
-    <input type="text" name="udstyrsniveau" placeholder="text" autofocus="autofocus" required/> <br/>
-    <label >Stål pris:</label>
-    <input type="number" name="stålPris" placeholder="number" autofocus="autofocus" required/> <br/>
-    <label >Afgift:</label>
-    <input type="number" name="afgift" placeholder="number" autofocus="autofocus" required/> <br/>
-    <label >Udledning af Co2 %:</label>
-    <input type="number" name="udledning_Co2" placeholder="number" autofocus="autofocus" required/> <br/>
+    <form th:action="@{/laverNyBilType}" method="get">
+      <div>
+        <label for="mærke">Mærke:</label>
+        <input type="text" id="mærke" name="mærke" placeholder="F.eks. Toyota" required autofocus>
+      </div>
 
-    <br/>
-    <button type="submit" value="Bekræft BilType">Bekræft bilType</button>
-  </form>
-  <form th:action="@{/}">
-    <button class="annuller"  value="Go to ?index?">Go to ?index?</button>
-  </form>
+      <div>
+        <label for="model">Model:</label>
+        <input type="text" id="model" name="model" placeholder="F.eks. Yaris" required>
+      </div>
+
+      <div>
+        <label for="udstyrsniveau">Udstyrsniveau:</label>
+        <input type="text" id="udstyrsniveau" name="udstyrsniveau" placeholder="F.eks. Comfort" required>
+      </div>
+
+      <div>
+        <label for="stålPris">Stålpris:</label>
+        <input type="number" id="stålPris" name="stålPris" placeholder="F.eks. 150000" required>
+      </div>
+
+      <div>
+        <label for="afgift">Afgift:</label>
+        <input type="number" id="afgift" name="afgift" placeholder="F.eks. 30000" required>
+      </div>
+
+      <div>
+        <label for="udledning_Co2">Udledning af CO2 (%):</label>
+        <input type="number" id="udledning_Co2" name="udledning_Co2" placeholder="F.eks. 95" required>
+      </div>
+
+      <div>
+        <button type="submit">Bekræft Biltype</button>
+      </div>
+    </form>
+
+    <form th:action="@{/}" method="get">
+      <button type="submit" class="annuller">Tilbage til forsiden</button>
+    </form>
   </section>
 </main>
+
 <footer>
-  <!-- skriv side-specific footer her -->
+  <!-- skriv side-specifik footer her -->
 </footer>
 </body>
 </html>

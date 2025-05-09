@@ -3,26 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" th:href="@{style.css}">
-    <title>Title</title>
+    <title>Opret Nyt Lager</title>
 </head>
-
-<!-- Venlist ikke lav lokal styling for ting som kunne gå igen i andre html -->
-<style></style>
 
 <body>
 <header th:insert="~{fragments :: header}"></header>
+
 <main>
-    <form th:action="@{/laverNytLager}" method="get">
-        <label >Navn:</label>
-        <input type="text" name="navn" placeholder="text" autofocus="autofocus" maxlength="50" required/> <br/>
-        <label >Adresse:</label>
-        <input type="text" name="adresse" placeholder="text" maxlength="50" required /> <br/>
-        <button type="submit" value="Bekræft lager">Bekræft lager</button>
-    </form>
-    <form th:action="@{/}">
-        <button class="annuller"  value="Go to ?index?">Go to ?index?</button>
-    </form>
+    <section>
+        <h2>Opret Nyt Lager</h2>
+        <form th:action="@{/laverNytLager}" method="get">
+            <div>
+                <label for="navn">Navn:</label>
+                <input type="text" id="navn" name="navn" placeholder="Indtast lagernavn" maxlength="50" required autofocus />
+            </div>
+
+            <div>
+                <label for="adresse">Adresse:</label>
+                <input type="text" id="adresse" name="adresse" placeholder="Indtast adresse" maxlength="50" required />
+            </div>
+
+            <div>
+                <button type="submit">Bekræft lager</button>
+            </div>
+        </form>
+
+        <form th:action="@{/}" method="get">
+            <button class="annuller">Tilbage til forsiden</button>
+        </form>
+    </section>
 </main>
+
 <footer>
     <!-- skriv side-specific footer her -->
 </footer>

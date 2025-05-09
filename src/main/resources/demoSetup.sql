@@ -73,8 +73,8 @@ VALUES
 
 INSERT INTO lager (navn, adresse)
 VALUES
-    ('Lager 1', '123 Main St'),
-    ('Lager 2', '456 Side St');
+    ('a', '123 Main St'),
+    ('b ', '456 Side St');
 
 INSERT INTO bil (vognNummer, stelNummer, bilType_Id, lager_Id, status)
 VALUES

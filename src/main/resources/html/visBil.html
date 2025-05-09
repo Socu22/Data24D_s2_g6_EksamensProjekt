@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" th:href="@{style.css}">
+    <title>Title</title>
+</head>
+
+<!-- Venlist ikke lav lokal styling for ting som kunne gå igen i andre html -->
+<style></style>
+
+<body>
+<header th:insert="~{fragments :: header}"></header>
+<main>
+    <section>
+        <h2>Bil</h2>
+        <table>
+            <thead>
+            <tr>
+                <th>VognNummer</th>
+                <th>StelNummer</th>
+                <th>BilType Id</th>
+                <th>Lager Id</th>
+                <th>Status</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td th:text="${bil.vognNummer}"></td>
+                <td th:text="${bil.stelNummer}"></td>
+                <td th:text="${bil.getBilType_Id}"></td>
+                <td th:text="${bil.lager_Id}"></td>
+                <td th:text="${bil.status}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+    <section>
+        <form th:action="@{sletBil}" method="get">
+            <button type="submit" >slet Bil </button>
+        </form>
+    </section>
+    <section>
+        <form th:action="@{OpretNotation}" method="get">
+            <button type="submit" >nyt Notation </button>
+        </form>
+    </section>
+
+</main>
+<footer>
+    <!-- skriv side-specific footer her -->
+</footer>
+</body>
+</html>

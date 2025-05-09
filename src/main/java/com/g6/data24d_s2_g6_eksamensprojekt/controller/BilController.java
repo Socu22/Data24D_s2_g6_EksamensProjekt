@@ -29,7 +29,7 @@ public class BilController {
     LagerRepository lagerRepository;
 
 
-    @GetMapping("visbiler")
+    @GetMapping("visBiler")
     public String getVisBiler(HttpServletRequest request, Model model){
         HttpSession session = faaSession(request, model);
         if(session == null) return "redirect:/Logind";
@@ -39,6 +39,31 @@ public class BilController {
 
 
         return "visBiler";
+    }
+    @GetMapping("visBil")
+    public String getVisBil(HttpServletRequest request, Model model){
+        HttpSession session = faaSession(request, model);
+        if(session == null) return "redirect:/Logind";
+
+        String vognNummer = request.getParameter("vognNummer");
+        Bil bil = bilRepository.tagFatIBil(vognNummer);
+        session.setAttribute("bil",bil);
+        model.addAttribute("bil", bil);
+
+        return "visBil";
+    }
+    @GetMapping("sletBil")
+    public String postSletBil(HttpServletRequest request, Model model){
+        HttpSession session = faaSession(request, model);
+        if(session == null) return "redirect:/Logind";
+
+        Bil bil = (Bil) session.getAttribute("bil");
+
+        bilRepository.sletBil(bil.getVognNummer());
+
+
+
+        return "redirect:visBiler";
     }
     @GetMapping("nyBil")
     public String getNyBil(HttpServletRequest request, Model model){
