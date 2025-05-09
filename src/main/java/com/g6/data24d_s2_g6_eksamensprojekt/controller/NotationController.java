@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +24,10 @@ public class NotationController
     NotationRepository notationRepository;
 
     @Autowired
-    BilRepository bilRepository; // ?: is this necessary?
+    BilRepository bilRepository;
+
+    @Autowired
+    AftaleRepository aftaleRepository; // ! kun for testing !
 
     @GetMapping("/OpretNotation")
     public String opretNotation(HttpServletRequest request, Model model)
@@ -40,35 +44,26 @@ public class NotationController
             bil    = (Bil) session.getAttribute("Bil");
         }
 
-        // aftale = aftaleRepo.tagFatILejeAftale(1);
+        aftale = aftaleRepository.tagFatILejeAftale(1); // ! udelukkende for testing !
+        bil = bilRepository.tagFatIBil(aftale.getVognNummer()); // ! udelukkende for testing !
+        model.addAttribute("Biler", bilRepository.getBiler());
 
         if (aftale != null)
         {
-            liste = notationRepository.getNotationer(aftale);
+            // ? liste = notationRepository.getNotationer(aftale);
 
             model.addAttribute("LejeAftale", aftale);
         }
-        else if (bil != null)
+        if (bil != null)
         {
-            liste = notationRepository.getNotationer(bil);
+            // ? liste = notationRepository.getNotationer(bil);
 
             model.addAttribute("Bil", bil);
         }
-        else
-        {
-            liste = new ArrayList<>();
-            bil = bilRepository.getBiler().getFirst(); // ! udelukkende for testing !
-        }
-
-        model.addAttribute("Notationer", liste);
-
-        if (session != null) {session.setAttribute("Bil", bil);}
-        model.addAttribute("Bil", bil);
 
         return "notation";
     }
 
-    /*
     @GetMapping("/AnnullerNotation")
     public String annullerNotation(HttpServletRequest request, Model model)
     {
@@ -76,14 +71,13 @@ public class NotationController
         if (session.getAttribute("LejeAftale") != null) return "redirect:/"; // todo: LejeAftale-visning
         return "redirect:/"; // todo: BilKatalog-visning
     }
-     */
 
     @GetMapping("/BekraeftNotation")
-    public String bekraeftNotation(HttpServletRequest request, Model model)
+    public String bekraeftNotation(@RequestParam("bekraeft") boolean bekraeft, HttpServletRequest request, Model model)
     {
         HttpSession session = BrugerController.faaSession(request, model);
 
-        if (request.getParameter("bekraeft").equals("false"))
+        if (bekraeft)
         {
             if (session.getAttribute("LejeAftale") != null) return "redirect:/"; // todo: LejeAftale-visning
             return "redirect:/"; // todo: BilKatalog-visning

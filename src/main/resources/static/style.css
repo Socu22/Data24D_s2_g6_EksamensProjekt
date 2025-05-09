@@ -15,7 +15,7 @@
 
 body {}
 
-main, header, footer, section, button, p.vognNr, li {
+main, header, footer, section, button, p.vognNr, div.liste {
     border-style: solid;
     border-width: thin;
 
@@ -64,15 +64,6 @@ main {
     margin-right: var(--ekstra);
     padding: 0;
     display: -ms-flexbox;
-}
-
-ul {
-    list-style-type: none;
-}
-
-li:hover {
-    cursor: pointer;
-    background-color: var(--kort-kant-farve);
 }
 
 button {
@@ -124,6 +115,7 @@ p.vognNr {
     text-align: center;
     font-weight: bold;
     font-size: large;
+    width: fit-content;
 }
 
 p.stelNummer {
@@ -135,11 +127,26 @@ textarea{
     resize: none;
 }
 
+div.liste {
+    padding: 0;
+}
+
+div.liste:hover {
+    cursor: pointer;
+    background-color: var(--kort-kant-farve);
+}
+
 div.kort {
     justify-content: left;
+    display: inline-flex;
+    align-items: center;
 }
 
 div.kort div{
     border-left: 1mm solid lightgray;
     display: block;
+}
+
+ul {
+    list-style-type: none;
 }
