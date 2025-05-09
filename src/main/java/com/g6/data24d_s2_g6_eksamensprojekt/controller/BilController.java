@@ -2,7 +2,10 @@ package com.g6.data24d_s2_g6_eksamensprojekt.controller;
 
 import com.g6.data24d_s2_g6_eksamensprojekt.model.Bil;
 import com.g6.data24d_s2_g6_eksamensprojekt.model.BilType;
+import com.g6.data24d_s2_g6_eksamensprojekt.model.Lager;
 import com.g6.data24d_s2_g6_eksamensprojekt.repository.BilRepository;
+import com.g6.data24d_s2_g6_eksamensprojekt.repository.BilTypeRepository;
+import com.g6.data24d_s2_g6_eksamensprojekt.repository.LagerRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +22,11 @@ public class BilController {
 
     @Autowired
     BilRepository bilRepository;
+    @Autowired
+    BilTypeRepository bilTypeRepository;
+
+    @Autowired
+    LagerRepository lagerRepository;
 
 
     @GetMapping("visbiler")
@@ -29,12 +37,19 @@ public class BilController {
         List<Bil> bilList = bilRepository.getBiler();
         model.addAttribute("bilList",bilList);
 
+
         return "visBiler";
     }
     @GetMapping("nyBil")
     public String getNyBil(HttpServletRequest request, Model model){
         HttpSession session = faaSession(request, model);
         if(session == null) return "redirect:/Logind";
+
+
+        List<BilType> bilTypeList = bilTypeRepository.getBilTyper();
+        List<Lager> lagerList =lagerRepository.samleLagerIListeLogik();
+        model.addAttribute("lagerList",lagerList);
+        model.addAttribute("bilTypeList",bilTypeList);
 
 
         return "nyBil";

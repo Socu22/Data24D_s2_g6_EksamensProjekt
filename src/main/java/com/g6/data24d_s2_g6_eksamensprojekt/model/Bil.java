@@ -50,7 +50,7 @@ public class Bil
 
     public int getBilType_Id(){
 
-        return type.getBilTypeId();
+        return type.getBilType_Id();
     }
 
     public String toString()
