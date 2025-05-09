@@ -59,7 +59,7 @@ public class BilController {
 
         Bil bil = (Bil) session.getAttribute("bil");
 
-        bilRepository.sletBil(bil.getVognNummer());
+        bilRepository.sletBil(bil.getVognNummer()); // todo: fix så en bil kan slettes
 
 
 
