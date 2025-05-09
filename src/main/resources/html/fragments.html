@@ -14,31 +14,81 @@
     </div>
 </div>
 
-<div th:fragment="bilKort" class="kort">
-    <p class="vognNr" th:text="${Bil.toString()}"></p>
+<div th:fragment="aftaleListeKort (vognNummer, kundeNavn, afgift, lager, startDato, slutDato)" class="kort">
+    <p class="vognNr" th:text="${vognNummer}"></p>
     <div>
-        <p th:text="'Type: ' + ${Bil.getType().bilTypeId}">Type:</p>
-        <p th:text="${Bil.stelNummer}" class="stelNummer">--StelNummer--</p>
+        <p>Lejer:</p>
+        <p th:text="${kundeNavn}" class="stelNummer" style="font-weight: bold">--Lejers Navn--</p>
     </div>
     <div>
-        <p th:text="'Lager: ' + ${Bil.getLager_Id()}">Lager:</p>
-        <p th:text="'Mnd. Afgift: ' + ${Bil.getType().afgift} + 'kr'">Mnd. Afgift:</p>
+        <p th:text="'Mnd. Afgift: ' + ${afgift} + 'kr'">Mnd. Afgift:</p>
+        <p th:text="'Lager: ' + ${lager}">Lager:</p>
+    </div>
+    <div style="text-align: right;">
+        <p th:text="'Periode: ' + ${startDato}">Periode: StartDato</p>
+        <p th:text="${slutDato}">SlutDato</p>
     </div>
 </div>
 
-<div th:fragment="aftaleKort" class="kort">
-    <p class="vognNr" th:text="${Bil.toString()}"></p>
+<div th:fragment="bilListeKort (vognNummer, bilType, stelNummer, lager, afgift)" class="kort">
+    <p class="vognNr" th:text="${vognNummer}"></p>
     <div>
-        <p>Lejer:</p>
-        <p th:text="${LejeAftale.kunde_Id}" class="stelNummer" style="font-weight: bold">--Lejers Navn--</p>
+        <p th:text="'Type: ' + ${bilType}">Type:</p>
+        <p th:text="${stelNummer}" class="stelNummer">--StelNummer--</p>
     </div>
     <div>
-        <p th:text="'Mnd. Afgift: ' + ${Bil.getType().afgift} + 'kr'">Mnd. Afgift:</p>
-        <p th:text="'Lager: ' + ${Bil.getLager_Id()}">Lager:</p>
+        <p th:text="'Lager: ' + ${lager}">Lager:</p>
+        <p th:text="'Mnd. Afgift: ' + ${afgift} + 'kr'">Mnd. Afgift:</p>
     </div>
-    <div style="text-align: right;">
-        <p th:text="'Periode: ' + ${LejeAftale.getStartDato()}">Periode: StartDato</p>
-        <p th:text="${LejeAftale.getSlutDato()}">SlutDato</p>
+</div>
+
+<div th:fragment="bilKort">
+    <div th:insert="~{fragments :: bilListeKort(
+                                        vognNummer=${Bil.toString()},
+                                        bilType=${Bil.getType().bilTypeId},
+                                        stelNummer=${Bil.stelNummer},
+                                        lager=${Bil.getLager_Id()},
+                                        afgift=${Bil.getType().afgift}
+                                        )}">
+    </div>
+</div>
+
+<div th:fragment="aftaleKort">
+    <div th:insert="~{fragments :: aftaleListeKort (
+                                        vognNummer=${Bil.toString()},
+                                        kundeNavn=${LejeAftale.kunde_Id},
+                                        afgift=${Bil.getType().afgift},
+                                        lager=${Bil.getLager_Id()},
+                                        startDato=${LejeAftale.getStartDato()},
+                                        slutDato=${LejeAftale.getSlutDato()}
+                                        )}">
+    </div>
+</div>
+
+<div th:fragment="bilListe">
+    <div th:each="Bil_ : ${Biler}" class="liste">
+        <div th:insert="~{fragments :: bilListeKort(
+                                    vognNummer=${Bil_.toString()},
+                                    bilType=${Bil_.getType().bilTypeId},
+                                    stelNummer=${Bil_.stelNummer},
+                                    lager=${Bil_.getLager_Id()},
+                                    afgift=${Bil_.getType().afgift}
+                                    )}">
+        </div>
+    </div>
+</div>
+
+<div th:fragment="aftaleListe">
+    <div th:each="Aftale_ : ${LejeAftaler}" class="liste">
+        <div th:insert="~{fragments :: aftaleListeKort (
+                                        vognNummer=${Aftale_.getVognNummer},
+                                        kundeNavn=${Aftale_.kunde_Id},
+                                        afgift='placeholder',
+                                        lager='placeholder',
+                                        startDato=${Aftale_.getStartDato()},
+                                        slutDato=${Aftale_.getSlutDato()}
+                                        )}">
+        </div>
     </div>
 </div>
 
