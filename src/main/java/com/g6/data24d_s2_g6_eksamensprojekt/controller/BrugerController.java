@@ -61,7 +61,7 @@ public class BrugerController {
 
         model.addAttribute("registrerBesked", session.getAttribute("registrerBesked"));
         session.setAttribute("registrerBesked", "");
-        model.addAttribute("stilling", session.getAttribute("stilling"));
+       // model.addAttribute("stilling", session.getAttribute("stilling"));
 
         String stilling = (String) session.getAttribute("stilling");
         if(stilling == null)
@@ -71,12 +71,13 @@ public class BrugerController {
         model.addAttribute("adgangskode",session.getAttribute("adgangskode"));
         model.addAttribute("adgangskode2",session.getAttribute("adgangskode2"));
         model.addAttribute("stilling", stilling);
+        model.addAttribute("manglendeInput", session.getAttribute("manglendeInput"));
 
-        System.out.println(stilling + " , " + session.getAttribute("navn") + "  , " + session.getAttribute("adgangskode")+ " , " + session.getAttribute("adgangskode2") );
 
         session.setAttribute("navn", "");
         session.setAttribute("adgangskode", "");
         session.setAttribute("adgangskode2", "");
+        session.setAttribute("manglendeInput", null);
 
 
         return "registrer";
@@ -86,29 +87,51 @@ public class BrugerController {
         HttpSession session = faaSession(request, model);
         if(session == null) return "redirect:/Logind";
 
+
         String navn = request.getParameter("navn");
         String adgangskode = request.getParameter("adgangskode");
         String adgangskode2 = request.getParameter("adgangskode2");
         String stilling = request.getParameter("stilling");
-        if(navn != null && adgangskode != null  && adgangskode2 != null && stilling != null){
-            if(!adgangskode.equals(adgangskode2)){
-                session.setAttribute("registrerBesked", "Verificer Adgangskode er ikke det samme som Adgangskode");
-            }
-            else if(brugerRepository.brugerEksisterer(navn)){
-                session.setAttribute("registrerBesked", "Bruger med samme navn eksisterer allerede");
-            }
-            else{
-                session.setAttribute("registrerBesked", "Ny bruger lavet");
-                brugerRepository.lavBruger(navn, adgangskode, stilling);
-            }
 
-            return "redirect:/Registrer";
+        if(stilling.toCharArray()[stilling.length() - 1] == '_'){
+            stilling = stilling.replace("_", "");
+            if(!navn.isEmpty() && !adgangskode.isEmpty() && !adgangskode2.isEmpty() && !stilling.isEmpty()){
+
+                if(!adgangskode.equals(adgangskode2)){
+                    session.setAttribute("registrerBesked", "Verificer Adgangskode er ikke det samme som Adgangskode");
+                }
+                else if(brugerRepository.brugerEksisterer(navn)){
+                    session.setAttribute("registrerBesked", "Bruger med samme navn eksisterer allerede");
+                }
+                else{
+                    session.setAttribute("registrerBesked", "Ny bruger lavet");
+                    brugerRepository.lavBruger(navn, adgangskode, stilling);
+                }
+            }
+            else {
+                if(navn.isEmpty()){
+                    session.setAttribute("manglendeInput", 0);
+                }
+                else if(adgangskode.isEmpty()){
+                    session.setAttribute("manglendeInput", 1);
+                }
+                else if(adgangskode2.isEmpty()){
+                    session.setAttribute("manglendeInput", 2);
+                }
+            }
         }
+        else {
 
+        }
+        session.setAttribute("stilling", stilling);
+        session.setAttribute("navn", navn);
+        session.setAttribute("adgangskode", adgangskode);
+        session.setAttribute("adgangskode2", adgangskode2);
         return "redirect:/Registrer";
     }
-    @GetMapping("/Stilling")
+   /* @GetMapping("/Stilling")
     public String stillingSide(HttpServletRequest request, Model model) {
+        System.out.println("Stillingside");
         HttpSession session = faaSession(request, model);
         if(session == null) return "redirect:/Logind";
 
@@ -116,10 +139,10 @@ public class BrugerController {
         session.setAttribute("navn", request.getParameter("navn"));
         session.setAttribute("adgangskode", request.getParameter("adgangskode"));
         session.setAttribute("adgangskode2",request.getParameter("adgangskode2"));
-        System.out.println("stilling: " + request.getParameter("stilling") + " , " + request.getParameter("navn") + " , "  + request.getParameter("adgangskode") + " , " +  request.getParameter("adgangskode2"));
+
 
         return "redirect:/Registrer";
-    }
+    }*/
 
     /*@GetMapping("/Dataregistrering")
     public String dataregistreringStilling(HttpServletRequest request, Model model) {
