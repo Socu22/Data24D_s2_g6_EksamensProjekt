@@ -44,4 +44,14 @@ public class BilRepository
         }
         return null;
     }
+    public boolean sletBil(String vognNummer){
+        List <Bil> count= jdbcTemplate.query("select * from bil where vognNummer=?",rowMapper,vognNummer);
+        if (count.size()==1){
+            jdbcTemplate.update("delete from bil where vognNummer=?",vognNummer);
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
 }

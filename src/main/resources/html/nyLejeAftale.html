@@ -3,94 +3,99 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" th:href="@{style.css}">
-    <title>Title</title>
+    <title>Ny Lejeaftale</title>
 </head>
-
-<!-- Venlist ikke lav lokal styling for ting som kunne gå igen i andre html -->
-<style></style>
 
 <body>
 <header th:insert="~{fragments :: header}"></header>
+
 <main>
-    <form th:object="${bil}">
-        <ul>
-            <li>
-                <table>
-                    <tr>
-                        <label>vognNummer - stelNummer - bilType_Id - lager_Id - status</label>
-                    </tr>
-                    <tr >
-                        <td><p th:field="bil.vognNummer"th:text="${bil.vognNummer}"></p></td>
-                        <td><p th:field="bil.stelNummer"th:text="${bil.stelNummer}"></p></td>
-                        <td><p th:field="bil.getBilType_Id"th:text="${bil.getBilType_Id}"></p></td>
-                        <td><p th:field="bil.lager_Id"th:text="${bil.Lager_Id}"></p></td>
-                        <td><p th:field="bil.status"th:text="${bil.status}"></p></td>
-                    </tr>
-                    <tr>
+    <!-- Bilvisning -->
+    <section>
+        <h2>Bil</h2>
+        <table>
+            <thead>
+            <tr>
+                <th>VognNummer</th>
+                <th>StelNummer</th>
+                <th>BilType Id</th>
+                <th>Lager Id</th>
+                <th>Status</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td th:text="${bil.vognNummer}"></td>
+                <td th:text="${bil.stelNummer}"></td>
+                <td th:text="${bil.getBilType_Id}"></td>
+                <td th:text="${bil.lager_Id}"></td>
+                <td th:text="${bil.status}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
 
-                    </tr>
-                </table>
+    <!-- Kundevisning -->
+    <section>
+        <h2>Kunde</h2>
+        <table>
+            <tr>
+                <th>Kunde ID</th>
+                <th>Navn</th>
+            </tr>
+            <tr>
+                <td th:text="${kunde.kunde_Id}"></td>
+                <td th:text="${kunde.navn}"></td>
+            </tr>
+        </table>
+    </section>
 
+    <!-- Lejeaftaleformular -->
+    <section>
+        <h2>Opret Lejeaftale</h2>
+        <form th:action="@{/laverNyLejeAftale}" method="get">
+            <div>
+                <label for="kunde_Id">Kunde ID:</label>
+                <select id="kunde_Id" name="kunde_Id">
+                    <option value="" disabled selected>Vælg en kunde</option>
+                    <option th:each="kunde : ${kundeList}" th:value="${kunde.kunde_Id}" th:text="${kunde.navn + ' (ID: ' + kunde.kunde_Id + ')'}"></option>
+                </select>
+            </div>
 
+            <div>
+                <label for="vognNummer">Vognnummer:</label>
+                <select id="vognNummer" name="vognNummer">
+                    <option value="" disabled selected>Vælg en bil</option>
+                    <option th:each="bil : ${bilList}" th:value="${bil.vognNummer}" th:text="${bil.vognNummer+ ' (status: ' + bil.status + ')'}"></option>
+                </select>
+            </div>
 
+            <div>
+                <label for="startDato">Startdato:</label>
+                <input type="date" id="startDato" name="startDato" required />
+            </div>
 
+            <div>
+                <label for="slutDato">Slutdato:</label>
+                <input type="date" id="slutDato" name="slutDato" required />
+            </div>
 
-            </li>
-        </ul>
-    </form>
-    <form th:object="${kunde}">
-        <ul>
-            <li>
-                <table>
-                    <tr>
-                        <td><label>id - </label><p th:field="kunde.kunde_Id"th:text="${kunde.kunde_Id}"></p></td>
-                        <td><label>navn </label><p th:field="kunde.navn"th:text="${kunde.navn}"></p></td>
-                    </tr>
-                </table>
+            <div>
+                <label for="detaljer">Detaljer:</label>
+                <textarea id="detaljer" name="detaljer" placeholder="Beskriv afhentningen" maxlength="255" rows="4" required></textarea>
+            </div>
 
+            <div>
+                <button type="submit">Bekræft lejeaftale</button>
+            </div>
+        </form>
 
-
-
-
-            </li>
-        </ul>
-    </form>
-<section>
-    <form th:action="@{/laverNyLejeAftale}" method="get">
-        <label>Kunde ID:</label>
-        <label>
-            <input type="number" name="kunde_Id" placeholder="Indtast kunde ID" required />
-        </label> <br/>
-
-        <label>Vognnummer:</label>
-        <label>
-            <select name="vognNummer">
-                <option th:each="bil : ${bilList}" th:value="${bil.vognNummer}" th:text="${bil.vognNummer}"></option>
-            </select>
-        </label> <br/>
-
-        <label>Startdato:</label>
-        <label>
-            <input type="date" name="startDato" required />
-        </label> <br/>
-
-        <label>Slutdato:</label>
-        <label>
-            <input type="date" name="slutDato" required />
-        </label> <br/>
-
-        <label>Detaljer:</label>
-        <label>
-            <textarea name="detaljer" placeholder="Beskriv Afhentningen" maxlength="255" rows="4" cols="50" required></textarea>
-        </label> <br/>
-        <button type="submit">Bekræft lejeaftale</button>
-    </form>
-    <form th:action="@{/}">
-        <button class="annuller"  value="Go to ?index?">Go to ?index?</button>
-    </form>
-
-</section>
+        <form th:action="@{/}" method="get">
+            <button type="submit" class="annuller">Tilbage til forsiden</button>
+        </form>
+    </section>
 </main>
+
 <footer>
     <!-- skriv side-specific footer her -->
 </footer>

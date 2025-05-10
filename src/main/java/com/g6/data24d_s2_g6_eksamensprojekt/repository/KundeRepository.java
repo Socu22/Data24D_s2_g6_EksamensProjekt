@@ -1,5 +1,6 @@
 package com.g6.data24d_s2_g6_eksamensprojekt.repository;
 
+import com.g6.data24d_s2_g6_eksamensprojekt.model.Bil;
 import com.g6.data24d_s2_g6_eksamensprojekt.model.Kunde;
 import com.g6.data24d_s2_g6_eksamensprojekt.model.LejeAftale;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,11 @@ public class KundeRepository {
             return lejeAftaleList.getFirst();
         }
         return null;
+    }
+    public List<Kunde> getKunder()
+    {
+        List<Kunde> kundeList = jdbcTemplate.query("select * from kunde",rowMapper);
+        return kundeList;
     }
 
 

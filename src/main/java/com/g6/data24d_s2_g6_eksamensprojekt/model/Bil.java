@@ -1,6 +1,7 @@
 package com.g6.data24d_s2_g6_eksamensprojekt.model;
 
 import java.util.List;
+import java.util.Objects;
 
 public class Bil
 {
@@ -51,6 +52,17 @@ public class Bil
     public int getBilType_Id(){
 
         return type.getBilType_Id();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof Bil bil)) return false;
+        return getLager_Id() == bil.getLager_Id() && Objects.equals(getVognNummer(), bil.getVognNummer()) && Objects.equals(getStelNummer(), bil.getStelNummer()) && Objects.equals(getType(), bil.getType()) && Objects.equals(getStatus(), bil.getStatus()) && Objects.equals(notationer, bil.notationer) && Objects.equals(lejeAftaler, bil.lejeAftaler);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getVognNummer(), getStelNummer(), getType(), getLager_Id(), getStatus(), notationer, lejeAftaler);
     }
 
     public String toString()
