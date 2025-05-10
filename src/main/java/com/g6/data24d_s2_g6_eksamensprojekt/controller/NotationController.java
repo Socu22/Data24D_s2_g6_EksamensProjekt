@@ -33,6 +33,7 @@ public class NotationController
     public String opretNotation(HttpServletRequest request, Model model)
     {
         HttpSession session = BrugerController.faaSession(request, model);
+        if(session == null) return "redirect:/Logind";
 
         List<Notation> liste;
         LejeAftale aftale = null;

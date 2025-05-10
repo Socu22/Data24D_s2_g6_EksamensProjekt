@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.g6.data24d_s2_g6_eksamensprojekt.controller.BrugerController.faaSession;
@@ -29,6 +30,31 @@ public class LejeAftaleController {
     @Autowired
     KundeRepository kundeRepository;
 
+    @GetMapping("LejeAftaler")
+    public String visAftaler(HttpServletRequest request, Model model)
+    {
+        HttpSession session = BrugerController.faaSession(request, model);
+        // if(session == null) return "redirect:/Logind";
+
+        model.addAttribute("LejeAftaler", aftaleRepository.samleLejeAftalerIListeLogik());
+
+        return "lejeAftaleListe";
+    }
+
+    @GetMapping("LejeAftale")
+    public String visAftale(@RequestParam("aftaleId") int id, HttpServletRequest request, Model model)
+    {
+        HttpSession session = BrugerController.faaSession(request, model);
+        // if(session == null) return "redirect:/Logind";
+        // session.removeAttribute("Aftaler");
+
+        LejeAftale aftale = aftaleRepository.tagFatILejeAftale(id);
+
+        model.addAttribute("Bil", bilRepository.tagFatIBil(aftale.getVognNummer()));
+        model.addAttribute("LejeAftale", aftale);
+
+        return "visLejeAftale";
+    }
 
     //logikken når man trykke på vælg bil.
     @GetMapping("nyLejeAftale")
