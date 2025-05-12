@@ -34,7 +34,7 @@ public class LejeAftaleController {
         HttpSession session = BrugerController.faaSession(request, model);
         // if(session == null) return "redirect:/Logind";
 
-        model.addAttribute("LejeAftaler", aftaleRepository.samleLejeAftalerIListeLogik());
+        model.addAttribute("lejeAftaler", aftaleRepository.samleLejeAftalerIListeLogik());
 
         return "lejeAftaleListe";
     }
@@ -48,8 +48,8 @@ public class LejeAftaleController {
 
         LejeAftale aftale = aftaleRepository.tagFatILejeAftale(id);
 
-        model.addAttribute("Bil", bilRepository.tagFatIBil(aftale.getVognNummer()));
-        model.addAttribute("LejeAftale", aftale);
+        model.addAttribute("bil", bilRepository.tagFatIBil(aftale.getVognNummer()));
+        model.addAttribute("lejeAftale", aftale);
 
         return "visLejeAftale";
     }
@@ -72,10 +72,6 @@ public class LejeAftaleController {
            kunde = kundeRepository.tagFatIKunde((Integer) session.getAttribute("kunde_Id"));
 
        }
-
-
-
-
         model.addAttribute("bilList",bilList);
         model.addAttribute("bil", bil);
 

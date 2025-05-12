@@ -41,8 +41,8 @@ public class NotationController
 
         if (session != null)
         {
-            aftale = (LejeAftale) session.getAttribute("LejeAftale");
-            bil    = (Bil) session.getAttribute("Bil");
+            aftale = (LejeAftale) session.getAttribute("lejeAftale");
+            bil    = (Bil) session.getAttribute("bil");
         }
 
         if (bil == null || aftale == null) // ! udelukkende for testing !
@@ -53,12 +53,12 @@ public class NotationController
 
         if (aftale != null)
         {
-            model.addAttribute("LejeAftale", aftale);
-            model.addAttribute("Bil", bil); // todo: hent bil gennem lejeaftalen!
+            model.addAttribute("lejeAftale", aftale);
+            model.addAttribute("bil", bil); // todo: hent bil gennem lejeaftalen!
         }
         else // hvis ikke der er en lejeaftale, må man være kommet her fra en bil.
         {
-            model.addAttribute("Bil", bil);
+            model.addAttribute("bil", bil);
         }
 
 
@@ -69,7 +69,7 @@ public class NotationController
     public String annullerNotation(HttpServletRequest request, Model model)
     {
         HttpSession session = BrugerController.faaSession(request, model);
-        if (session.getAttribute("LejeAftale") != null) return "redirect:/"; // todo: LejeAftale-visning
+        if (session.getAttribute("lejeAftale") != null) return "redirect:/"; // todo: LejeAftale-visning
         return "redirect:/"; // todo: BilKatalog-visning
     }
 
@@ -78,8 +78,8 @@ public class NotationController
     {
         HttpSession session = BrugerController.faaSession(request, model);
 
-        Bil bil           = (Bil)        session.getAttribute("Bil");
-        LejeAftale aftale = (LejeAftale) session.getAttribute("LejeAftale");
+        Bil bil           = (Bil)        session.getAttribute("bil");
+        LejeAftale aftale = (LejeAftale) session.getAttribute("lejeAftale");
 
         String notation   = request.getParameter("beskrivelse");
         double pris       = Double.parseDouble(request.getParameter("pris"));
