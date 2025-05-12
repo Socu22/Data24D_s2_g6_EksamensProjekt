@@ -29,8 +29,8 @@ public class BilController {
     LagerRepository lagerRepository;
 
 
-    @GetMapping("visBiler")
-    public String getVisBiler(HttpServletRequest request, Model model){
+    @GetMapping("/VisBiler")
+    public String visBiler(HttpServletRequest request, Model model){
         HttpSession session = faaSession(request, model);
         if(session == null) return "redirect:/Logind";
 
@@ -40,8 +40,8 @@ public class BilController {
 
         return "visBiler";
     }
-    @GetMapping("visBil")
-    public String getVisBil(HttpServletRequest request, Model model){
+    @GetMapping("/VisBil")
+    public String visBil(HttpServletRequest request, Model model){
         HttpSession session = faaSession(request, model);
         if(session == null) return "redirect:/Logind";
 
@@ -52,8 +52,8 @@ public class BilController {
 
         return "visBil";
     }
-    @GetMapping("sletBil")
-    public String postSletBil(HttpServletRequest request, Model model){
+    @GetMapping("/SletBil")
+    public String sletBil(HttpServletRequest request, Model model){
         HttpSession session = faaSession(request, model);
         if(session == null) return "redirect:/Logind";
 
@@ -65,8 +65,8 @@ public class BilController {
 
         return "redirect:visBiler";
     }
-    @GetMapping("nyBil")
-    public String getNyBil(HttpServletRequest request, Model model){
+    @GetMapping("/NyBil")
+    public String nyBil(HttpServletRequest request, Model model){
         HttpSession session = faaSession(request, model);
         if(session == null) return "redirect:/Logind";
 
@@ -79,8 +79,8 @@ public class BilController {
 
         return "nyBil";
     }
-    @GetMapping("laverNyBil")
-    public String postLaverNyBil (HttpServletRequest request, Model model){
+    @GetMapping("/GemNyBil")
+    public String gemNyBil(HttpServletRequest request, Model model){
         HttpSession session = faaSession(request, model);
         if(session == null) return "redirect:/Logind";
 

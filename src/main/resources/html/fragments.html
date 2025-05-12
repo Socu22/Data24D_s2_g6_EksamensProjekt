@@ -67,7 +67,7 @@
 
 <div th:fragment="bilListe">
     <div th:each="Bil : ${biler}" class="liste">
-        <a th:href="@{visBil(vognNummer = ${Bil.getVognNummer()})}" style="color: inherit; text-decoration: none">
+        <a th:href="@{VisBil(vognNummer = ${Bil.getVognNummer()})}" style="color: inherit; text-decoration: none">
             <div th:insert="~{fragments :: bilListeKort(
                                         vognNummer=${Bil.toString()},
                                         bilType=   ${Bil.getType().bilTypeId},
@@ -82,7 +82,7 @@
 
 <div th:fragment="aftaleListe">
         <div th:each="Aftale : ${lejeAftaler}" class="liste">
-            <a th:href="@{LejeAftale(aftaleId = ${Aftale.getAftale_Id()})}" style="color: inherit; text-decoration: none">
+            <a th:href="@{VisLejeAftale(aftaleId = ${Aftale.getAftale_Id()})}" style="color: inherit; text-decoration: none">
                 <div th:insert="~{fragments :: aftaleListeKort (
                                     vognNummer=${Aftale.getVognNummer()},
                                     kundeNavn= ${Aftale.kunde_Id},

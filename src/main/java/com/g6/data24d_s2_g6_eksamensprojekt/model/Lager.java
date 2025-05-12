@@ -1,9 +1,9 @@
 package com.g6.data24d_s2_g6_eksamensprojekt.model;
 
 public class Lager {
-    int lager_Id;
-    String navn;
-    String adresse;
+  private int lager_Id;
+  private String navn;
+  private String adresse;
 
     public Lager(int lager_Id, String navn, String adresse) {
         this.lager_Id = lager_Id;

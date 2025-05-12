@@ -18,7 +18,7 @@ public class BilTypeController {
     @Autowired
     BilTypeRepository bilTypeRepository;
 
-    @GetMapping("nyBilType")
+    @GetMapping("/NyBilType")
     public String getNyBilType(HttpServletRequest request, Model model){
         HttpSession session = faaSession(request, model);
         if(session == null) return "redirect:/Logind";
@@ -26,8 +26,8 @@ public class BilTypeController {
 
         return "nyBilType";
     }
-    @GetMapping("laverNyBilType")
-    public String postLaverNyBilType(HttpServletRequest request, Model model){
+    @GetMapping("/GemNyBilType")
+    public String gemNyBilType(HttpServletRequest request, Model model){
         HttpSession session = faaSession(request, model);
         if(session == null) return "redirect:/Logind";
 

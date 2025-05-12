@@ -29,8 +29,8 @@ public class NotationController
     @Autowired
     AftaleRepository aftaleRepository; // ! kun for testing !
 
-    @GetMapping("/OpretNotation")
-    public String opretNotation(HttpServletRequest request, Model model)
+    @GetMapping("/NyNotation")
+    public String nyNotation(HttpServletRequest request, Model model)
     {
         HttpSession session = BrugerController.faaSession(request, model);
         if(session == null) return "redirect:/Logind";
@@ -73,8 +73,8 @@ public class NotationController
         return "redirect:/"; // todo: BilKatalog-visning
     }
 
-    @GetMapping("/BekraeftNotation")
-    public String bekraeftNotation(HttpServletRequest request, Model model)
+    @GetMapping("/GemNotation")
+    public String gemNotation(HttpServletRequest request, Model model)
     {
         HttpSession session = BrugerController.faaSession(request, model);
 

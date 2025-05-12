@@ -11,13 +11,13 @@
 
 <main>
   <section>
-    <form th:action="@{nyBil}" method="get">
+    <form th:action="@{NyBil}" method="get">
       <button type="submit">Ny Bil</button>
     </form>
-    <form th:action="@{nytLager}" method="get">
+    <form th:action="@{NytLager}" method="get">
       <button type="submit">Nyt Lager</button>
     </form>
-    <form th:action="@{nyBilType}" method="get">
+    <form th:action="@{NyBilType}" method="get">
       <button type="submit">Ny Biltype</button>
     </form>
   </section>
@@ -42,7 +42,7 @@
         <td th:text="${bil.lager_Id}"></td>
         <td th:text="${bil.status}"></td>
         <td>
-          <a th:href="@{visBil(vognNummer=${bil.vognNummer})}">
+          <a th:href="@{VisBil(vognNummer=${bil.vognNummer})}">
             <button type="button">Vis</button>
           </a>
         </td>

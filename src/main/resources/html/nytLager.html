@@ -12,7 +12,7 @@
 <main>
     <section>
         <h2>Opret Nyt Lager</h2>
-        <form th:action="@{/laverNytLager}" method="get">
+        <form th:action="@{/GemNytLager}" method="get">
             <div>
                 <label for="navn">Navn:</label>
                 <input type="text" id="navn" name="navn" placeholder="Indtast lagernavn" maxlength="50" required autofocus />
@@ -28,7 +28,7 @@
             </div>
         </form>
 
-        <form th:action="@{/}" method="get">
+        <form th:action="@{/VisBiler}" method="get">
             <button class="annuller">Tilbage til forsiden</button>
         </form>
     </section>

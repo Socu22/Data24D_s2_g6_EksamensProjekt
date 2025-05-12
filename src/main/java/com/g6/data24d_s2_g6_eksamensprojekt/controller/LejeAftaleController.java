@@ -12,10 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.g6.data24d_s2_g6_eksamensprojekt.controller.BrugerController.faaSession;
@@ -30,8 +28,8 @@ public class LejeAftaleController {
     @Autowired
     KundeRepository kundeRepository;
 
-    @GetMapping("LejeAftaler")
-    public String visAftaler(HttpServletRequest request, Model model)
+    @GetMapping("/VisLejeAftaler")
+    public String visLejeAftaler(HttpServletRequest request, Model model)
     {
         HttpSession session = BrugerController.faaSession(request, model);
         // if(session == null) return "redirect:/Logind";
@@ -41,8 +39,8 @@ public class LejeAftaleController {
         return "lejeAftaleListe";
     }
 
-    @GetMapping("LejeAftale")
-    public String visAftale(@RequestParam("aftaleId") int id, HttpServletRequest request, Model model)
+    @GetMapping("/VisLejeAftale")
+    public String visLejeAftale(@RequestParam("aftaleId") int id, HttpServletRequest request, Model model)
     {
         HttpSession session = BrugerController.faaSession(request, model);
         // if(session == null) return "redirect:/Logind";
@@ -57,20 +55,26 @@ public class LejeAftaleController {
     }
 
     //logikken når man trykke på vælg bil.
-    @GetMapping("nyLejeAftale")
-    public String getNyLejeAftale(Model model, HttpServletRequest request){
+    @GetMapping("/NyLejeAftale")
+    public String nyLejeAftale(Model model, HttpServletRequest request){
         HttpSession session = faaSession(request, model);
         if(session == null) return "redirect:/Logind";
 
         List<Bil> bilList = bilRepository.getBiler();
-
         Bil bil = bilList.getFirst();
         if((Bil) session.getAttribute("bil") != null){
             bil = (Bil) session.getAttribute("bil");
         }
 
         List<Kunde> kundeList = kundeRepository.getKunder();
-        Kunde kunde = kundeRepository.tagFatIKunde(1); //todo: smarter måde at få fart på en kunde
+        Kunde kunde =kundeList.getFirst();
+       if(session.getAttribute("kunde_Id")!=null){
+           kunde = kundeRepository.tagFatIKunde((Integer) session.getAttribute("kunde_Id"));
+
+       }
+
+
+
 
         model.addAttribute("bilList",bilList);
         model.addAttribute("bil", bil);
@@ -80,8 +84,8 @@ public class LejeAftaleController {
 
         return "nyLejeAftale";
     }
-    @GetMapping("laverNyLejeAftale")
-    public String postNyLejeAftale(@RequestParam("kunde_Id") int kunde_Id,
+    @GetMapping("/GemNyLejeAftale")
+    public String gemNyLejeAftale(@RequestParam("kunde_Id") int kunde_Id,
                                    @RequestParam("vognNummer") String vognNummer,
                                    @RequestParam("startDato") String startDato,
                                    @RequestParam("startDato") String slutDato,
@@ -95,6 +99,25 @@ public class LejeAftaleController {
         aftaleRepository.nyAftaleLogik(lejeAftale);
 
         return "redirect:/";
+    }
+    @GetMapping("/OmdirigerNyLejeAftale")
+    public String omdirigerNyLejeAftale(Model model, HttpServletRequest request){
+        HttpSession session = faaSession(request, model);
+        if(session == null) return "redirect:/Logind";
+
+        int aftale_Id = Integer.parseInt(request.getParameter("aftale_Id"));
+        int kunde_Id = Integer.parseInt(request.getParameter("kunde_Id"));
+        String vognNummer = request.getParameter("vognNummer");
+        String startDato = request.getParameter("startDato");
+        String slutDato = request.getParameter("slutDato");
+        String detaljer = request.getParameter("detaljer");
+        session.setAttribute("aftale_Id",aftale_Id);
+        session.setAttribute("kunde_Id",kunde_Id);
+        session.setAttribute("vognNummer",vognNummer);
+        session.setAttribute("startDato",startDato);
+        session.setAttribute("slutDato",slutDato);
+        session.setAttribute("detaljer",detaljer);
+        return "redirect:/nyLejeAftale";
     }
 
 

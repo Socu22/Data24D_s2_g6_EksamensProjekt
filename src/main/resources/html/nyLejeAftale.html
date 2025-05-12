@@ -36,7 +36,7 @@
     </section>
 
     <!-- Kundevisning -->
-    <section>
+    <section th:if = "${kunde_Id == -1}">
         <h2>Kunde</h2>
         <table>
             <tr>
@@ -53,7 +53,7 @@
     <!-- Lejeaftaleformular -->
     <section>
         <h2>Opret Lejeaftale</h2>
-        <form th:action="@{/laverNyLejeAftale}" method="get">
+        <form th:action="@{/GemNyLejeAftale}" method="get">
             <div>
                 <label for="kunde_Id">Kunde ID:</label>
                 <select id="kunde_Id" name="kunde_Id">
@@ -90,7 +90,7 @@
             </div>
         </form>
 
-        <form th:action="@{/}" method="get">
+        <form th:action="@{/VisLejeAftaler}" method="get">
             <button type="submit" class="annuller">Tilbage til forsiden</button>
         </form>
     </section>

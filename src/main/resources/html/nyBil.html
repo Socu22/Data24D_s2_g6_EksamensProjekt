@@ -11,7 +11,7 @@
 
 <main>
   <section>
-    <form th:action="@{/laverNyBil}" method="get">
+    <form th:action="@{/GemNyBil}" method="get">
       <div>
         <label for="vognNummer">VognNummer:</label>
         <input type="text" id="vognNummer" name="vognNummer" placeholder="Indtast vognnummer" maxlength="7" required autofocus>
@@ -48,7 +48,7 @@
       </div>
     </form>
 
-    <form th:action="@{/}" method="get">
+    <form th:action="@{/VisBiler}" method="get">
       <button type="submit" class="annuller">Tilbage til forsiden</button>
     </form>
   </section>

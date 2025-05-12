@@ -1,12 +1,12 @@
 package com.g6.data24d_s2_g6_eksamensprojekt.model;
 
 public class LejeAftale {
-    int aftale_Id;
-    int kunde_Id;
-    String vognNummer;
-    String startDato;
-    String slutDato;
-    String detaljer;
+   private int aftale_Id;
+   private int kunde_Id;
+   private String vognNummer;
+   private String startDato;
+   private String slutDato;
+   private String detaljer;
 
     public LejeAftale(int aftale_Id, int kunde_Id, String vognNummer, String startDato, String slutDato, String detaljer) {
         this.aftale_Id = aftale_Id;

@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class BrugerController {
@@ -23,7 +22,7 @@ public class BrugerController {
         return "index";
     }
     @GetMapping("/Logind")
-    public String logindSide(HttpServletRequest request, Model model) {
+    public String logInd(HttpServletRequest request, Model model) {
         HttpSession session = request.getSession(false);
         if(session != null)
             return "redirect:/";
@@ -35,7 +34,7 @@ public class BrugerController {
     }
 
     @GetMapping("/OmdirigerLogind")
-    public String omdirigerLogindSide(HttpServletRequest request, Model model) {
+    public String omdirigerLogInd(HttpServletRequest request, Model model) {
         String navn = request.getParameter("navn");
         String adgangskode = request.getParameter("adgangskode");
         if(navn != null && adgangskode != null){
@@ -50,12 +49,12 @@ public class BrugerController {
         return "redirect:/Logind";
     }
     @GetMapping("/LogUd")
-    public String logUdSide(HttpServletRequest request, Model model) {
+    public String logUd(HttpServletRequest request, Model model) {
         request.getSession().invalidate();
         return "redirect:/Logind";
     }
     @GetMapping("/Registrer")
-    public String registrerSide(HttpServletRequest request, Model model) {
+    public String registrer(HttpServletRequest request, Model model) {
         HttpSession session = faaSession(request, model);
         if(session == null) return "redirect:/Logind";
 
@@ -129,52 +128,7 @@ public class BrugerController {
         session.setAttribute("adgangskode2", adgangskode2);
         return "redirect:/Registrer";
     }
-   /* @GetMapping("/Stilling")
-    public String stillingSide(HttpServletRequest request, Model model) {
-        System.out.println("Stillingside");
-        HttpSession session = faaSession(request, model);
-        if(session == null) return "redirect:/Logind";
 
-        session.setAttribute("stilling", request.getParameter("stilling"));
-        session.setAttribute("navn", request.getParameter("navn"));
-        session.setAttribute("adgangskode", request.getParameter("adgangskode"));
-        session.setAttribute("adgangskode2",request.getParameter("adgangskode2"));
-
-
-        return "redirect:/Registrer";
-    }*/
-
-    /*@GetMapping("/Dataregistrering")
-    public String dataregistreringStilling(HttpServletRequest request, Model model) {
-        HttpSession session = faaSession(request, model);
-        if(session == null) return "redirect:/Logind";
-
-        sætStilling("Dataregistrering",  session, request, model);
-        return "redirect:/Registrer";
-    }
-    @GetMapping("/Skade_og_Udbedring")
-    public String Skade_UdbedringStilling(HttpServletRequest request, Model model) {
-        HttpSession session = faaSession(request, model);
-        if(session == null) return "redirect:/Logind";
-
-        sætStilling("Skade & Udbedring",  session, request, model);
-        return "redirect:/Registrer";
-    }
-    @GetMapping("/Forretningsudvikler")
-    public String ForretningsudviklerStilling(HttpServletRequest request, Model model) {
-        HttpSession session = faaSession(request, model);
-        if(session == null) return "redirect:/Logind";
-
-        sætStilling("Forretningsudvikler", session, request, model);
-        return "redirect:/Registrer";
-    }
-    private void sætStilling(String stilling, HttpSession session, HttpServletRequest request, Model model) {
-        this.stilling = stilling;
-        session.setAttribute("stilling", stilling);
-        model.addAttribute("navn", request.getParameter("navn"));
-        model.addAttribute("adgangskode", request.getParameter("adgangskode"));
-        model.addAttribute("adgangskode2",request.getParameter("adgangskode2"));
-    }*/
     private void saetSession(HttpServletRequest request, Bruger bruger, Model model) {
         HttpSession session = request.getSession();
         session.setMaxInactiveInterval(1200);
