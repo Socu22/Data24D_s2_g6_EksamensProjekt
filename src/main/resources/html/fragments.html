@@ -45,7 +45,7 @@
 <div th:fragment="bilKort">
     <div th:insert="~{fragments :: bilListeKort(
                                         vognNummer=${bil.toString()},
-                                        bilType=   ${bil.getType().bilTypeId},
+                                        bilType=   ${bil.getBilType_Id},
                                         stelNummer=${bil.stelNummer},
                                         lager=     ${bil.getLager_Id()},
                                         afgift=    ${bil.getType().afgift}
@@ -70,7 +70,7 @@
         <a th:href="@{VisBil(vognNummer = ${Bil.getVognNummer()})}" style="color: inherit; text-decoration: none">
             <div th:insert="~{fragments :: bilListeKort(
                                         vognNummer=${Bil.toString()},
-                                        bilType=   ${Bil.getType().bilTypeId},
+                                        bilType=   ${Bil.getBilType_Id},
                                         stelNummer=${Bil.getStelNummer()},
                                         lager=     ${Bil.getLager_Id()},
                                         afgift=    ${Bil.getType().afgift}
