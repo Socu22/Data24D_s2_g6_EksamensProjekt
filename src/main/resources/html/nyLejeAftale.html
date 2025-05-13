@@ -36,7 +36,7 @@
     </section>
 
     <!-- Kundevisning -->
-    <section th:if = "${kunde_Id == -1}">
+    <section th:if="${kunde}">
         <h2>Kunde</h2>
         <table>
             <tr>
@@ -44,7 +44,7 @@
                 <th>Navn</th>
             </tr>
             <tr>
-                <td th:text="${kunde.kunde_Id}"></td>
+                <td th:text="${kunde.getKunde_Id}"></td>
                 <td th:text="${kunde.navn}"></td>
             </tr>
         </table>
@@ -53,20 +53,19 @@
     <!-- Lejeaftaleformular -->
     <section>
         <h2>Opret Lejeaftale</h2>
-        <form th:action="@{/GemNyLejeAftale}" method="get">
+        <form th:action="@{/OmdirigerNyLejeAftale}" method="get">
             <div>
                 <label for="kunde_Id">Kunde ID:</label>
-                <select id="kunde_Id" name="kunde_Id">
+                <select id="kunde_Id" name="kunde_Id" onchange="this.form.submit()" >
                     <option value="" disabled selected>Vælg en kunde</option>
-                    <option th:each="kunde : ${kundeList}" th:value="${kunde.kunde_Id}" th:text="${kunde.navn + ' (ID: ' + kunde.kunde_Id + ')'}"></option>
+                    <option  th:each="kunde : ${kundeList}" th:value="${kunde.getKunde_Id}" th:text="${kunde.navn + ' (ID: ' + kunde.getKunde_Id + ')'}"></option>
                 </select>
             </div>
-
             <div>
                 <label for="vognNummer">Vognnummer:</label>
                 <select id="vognNummer" name="vognNummer">
                     <option value="" disabled selected>Vælg en bil</option>
-                    <option th:each="bil : ${bilList}" th:value="${bil.vognNummer}" th:text="${bil.vognNummer+ ' (status: ' + bil.status + ')'}"></option>
+                    <option th:type="submit" th:each="bil : ${bilList}" th:value="${bil.vognNummer}" th:text="${bil.vognNummer+ ' (status: ' + bil.status + ')'}"></option>
                 </select>
             </div>
 
@@ -86,7 +85,7 @@
             </div>
 
             <div>
-                <button type="submit">Bekræft lejeaftale</button>
+                <button type="submit" name="submitKnap" value="True">Bekræft lejeaftale</button>
             </div>
         </form>
 

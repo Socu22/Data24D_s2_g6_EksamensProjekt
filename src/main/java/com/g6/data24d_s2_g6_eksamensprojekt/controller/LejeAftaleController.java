@@ -72,8 +72,11 @@ public class LejeAftaleController {
            kunde = kundeRepository.tagFatIKunde((Integer) session.getAttribute("kunde_Id"));
 
        }
+
+
         model.addAttribute("bilList",bilList);
         model.addAttribute("bil", bil);
+
 
         model.addAttribute("kundeList",kundeList);
         model.addAttribute("kunde", kunde);
@@ -84,7 +87,7 @@ public class LejeAftaleController {
     public String gemNyLejeAftale(@RequestParam("kunde_Id") int kunde_Id,
                                    @RequestParam("vognNummer") String vognNummer,
                                    @RequestParam("startDato") String startDato,
-                                   @RequestParam("startDato") String slutDato,
+                                   @RequestParam("slutDato") String slutDato,
                                    @RequestParam("detaljer") String detaljer,
                                    HttpServletRequest request, Model model){
         HttpSession session = faaSession(request, model);
@@ -101,19 +104,34 @@ public class LejeAftaleController {
         HttpSession session = faaSession(request, model);
         if(session == null) return "redirect:/Logind";
 
-        int aftale_Id = Integer.parseInt(request.getParameter("aftale_Id"));
-        int kunde_Id = Integer.parseInt(request.getParameter("kunde_Id"));
+        int aftale_Id=0;
+        int kunde_Id=0;
+        try {
+            aftale_Id = Integer.parseInt(request.getParameter("aftale_Id"));
+            kunde_Id = Integer.parseInt(request.getParameter("kunde_Id"));
+        }catch (NumberFormatException n){
+
+        }
+
         String vognNummer = request.getParameter("vognNummer");
         String startDato = request.getParameter("startDato");
         String slutDato = request.getParameter("slutDato");
         String detaljer = request.getParameter("detaljer");
+        boolean bool = Boolean.parseBoolean(request.getParameter("submitKnap"));
+        if (bool){
+            LejeAftale lejeAftale = new LejeAftale(kunde_Id,vognNummer,startDato,slutDato,detaljer);
+
+            aftaleRepository.nyAftaleLogik(lejeAftale);
+
+            return "redirect:/";
+        }
         session.setAttribute("aftale_Id",aftale_Id);
         session.setAttribute("kunde_Id",kunde_Id);
         session.setAttribute("vognNummer",vognNummer);
         session.setAttribute("startDato",startDato);
         session.setAttribute("slutDato",slutDato);
         session.setAttribute("detaljer",detaljer);
-        return "redirect:/nyLejeAftale";
+        return "redirect:/NyLejeAftale";
     }
 
 
