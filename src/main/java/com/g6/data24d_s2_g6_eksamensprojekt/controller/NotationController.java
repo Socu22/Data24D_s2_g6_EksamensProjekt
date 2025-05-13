@@ -35,32 +35,29 @@ public class NotationController
         HttpSession session = BrugerController.faaSession(request, model);
         if(session == null) return "redirect:/Logind";
 
-        List<Notation> liste;
-        LejeAftale aftale = null;
-        Bil bil           = null;
+        LejeAftale aftale = (LejeAftale) session.getAttribute("lejeAftale");
+        Bil bil           = (Bil) session.getAttribute("bil");
 
-        if (session != null)
-        {
-            aftale = (LejeAftale) session.getAttribute("lejeAftale");
-            bil    = (Bil) session.getAttribute("bil");
-        }
-
+        /*
         if (bil == null || aftale == null) // ! udelukkende for testing !
         {
             aftale = aftaleRepository.tagFatILejeAftale(1); // ! udelukkende for testing !
             bil = bilRepository.tagFatIBil(aftale.getVognNummer()); // ! udelukkende for testing !
         }
+         */
 
         if (aftale != null)
         {
+            bil = bilRepository.tagFatIBil(aftale.getVognNummer());
+
             model.addAttribute("lejeAftale", aftale);
-            model.addAttribute("bil", bil); // todo: hent bil gennem lejeaftalen!
+            model.addAttribute("bil", bil);
+            session.setAttribute("bil", bil);
         }
         else // hvis ikke der er en lejeaftale, må man være kommet her fra en bil.
         {
             model.addAttribute("bil", bil);
         }
-
 
         return "notation";
     }
@@ -69,8 +66,12 @@ public class NotationController
     public String annullerNotation(HttpServletRequest request, Model model)
     {
         HttpSession session = BrugerController.faaSession(request, model);
-        if (session.getAttribute("lejeAftale") != null) return "redirect:/"; // todo: LejeAftale-visning
-        return "redirect:/"; // todo: BilKatalog-visning
+
+        LejeAftale aftale = (LejeAftale) session.getAttribute("lejeAftale");
+        Bil bil           = (Bil)        session.getAttribute("bil");
+
+        if (aftale != null) return "redirect:/VisLejeAftale?aftaleId=" + aftale.getAftale_Id();
+        return "redirect:/VisBil?vognNummer=" + bil.getVognNummer();
     }
 
     @GetMapping("/GemNotation")
@@ -78,8 +79,8 @@ public class NotationController
     {
         HttpSession session = BrugerController.faaSession(request, model);
 
-        Bil bil           = (Bil)        session.getAttribute("bil");
         LejeAftale aftale = (LejeAftale) session.getAttribute("lejeAftale");
+        Bil bil           = (Bil)        session.getAttribute("bil");
 
         String notation   = request.getParameter("beskrivelse");
         double pris       = Double.parseDouble(request.getParameter("pris"));
@@ -87,12 +88,10 @@ public class NotationController
         if (aftale != null)
         {
             notationRepository.addNotation(aftale.getVognNummer(), aftale.getAftale_Id(), notation, pris);
-
-            return "redirect:/"; // todo: LejeAftale-visning
+            return "redirect:/VisLejeAftale?aftaleId=" + aftale.getAftale_Id();
         }
 
         notationRepository.addNotation(bil.getVognNummer(), null, notation, pris);
-
-        return "redirect:/"; // todo: BilKatalog-visning
+        return "redirect:/VisBil?vognNummer=" + bil.getVognNummer();
     }
 }
