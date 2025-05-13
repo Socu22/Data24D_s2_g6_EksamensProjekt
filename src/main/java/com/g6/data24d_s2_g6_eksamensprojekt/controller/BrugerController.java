@@ -42,7 +42,7 @@ public class BrugerController {
             if(bruger != null){
                 saetSession(request, bruger, model);
                 //return "redirect:/";
-                return "redirect:/Registrer";
+                return "redirect:/VisLejeAftaler";
             }
             return "redirect:/Logind?d=true";
         }
