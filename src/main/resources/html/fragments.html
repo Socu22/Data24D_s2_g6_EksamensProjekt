@@ -2,12 +2,20 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <div th:fragment="header">
-    <img th:src="@{/img/BILABONNEMENT_logo.svg}" alt="Manglende Logo" style="height: 3rem"/>
     <div>
-        <form th:action="@{/LogUd}" th:method="get" th:if="${aktivBruger}" style="margin-right: 1rem">
-            <input type="checkbox" id="valuta">
-            <label for="valuta">dkk/eur</label>
-        </form>
+        <img th:src="@{/img/BILABONNEMENT_logo.svg}" alt="Manglende Logo" style="height: 3rem"/>
+        <span th:if="${aktivBruger}" th:text="'Bruger: ' + ${aktivBruger.navn}" style="text-align: left; font-size: x-large; margin-left: 1rem"></span>
+    </div>
+    <div th:if="${aktivBruger}">
+        <div>
+            <form th:action="@{/Registrer}" th:method="get" style="margin-right: 1rem">
+                <button type="submit">Registrér Ny Burger</button>
+            </form>
+            <form th:action="@{/LogUd}" th:method="get" style="margin-right: 1rem">
+                <input type="checkbox" id="valuta">
+                <label for="valuta">dkk/eur</label>
+            </form>
+        </div>
         <form th:action="@{/LogUd}" th:method="get">
             <button type="submit" class="logud">Log Ud</button>
         </form>
@@ -97,8 +105,11 @@
 </div>
 
 <div th:fragment="footer">
+    <form th:action="@{/VisBiler}" th:method="get">
+        <button type="submit">Bil Liste</button>
+    </form>
     <div>
-        <p>Footer</p>
+        <p>Samlet Indkomst: TODO</p>
     </div>
 </div>
 
