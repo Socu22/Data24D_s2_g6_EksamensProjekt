@@ -32,18 +32,18 @@ public class LejeAftaleController {
     public String visLejeAftaler(HttpServletRequest request, Model model)
     {
         HttpSession session = BrugerController.faaSession(request, model);
-        if(session == null) return "redirect:/Logind";
+        // if(session == null) return "redirect:/Logind";
 
         model.addAttribute("lejeAftaler", aftaleRepository.samleLejeAftalerIListeLogik());
 
-        return "visLejeAftaler";
+        return "lejeAftaleListe";
     }
 
     @GetMapping("/VisLejeAftale")
     public String visLejeAftale(@RequestParam("aftaleId") int id, HttpServletRequest request, Model model)
     {
         HttpSession session = BrugerController.faaSession(request, model);
-        if(session == null) return "redirect:/Logind";
+        // if(session == null) return "redirect:/Logind";
         // session.removeAttribute("Aftaler");
 
         LejeAftale aftale = aftaleRepository.tagFatILejeAftale(id);
@@ -61,35 +61,38 @@ public class LejeAftaleController {
         if(session == null) return "redirect:/Logind";
 
         List<Bil> bilList = bilRepository.getBiler();
-        Bil bil = bilList.getFirst();
-        if((Bil) session.getAttribute("bil") != null){
-            bil = (Bil) session.getAttribute("bil");
+        //Bil bil = bilList.getFirst();
+        Bil bil = null;
+        if(session.getAttribute("vognNummer") != null){
+            bil = bilRepository.tagFatIBil((String) session.getAttribute("vognNummer"));
         }
 
         List<Kunde> kundeList = kundeRepository.getKunder();
-        Kunde kunde =kundeList.getFirst();
-       if(session.getAttribute("kunde_Id")!=null){
-           kunde = kundeRepository.tagFatIKunde((Integer) session.getAttribute("kunde_Id"));
-
-       }
-
+        //Kunde kunde =kundeList.getFirst();
+        Kunde tempKunde = null;
+        if(session.getAttribute("kunde_Id")!=null){
+            tempKunde = kundeRepository.tagFatIKunde((Integer) session.getAttribute("kunde_Id"));
+        }
+        model.addAttribute("startDato", session.getAttribute("startDato"));
+        model.addAttribute("slutDato", session.getAttribute("slutDato"));
+        model.addAttribute("detaljer", session.getAttribute("detaljer"));
 
         model.addAttribute("bilList",bilList);
         model.addAttribute("bil", bil);
 
 
         model.addAttribute("kundeList",kundeList);
-        model.addAttribute("kunde", kunde);
+        model.addAttribute("tempKunde", tempKunde);
 
         return "nyLejeAftale";
     }
     @GetMapping("/GemNyLejeAftale")
     public String gemNyLejeAftale(@RequestParam("kunde_Id") int kunde_Id,
-                                   @RequestParam("vognNummer") String vognNummer,
-                                   @RequestParam("startDato") String startDato,
-                                   @RequestParam("slutDato") String slutDato,
-                                   @RequestParam("detaljer") String detaljer,
-                                   HttpServletRequest request, Model model){
+                                  @RequestParam("vognNummer") String vognNummer,
+                                  @RequestParam("startDato") String startDato,
+                                  @RequestParam("slutDato") String slutDato,
+                                  @RequestParam("detaljer") String detaljer,
+                                  HttpServletRequest request, Model model){
         HttpSession session = faaSession(request, model);
         if(session == null) return "redirect:/Logind";
 
@@ -108,9 +111,13 @@ public class LejeAftaleController {
         int kunde_Id=0;
         try {
             aftale_Id = Integer.parseInt(request.getParameter("aftale_Id"));
+        }catch (NumberFormatException n){
+            System.out.println("fangede ikke aftale Id");
+        }
+        try {
             kunde_Id = Integer.parseInt(request.getParameter("kunde_Id"));
         }catch (NumberFormatException n){
-
+            System.out.println("fangede ikke kunde Id");
         }
 
         String vognNummer = request.getParameter("vognNummer");
@@ -118,6 +125,7 @@ public class LejeAftaleController {
         String slutDato = request.getParameter("slutDato");
         String detaljer = request.getParameter("detaljer");
         boolean bool = Boolean.parseBoolean(request.getParameter("submitKnap"));
+        System.out.println(aftale_Id + " , " + kunde_Id + " , " + vognNummer + " , " + startDato + " , " + slutDato + " , " + detaljer + " , " + bool );
         if (bool){
             LejeAftale lejeAftale = new LejeAftale(kunde_Id,vognNummer,startDato,slutDato,detaljer);
 

@@ -11,7 +11,7 @@
 
 <main>
     <!-- Bilvisning -->
-    <section>
+    <section th:if="${bil != null}">
         <h2>Bil</h2>
         <table>
             <thead>
@@ -36,7 +36,7 @@
     </section>
 
     <!-- Kundevisning -->
-    <section th:if="${kunde}">
+    <section th:if="${tempKunde != null}">
         <h2>Kunde</h2>
         <table>
             <tr>
@@ -44,8 +44,8 @@
                 <th>Navn</th>
             </tr>
             <tr>
-                <td th:text="${kunde.getKunde_Id}"></td>
-                <td th:text="${kunde.navn}"></td>
+                <td th:text="${tempKunde.getKunde_Id()}"></td>
+                <td th:text="${tempKunde.navn}"></td>
             </tr>
         </table>
     </section>
@@ -56,32 +56,32 @@
         <form th:action="@{/OmdirigerNyLejeAftale}" method="get">
             <div>
                 <label for="kunde_Id">Kunde ID:</label>
-                <select id="kunde_Id" name="kunde_Id" onchange="this.form.submit()" >
+                <select id="kunde_Id" name="kunde_Id" onchange="this.form.submit()" required >
                     <option value="" disabled selected>Vælg en kunde</option>
-                    <option  th:each="kunde : ${kundeList}" th:value="${kunde.getKunde_Id}" th:text="${kunde.navn + ' (ID: ' + kunde.getKunde_Id + ')'}"></option>
+                    <option  th:each="kunde : ${kundeList}" th:selected="${tempKunde != null and kunde.kunde_Id == tempKunde?.kunde_Id}" th:value="${kunde.getKunde_Id()}" th:text="${kunde.navn + ' (ID: ' + kunde.getKunde_Id() + ')'}"></option>
                 </select>
             </div>
             <div>
                 <label for="vognNummer">Vognnummer:</label>
-                <select id="vognNummer" name="vognNummer">
+                <select id="vognNummer" name="vognNummer" onchange="this.form.submit()" required>
                     <option value="" disabled selected>Vælg en bil</option>
-                    <option th:type="submit" th:each="bil : ${bilList}" th:value="${bil.vognNummer}" th:text="${bil.vognNummer+ ' (status: ' + bil.status + ')'}"></option>
+                    <option th:type="submit" th:each="Bil : ${bilList}" th:selected="${bil != null and Bil.vognNummer == bil.vognNummer}" th:value="${Bil.vognNummer}" th:text="${Bil.vognNummer+ ' (status: ' + Bil.status + ')'}"></option>
                 </select>
             </div>
 
             <div>
                 <label for="startDato">Startdato:</label>
-                <input type="date" id="startDato" name="startDato" required />
+                <input type="date" id="startDato" name="startDato" th:value="${startDato}" required />
             </div>
 
             <div>
                 <label for="slutDato">Slutdato:</label>
-                <input type="date" id="slutDato" name="slutDato" required />
+                <input type="date" id="slutDato" name="slutDato" th:value="${slutDato}" required />
             </div>
 
             <div>
                 <label for="detaljer">Detaljer:</label>
-                <textarea id="detaljer" name="detaljer" placeholder="Beskriv afhentningen" maxlength="255" rows="4" required></textarea>
+                <textarea id="detaljer" name="detaljer" th:text="${detaljer}" placeholder="Beskriv afhentningen" maxlength="255" rows="4" required></textarea>
             </div>
 
             <div>
