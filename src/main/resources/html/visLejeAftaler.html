@@ -12,12 +12,11 @@
 <body>
 <header th:insert="~{fragments :: header}"></header>
 <main>
-    <header class="underHeader"><!-- skriv under header her --></header>
-    <!-- skriv side-specific html her -->
+    <header class="underHeader">
+        <!-- skriv under header her -->
+    </header>
     <div th:insert="~{fragments :: aftaleListe}"></div>
 </main>
-<footer>
-    <!-- skriv side-specific footer her -->
-</footer>
+<footer th:insert="~{fragments :: footer}"></footer>
 </body>
 </html>

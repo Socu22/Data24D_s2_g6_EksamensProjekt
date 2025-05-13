@@ -10,7 +10,7 @@
 <header th:insert="~{fragments :: header}"></header>
 
 <main>
-  <section>
+  <header class="underHeader">
     <form th:action="@{NyBil}" method="get">
       <button type="submit">Ny Bil</button>
     </form>
@@ -20,9 +20,11 @@
     <form th:action="@{NyBilType}" method="get">
       <button type="submit">Ny Biltype</button>
     </form>
-  </section>
+  </header>
 
-  <section>
+  <div th:insert="~{fragments :: bilListe}"></div>
+
+  <!-- <section>
     <table>
       <thead>
       <tr>
@@ -49,11 +51,7 @@
       </tr>
       </tbody>
     </table>
-  </section>
+  </section> -->
 </main>
-
-<footer>
-  <!-- Skriv side-specifik footer her -->
-</footer>
 </body>
 </html>

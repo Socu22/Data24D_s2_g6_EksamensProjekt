@@ -43,19 +43,20 @@ header {
 }
 
 header.underHeader {
+    display: flex;
     padding: 0;
     top: 7rem;
+}
+
+footer {
+    position: sticky;
+    bottom: 0.5rem;
 }
 
 section {
     max-width: fit-content;
     margin-left: auto;
     margin-right: auto;
-}
-
-footer {
-    position: sticky;
-    bottom: 0.5rem;
 }
 
 main {

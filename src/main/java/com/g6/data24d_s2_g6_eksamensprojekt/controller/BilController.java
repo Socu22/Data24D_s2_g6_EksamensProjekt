@@ -34,9 +34,8 @@ public class BilController {
         HttpSession session = faaSession(request, model);
         if(session == null) return "redirect:/Logind";
 
-        List<Bil> bilList = bilRepository.getBiler();
-        model.addAttribute("bilList",bilList);
-
+        List<Bil> biler = bilRepository.getBiler();
+        model.addAttribute("biler",biler);
 
         return "visBiler";
     }
