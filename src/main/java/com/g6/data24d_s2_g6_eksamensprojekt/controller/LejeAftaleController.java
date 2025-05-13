@@ -36,7 +36,7 @@ public class LejeAftaleController {
 
         model.addAttribute("lejeAftaler", aftaleRepository.samleLejeAftalerIListeLogik());
 
-        return "lejeAftaleListe";
+        return "visLejeAftaler";
     }
 
     @GetMapping("/VisLejeAftale")
