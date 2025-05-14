@@ -28,16 +28,16 @@ public class NotationRepository
         String sql = "UPDATE notationer SET vognNummer = ?, aftale_Id = ?, beskrivelse = ?, pris = ? WHERE notationer_Id = ?;";
 
         jdbcTemplate.update(sql,
-                            notation.getVognNr(),
+                            notation.getVognNummer(),
                             notation.getAftaleId(),
                             notation.getBeskrivelse(),
                             notation.getPris(),
                             notation.getId());
     }
 
-    public List<Notation> getNotationer(LejeAftale aftale)
+    public List<Notation> getNotationer(int aftaleId)
     {
-        return selectNotationer("aftale_Id", aftale.getAftale_Id());
+        return selectNotationer("aftale_Id", aftaleId);
 
         /*
         String sql = "SELECT * FROM notationer WHERE aftale_Id = ?;";
@@ -47,9 +47,9 @@ public class NotationRepository
          */
     }
 
-    public List<Notation> getNotationer(Bil bil)
+    public List<Notation> getNotationer(String vognNummer)
     {
-        return selectNotationer("vognNummer", bil.getVognNummer());
+        return selectNotationer("vognNummer", vognNummer);
 
         /*
         String sql = "SELECT * FROM notationer WHERE vognNummer = ?;";
@@ -74,8 +74,8 @@ public class NotationRepository
         for (Map<String, Object> row:dataList)
         {
             list.add(new Notation((Integer) row.get("notationer_id"),
-                                  (Integer) row.get("vognNummer"),
                                   (Integer) row.get("aftale_Id"),
+                                  (String)  row.get("vognNummer"),
                                   (String)  row.get("beskrivelse"),
                                   (Double)  row.get("pris")));
         }
