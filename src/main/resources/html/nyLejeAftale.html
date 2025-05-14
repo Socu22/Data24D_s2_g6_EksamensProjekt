@@ -11,7 +11,10 @@
 
 <main>
     <!-- Bilvisning -->
-    <section th:if="${bil != null}">
+
+    <header class="underHeader" th:if="${bil != null}" th:insert="~{fragments :: bilKort}"></header>
+
+    <!-- <section th:if="${bil != null}">
         <h2>Bil</h2>
         <table>
             <thead>
@@ -33,7 +36,7 @@
             </tr>
             </tbody>
         </table>
-    </section>
+    </section> -->
 
     <!-- Kundevisning -->
     <section th:if="${tempKunde != null}">

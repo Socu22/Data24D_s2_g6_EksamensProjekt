@@ -32,18 +32,18 @@ public class LejeAftaleController {
     public String visLejeAftaler(HttpServletRequest request, Model model)
     {
         HttpSession session = BrugerController.faaSession(request, model);
-        // if(session == null) return "redirect:/Logind";
+        if(session == null) return "redirect:/Logind";
 
         model.addAttribute("lejeAftaler", aftaleRepository.samleLejeAftalerIListeLogik());
 
-        return "lejeAftaleListe";
+        return "visLejeAftaler";
     }
 
     @GetMapping("/VisLejeAftale")
     public String visLejeAftale(@RequestParam("aftaleId") int id, HttpServletRequest request, Model model)
     {
         HttpSession session = BrugerController.faaSession(request, model);
-        // if(session == null) return "redirect:/Logind";
+        if(session == null) return "redirect:/Logind";
         // session.removeAttribute("Aftaler");
 
         LejeAftale aftale = aftaleRepository.tagFatILejeAftale(id);
