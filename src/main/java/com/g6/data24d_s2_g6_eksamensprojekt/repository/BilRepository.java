@@ -2,6 +2,7 @@ package com.g6.data24d_s2_g6_eksamensprojekt.repository;
 
 import com.g6.data24d_s2_g6_eksamensprojekt.model.Bil;
 import com.g6.data24d_s2_g6_eksamensprojekt.model.BilType;
+import com.g6.data24d_s2_g6_eksamensprojekt.model.Kunde;
 import com.g6.data24d_s2_g6_eksamensprojekt.model.LejeAftale;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -9,7 +10,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
-import java.util.LinkedHashSet;
+import java.util.HashMap;
 import java.util.List;
 
 @Repository
@@ -17,6 +18,8 @@ public class BilRepository
 {
     @Autowired
     JdbcTemplate jdbcTemplate;
+    @Autowired
+    BilTypeRepository bilTypeRepository;
 
     private final RowMapper<Bil> rowMapper = (rs, rowNum) -> {
         Bil bil = new Bil(
@@ -35,13 +38,22 @@ public class BilRepository
     public List<Bil> getBiler()
     {
         List<Bil> bilList = jdbcTemplate.query("select * from bil",rowMapper);
+
+        List<BilType> bilTyper = bilTypeRepository.getBilTyper();
+        HashMap<Integer, BilType> typerMapped = new HashMap<>();
+
+        for (BilType biltype : bilTyper) {typerMapped.put(biltype.getBilType_Id(),biltype);}
+        for (Bil bil : bilList) {bil.setType(typerMapped.get(bil.getBilType_Id()));}
+
         return bilList;
     }
     //tager fat i bil ud fra et vognNummer
     public Bil tagFatIBil(String vognNummer){
         List<Bil> bilList= jdbcTemplate.query("select * from bil where vognNummer=?",rowMapper,vognNummer);
         if (bilList.size()==1){
-            return bilList.getFirst();
+            Bil bil = bilList.getFirst();
+            bil.setType(bilTypeRepository.getBilType(bil.getBilType_Id()));
+            return bil;
         }
         return null;
     }
