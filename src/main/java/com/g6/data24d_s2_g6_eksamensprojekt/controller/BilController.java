@@ -50,17 +50,25 @@ public class BilController {
         if(session == null) return "redirect:/Logind";
 
 
-        List<Bil> bilList = new ArrayList<>();
-
-        if((request.getParameter("vognNummer").length()==7)){
-            bilList = bilRepository.findBilUdFraVognNummer(request.getParameter("vognNummer"));
-        }else {
-            if(request.getParameter("vognNummer").length()==17){
-                bilList = bilRepository.findBilUdFraStelNummer(request.getParameter("vognNummer")); //  behandles som et stelNummer
+        List<Bil> bilList = new ArrayList<>(); // attribute som overskriver default biler vist;
+        String vognNummer = request.getParameter("vognNummer");
+        if (vognNummer!=null){
+            if((vognNummer.length()==7)){
+                bilList = bilRepository.findBilUdFraVognNummer(vognNummer);
+            }else {
+                if(vognNummer.length()==17){
+                    bilList = bilRepository.findBilUdFraStelNummer(vognNummer); //  behandles som et stelNummer
+                }
             }
+        } else if (request.getParameter("lager_Id")!=null) {
+            bilList= bilRepository.findBilUdFraLager_Id(Integer.parseInt(request.getParameter("lager_Id")));
+
+        } else if (request.getParameter("maerke")!=null){
+            bilList = bilRepository.findBilUdFraBilMaerke(request.getParameter("maerke"));
         }
 
-        session.setAttribute("biler",bilList);
+        //todo: sum element i et set også ind til session bilList. (krav: lager_Id og maerke skal kunne aktiveres og samles. evt bruge true or false på alle og samle dem som er true sat noget i. vente med submit indtil knap trykkes. )
+        session.setAttribute("biler",bilList); //gemmes is session.
 
         return "redirect:/VisBiler";
     }

@@ -30,6 +30,23 @@
         </div>
       </div>
     </form>
+    <form th:action="@{/OmdirigerVisBiler}" method="get">
+      <div>
+        <div>
+          <label for="lager_Id">lager id:</label>
+          <input type="text" id="lager_Id" name="lager_Id" placeholder="Indtast lager id" onchange="this.form.submit()" required autofocus>
+        </div>
+      </div>
+    </form>
+    <form th:action="@{/OmdirigerVisBiler}" method="get">
+      <div>
+        <div>
+          <label for="maerke">mærke:</label>
+          <input type="text" id="maerke" name="maerke" placeholder="Indtast mærke" onchange="this.form.submit()" required autofocus>
+        </div>
+      </div>
+    </form>
+
   </section>
 
   <div th:insert="~{fragments :: bilListe}"></div>

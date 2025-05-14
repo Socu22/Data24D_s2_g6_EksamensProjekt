@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 @Repository
@@ -68,27 +69,33 @@ public class BilRepository
         }
     }
 
-    public List<Bil> findUdFraKrav(String vognNummer, String bilMærke){
-        List<Bil> bilList = new ArrayList<>();
-        bilList.addAll(findBilUdFraVognNummer(vognNummer));
-        bilList.addAll(findBilUdFraModel(bilMærke));
-
-        LinkedHashSet<Bil> bilLinkedHashSet = new LinkedHashSet<>(bilList);
-        return bilLinkedHashSet.stream().toList();
-
-    }
+//    public List<Bil> findUdFraKrav(String vognNummer, String bilMærke){
+//        List<Bil> bilList = new ArrayList<>();
+//        bilList.addAll(findBilUdFraVognNummer(vognNummer));
+//        bilList.addAll(findBilUdFraModel(bilMærke));
+//
+//        LinkedHashSet<Bil> bilLinkedHashSet = new LinkedHashSet<>(bilList);
+//        return bilLinkedHashSet.stream().toList();
+//
+//    }
     public List<Bil> findBilUdFraVognNummer(String vognNummer){
 
         return jdbcTemplate.query("select * from bil where vognNummer=?",rowMapper,vognNummer);
 
     }
-    public List<Bil> findBilUdFraModel(String bilMærke){
-
-        return jdbcTemplate.query("select * from bil inner join bilType b on bilType_Id = b.bilType_Id where mærke='?'",rowMapper,bilMærke);
-
+    public List<Bil> findBilUdFraBilMaerke(String bilMærke){
+        return jdbcTemplate.query(
+                "SELECT * FROM bil INNER JOIN bilType b ON bil.bilType_Id = b.bilType_Id WHERE b.mærke = ?",
+                rowMapper,
+                bilMærke
+        );
     }
+
 
     public List<Bil> findBilUdFraStelNummer(String stelNummer) {
         return jdbcTemplate.query("select * from bil where stelNummer=?",rowMapper,stelNummer);
+    }
+    public List<Bil> findBilUdFraLager_Id(int lager_Id) {
+        return jdbcTemplate.query("select * from bil where lager_Id=?",rowMapper,lager_Id);
     }
 }
