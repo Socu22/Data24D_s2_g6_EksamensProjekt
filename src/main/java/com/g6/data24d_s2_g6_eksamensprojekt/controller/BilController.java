@@ -49,7 +49,17 @@ public class BilController {
         HttpSession session = faaSession(request, model);
         if(session == null) return "redirect:/Logind";
 
-        List<Bil> bilList = bilRepository.findBilUdFraVognNummer(request.getParameter("vognNummer"));
+
+        List<Bil> bilList = new ArrayList<>();
+
+        if((request.getParameter("vognNummer").length()==7)){
+            bilList = bilRepository.findBilUdFraVognNummer(request.getParameter("vognNummer"));
+        }else {
+            if(request.getParameter("vognNummer").length()==17){
+                bilList = bilRepository.findBilUdFraStelNummer(request.getParameter("vognNummer")); //  behandles som et stelNummer
+            }
+        }
+
         session.setAttribute("biler",bilList);
 
         return "redirect:/VisBiler";

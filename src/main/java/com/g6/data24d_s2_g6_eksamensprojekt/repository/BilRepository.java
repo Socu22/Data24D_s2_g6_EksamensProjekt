@@ -76,4 +76,7 @@ public class BilRepository
 
     }
 
+    public List<Bil> findBilUdFraStelNummer(String stelNummer) {
+        return jdbcTemplate.query("select * from bil where stelNummer=?",rowMapper,stelNummer);
+    }
 }
