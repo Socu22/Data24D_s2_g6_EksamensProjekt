@@ -3,9 +3,11 @@ package com.g6.data24d_s2_g6_eksamensprojekt.controller;
 import com.g6.data24d_s2_g6_eksamensprojekt.model.Bil;
 import com.g6.data24d_s2_g6_eksamensprojekt.model.Kunde;
 import com.g6.data24d_s2_g6_eksamensprojekt.model.LejeAftale;
+import com.g6.data24d_s2_g6_eksamensprojekt.model.Notation;
 import com.g6.data24d_s2_g6_eksamensprojekt.repository.AftaleRepository;
 import com.g6.data24d_s2_g6_eksamensprojekt.repository.BilRepository;
 import com.g6.data24d_s2_g6_eksamensprojekt.repository.KundeRepository;
+import com.g6.data24d_s2_g6_eksamensprojekt.repository.NotationRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.HashMap;
 import java.util.List;
 
 import static com.g6.data24d_s2_g6_eksamensprojekt.controller.BrugerController.faaSession;
@@ -27,6 +30,8 @@ public class LejeAftaleController {
     BilRepository bilRepository;
     @Autowired
     KundeRepository kundeRepository;
+    @Autowired
+    NotationRepository notationRepository;
 
     @GetMapping("/VisLejeAftaler")
     public String visLejeAftaler(HttpServletRequest request, Model model)
@@ -34,7 +39,22 @@ public class LejeAftaleController {
         HttpSession session = BrugerController.faaSession(request, model);
         if(session == null) return "redirect:/Logind";
 
-        model.addAttribute("lejeAftaler", aftaleRepository.samleLejeAftalerIListeLogik());
+        List<LejeAftale> aftaler = aftaleRepository.samleLejeAftalerIListeLogik();
+        List<Kunde> kunder = kundeRepository.getKunder();
+        HashMap<Integer, Kunde> kunderMapped = new HashMap<>();
+
+        for (Kunde kunde: kunder)
+        {
+            kunderMapped.put(kunde.getKunde_Id(),kunde);
+        }
+
+        for (LejeAftale aftale: aftaler)
+        {
+            aftale.setKunde(kunderMapped.get(aftale.getKunde_Id()));
+        }
+
+        model.addAttribute("lejeAftaler", aftaler);
+        // todo: udregn dagens indtægt
 
         return "visLejeAftaler";
     }
@@ -48,8 +68,11 @@ public class LejeAftaleController {
 
         LejeAftale aftale = aftaleRepository.tagFatILejeAftale(id);
 
-        model.addAttribute("bil", bilRepository.tagFatIBil(aftale.getVognNummer()));
+        aftale.setKunde(kundeRepository.tagFatIKunde(aftale.getKunde_Id()));
+
         model.addAttribute("lejeAftale", aftale);
+        model.addAttribute("bil", bilRepository.tagFatIBil(aftale.getVognNummer()));
+        model.addAttribute("notationer", notationRepository.getNotationer(aftale.getAftale_Id()));
 
         return "visLejeAftale";
     }

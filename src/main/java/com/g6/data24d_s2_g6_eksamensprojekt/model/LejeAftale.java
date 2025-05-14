@@ -7,6 +7,7 @@ public class LejeAftale {
    private String startDato;
    private String slutDato;
    private String detaljer;
+   private Kunde kunde;
 
     public LejeAftale(int aftale_Id, int kunde_Id, String vognNummer, String startDato, String slutDato, String detaljer) {
         this.aftale_Id = aftale_Id;
@@ -74,5 +75,15 @@ public class LejeAftale {
 
     public void setDetaljer(String detaljer) {
         this.detaljer = detaljer;
+    }
+
+    public Kunde getKunde()
+    {
+        return kunde;
+    }
+
+    public void setKunde(Kunde kunde)
+    {
+        this.kunde = kunde;
     }
 }
