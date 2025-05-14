@@ -9,6 +9,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 @Repository
@@ -54,4 +55,25 @@ public class BilRepository
             return false;
         }
     }
+
+    public List<Bil> findUdFraKrav(String vognNummer, String bilMærke){
+        List<Bil> bilList = new ArrayList<>();
+        bilList.addAll(findBilUdFraVognNummer(vognNummer));
+        bilList.addAll(findBilUdFraModel(bilMærke));
+
+        LinkedHashSet<Bil> bilLinkedHashSet = new LinkedHashSet<>(bilList);
+        return bilLinkedHashSet.stream().toList();
+
+    }
+    public List<Bil> findBilUdFraVognNummer(String vognNummer){
+
+        return jdbcTemplate.query("select * from bil where vognNummer=?",rowMapper,vognNummer);
+
+    }
+    public List<Bil> findBilUdFraModel(String bilMærke){
+
+        return jdbcTemplate.query("select * from bil inner join bilType b on bilType_Id = b.bilType_Id where mærke='?'",rowMapper,bilMærke);
+
+    }
+
 }

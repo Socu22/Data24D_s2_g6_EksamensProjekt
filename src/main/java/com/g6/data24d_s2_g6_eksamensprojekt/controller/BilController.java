@@ -13,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.g6.data24d_s2_g6_eksamensprojekt.controller.BrugerController.faaSession;
@@ -35,10 +36,25 @@ public class BilController {
         if(session == null) return "redirect:/Logind";
 
         List<Bil> biler = bilRepository.getBiler();
+        if(session.getAttribute("biler")!=null){
+            biler = (List<Bil>) session.getAttribute("biler");
+
+        }
         model.addAttribute("biler",biler);
 
         return "visBiler";
     }
+    @GetMapping("OmdirigerVisBiler")
+    public String Omdirigerbil(HttpServletRequest request, Model model){
+        HttpSession session = faaSession(request, model);
+        if(session == null) return "redirect:/Logind";
+
+        List<Bil> bilList = bilRepository.findBilUdFraVognNummer(request.getParameter("vognNummer"));
+        session.setAttribute("biler",bilList);
+
+        return "redirect:/VisBiler";
+    }
+
     @GetMapping("/VisBil")
     public String visBil(HttpServletRequest request, Model model){
         HttpSession session = faaSession(request, model);

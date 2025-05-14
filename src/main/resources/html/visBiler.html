@@ -21,6 +21,16 @@
       <button type="submit">Ny Biltype</button>
     </form>
   </header>
+  <section>
+    <form th:action="@{/OmdirigerVisBiler}" method="get">
+      <div>
+        <div>
+          <label for="vognNummer">VognNummer:</label>
+          <input type="text" id="vognNummer" name="vognNummer" placeholder="Indtast vognnummer" maxlength="7"  onchange="this.form.submit()" required autofocus>
+        </div>
+      </div>
+    </form>
+  </section>
 
   <div th:insert="~{fragments :: bilListe}"></div>
 
