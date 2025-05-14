@@ -9,8 +9,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
-import java.util.List;
-
 import static com.g6.data24d_s2_g6_eksamensprojekt.controller.BrugerController.faaSession;
 
 @Controller
@@ -41,7 +39,7 @@ public class BilTypeController {
 
         BilType bilType = new BilType(bilType_Id,mærke,modelP,udstyrsniveau,stålPris,afgift,udledning_Co2);
 
-        bilTypeRepository.nyBilTypeLogik(bilType);
+        bilTypeRepository.gemBilType(bilType);
         return "redirect:/"; //todo: show all biltyper
     }
 }

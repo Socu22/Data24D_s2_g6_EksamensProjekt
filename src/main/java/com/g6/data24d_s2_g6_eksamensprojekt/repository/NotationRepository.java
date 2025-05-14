@@ -6,9 +6,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.*;
 
-import com.g6.data24d_s2_g6_eksamensprojekt.model.Bil;
 import com.g6.data24d_s2_g6_eksamensprojekt.model.Notation;
-import com.g6.data24d_s2_g6_eksamensprojekt.model.LejeAftale;
 
 @Repository
 public class NotationRepository
@@ -16,14 +14,14 @@ public class NotationRepository
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    public void addNotation(String vognNr, Integer aftaleId, String beskrivelse, double pris)
+    public void gemNotation(String vognNummer, Integer aftaleId, String beskrivelse, double pris)
     {
         String sql = "INSERT INTO notationer (vognNummer, aftale_Id, beskrivelse, pris) VALUES (?, ?, ?, ?);";
 
-        jdbcTemplate.update(sql, vognNr, aftaleId, beskrivelse, pris);
+        jdbcTemplate.update(sql, vognNummer, aftaleId, beskrivelse, pris);
     }
 
-    public void updateNotation(Notation notation)
+    public void gemNotation(Notation notation)
     {
         String sql = "UPDATE notationer SET vognNummer = ?, aftale_Id = ?, beskrivelse = ?, pris = ? WHERE notationer_Id = ?;";
 
@@ -35,9 +33,9 @@ public class NotationRepository
                             notation.getId());
     }
 
-    public List<Notation> getNotationer(int aftaleId)
+    public List<Notation> hentNotationer(int aftaleId)
     {
-        return selectNotationer("aftale_Id", aftaleId);
+        return hentNotationer("aftale_Id", aftaleId);
 
         /*
         String sql = "SELECT * FROM notationer WHERE aftale_Id = ?;";
@@ -47,9 +45,9 @@ public class NotationRepository
          */
     }
 
-    public List<Notation> getNotationer(String vognNummer)
+    public List<Notation> hentNotationer(String vognNummer)
     {
-        return selectNotationer("vognNummer", vognNummer);
+        return hentNotationer("vognNummer", vognNummer);
 
         /*
         String sql = "SELECT * FROM notationer WHERE vognNummer = ?;";
@@ -59,15 +57,15 @@ public class NotationRepository
          */
     }
 
-    private List<Notation> selectNotationer(String column, Object identifier)
+    private List<Notation> hentNotationer(String column, Object identifier)
     {
         String sql = "SELECT * FROM notationer WHERE "+column+" = ?;";
         List<Map<String, Object>> list = jdbcTemplate.queryForList(sql, identifier);
 
-        return buildNotationer(list);
+        return bygNotationer(list);
     }
 
-    private List<Notation> buildNotationer(List<Map<String, Object>> dataList)
+    private List<Notation> bygNotationer(List<Map<String, Object>> dataList)
     {
         List<Notation> list = new ArrayList<>();
 

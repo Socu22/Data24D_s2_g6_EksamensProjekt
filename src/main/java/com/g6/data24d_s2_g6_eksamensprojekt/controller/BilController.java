@@ -35,7 +35,7 @@ public class BilController {
         HttpSession session = faaSession(request, model);
         if(session == null) return "redirect:/Logind";
 
-        List<Bil> biler = bilRepository.getBiler();
+        List<Bil> biler = bilRepository.hentBiler();
         if(session.getAttribute("biler")!=null){
             biler = (List<Bil>) session.getAttribute("biler");
 
@@ -54,17 +54,17 @@ public class BilController {
         String vognNummer = request.getParameter("vognNummer");
         if (vognNummer!=null){
             if((vognNummer.length()==7)){
-                bilList = bilRepository.findBilUdFraVognNummer(vognNummer);
+                bilList = bilRepository.hentBilerUdFraVognNummer(vognNummer);
             }else {
                 if(vognNummer.length()==17){
-                    bilList = bilRepository.findBilUdFraStelNummer(vognNummer); //  behandles som et stelNummer
+                    bilList = bilRepository.hentBilerUdFraStelNummer(vognNummer); //  behandles som et stelNummer
                 }
             }
         } else if (request.getParameter("lager_Id")!=null) {
-            bilList= bilRepository.findBilUdFraLager_Id(Integer.parseInt(request.getParameter("lager_Id")));
+            bilList= bilRepository.hentBilerUdFraLager_Id(Integer.parseInt(request.getParameter("lager_Id")));
 
         } else if (request.getParameter("maerke")!=null){
-            bilList = bilRepository.findBilUdFraBilMaerke(request.getParameter("maerke"));
+            bilList = bilRepository.hentBilerUdFraBilMaerke(request.getParameter("maerke"));
         }
 
         //todo: sum element i et set også ind til session bilList. (krav: lager_Id og maerke skal kunne aktiveres og samles. evt bruge true or false på alle og samle dem som er true sat noget i. vente med submit indtil knap trykkes. )
@@ -79,7 +79,7 @@ public class BilController {
         if(session == null) return "redirect:/Logind";
 
         String vognNummer = request.getParameter("vognNummer");
-        Bil bil = bilRepository.tagFatIBil(vognNummer);
+        Bil bil = bilRepository.hentBil(vognNummer);
         session.setAttribute("bil",bil);
         model.addAttribute("bil", bil);
 
@@ -104,8 +104,8 @@ public class BilController {
         if(session == null) return "redirect:/Logind";
 
 
-        List<BilType> bilTypeList = bilTypeRepository.getBilTyper();
-        List<Lager> lagerList =lagerRepository.samleLagerIListeLogik();
+        List<BilType> bilTypeList = bilTypeRepository.hentBilTyper();
+        List<Lager> lagerList =lagerRepository.hentLager();
         model.addAttribute("lagerList",lagerList);
         model.addAttribute("bilTypeList",bilTypeList);
 
@@ -125,7 +125,7 @@ public class BilController {
 
         Bil bil = new Bil(vognNummer,stelNummer,new BilType(bilType_Id),lager_Id,status);
 
-        bilRepository.nyBilLogik(bil);
+        bilRepository.gemBil(bil);
         return "redirect:/";
     }
 }

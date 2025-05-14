@@ -34,7 +34,7 @@ public class LagerController {
         if(session == null) return "redirect:/Logind";
 
         Lager nytLager = new Lager(navn,adresse);
-        lagerRepository.nytLagerLogik(nytLager);
+        lagerRepository.gemLager(nytLager);
         return "redirect:/"; //skal ændres
     }
 

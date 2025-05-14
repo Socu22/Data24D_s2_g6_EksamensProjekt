@@ -38,7 +38,7 @@ public class BrugerController {
         String navn = request.getParameter("navn");
         String adgangskode = request.getParameter("adgangskode");
         if(navn != null && adgangskode != null){
-            Bruger bruger = brugerRepository.faaBruger(navn, adgangskode);
+            Bruger bruger = brugerRepository.hentBruger(navn, adgangskode);
             if(bruger != null){
                 saetSession(request, bruger, model);
                 //return "redirect:/";
@@ -99,12 +99,12 @@ public class BrugerController {
                 if(!adgangskode.equals(adgangskode2)){
                     session.setAttribute("registrerBesked", "Verificer Adgangskode er ikke det samme som Adgangskode");
                 }
-                else if(brugerRepository.brugerEksisterer(navn)){
+                else if(brugerRepository.erBruger(navn)){
                     session.setAttribute("registrerBesked", "Bruger med samme navn eksisterer allerede");
                 }
                 else{
                     session.setAttribute("registrerBesked", "Ny bruger lavet");
-                    brugerRepository.lavBruger(navn, adgangskode, stilling);
+                    brugerRepository.gemBruger(navn, adgangskode, stilling);
                 }
             }
             else {

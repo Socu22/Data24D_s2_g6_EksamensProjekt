@@ -3,7 +3,6 @@ package com.g6.data24d_s2_g6_eksamensprojekt.controller;
 import com.g6.data24d_s2_g6_eksamensprojekt.model.Bil;
 import com.g6.data24d_s2_g6_eksamensprojekt.model.Kunde;
 import com.g6.data24d_s2_g6_eksamensprojekt.model.LejeAftale;
-import com.g6.data24d_s2_g6_eksamensprojekt.model.Notation;
 import com.g6.data24d_s2_g6_eksamensprojekt.repository.AftaleRepository;
 import com.g6.data24d_s2_g6_eksamensprojekt.repository.BilRepository;
 import com.g6.data24d_s2_g6_eksamensprojekt.repository.KundeRepository;
@@ -39,8 +38,8 @@ public class LejeAftaleController {
         HttpSession session = BrugerController.faaSession(request, model);
         if(session == null) return "redirect:/Logind";
 
-        List<LejeAftale> aftaler = aftaleRepository.samleLejeAftalerIListeLogik();
-        List<Kunde> kunder = kundeRepository.getKunder();
+        List<LejeAftale> aftaler = aftaleRepository.hentLejeAftaler();
+        List<Kunde> kunder = kundeRepository.hentKunder();
         HashMap<Integer, Kunde> kunderMapped = new HashMap<>();
 
         for (Kunde kunde: kunder)
@@ -66,13 +65,13 @@ public class LejeAftaleController {
         if(session == null) return "redirect:/Logind";
         // session.removeAttribute("Aftaler");
 
-        LejeAftale aftale = aftaleRepository.tagFatILejeAftale(id);
+        LejeAftale aftale = aftaleRepository.hentLejeAftale(id);
 
-        aftale.setKunde(kundeRepository.tagFatIKunde(aftale.getKunde_Id()));
+        aftale.setKunde(kundeRepository.hentKunde(aftale.getKunde_Id()));
 
         model.addAttribute("lejeAftale", aftale);
-        model.addAttribute("bil", bilRepository.tagFatIBil(aftale.getVognNummer()));
-        model.addAttribute("notationer", notationRepository.getNotationer(aftale.getAftale_Id()));
+        model.addAttribute("bil", bilRepository.hentBil(aftale.getVognNummer()));
+        model.addAttribute("notationer", notationRepository.hentNotationer(aftale.getAftale_Id()));
 
         return "visLejeAftale";
     }
@@ -83,18 +82,18 @@ public class LejeAftaleController {
         HttpSession session = faaSession(request, model);
         if(session == null) return "redirect:/Logind";
 
-        List<Bil> bilList = bilRepository.getBiler();
+        List<Bil> bilList = bilRepository.hentBiler();
         //Bil bil = bilList.getFirst();
         Bil bil = null;
         if(session.getAttribute("vognNummer") != null){
-            bil = bilRepository.tagFatIBil((String) session.getAttribute("vognNummer"));
+            bil = bilRepository.hentBil((String) session.getAttribute("vognNummer"));
         }
 
-        List<Kunde> kundeList = kundeRepository.getKunder();
+        List<Kunde> kundeList = kundeRepository.hentKunder();
         //Kunde kunde =kundeList.getFirst();
         Kunde tempKunde = null;
         if(session.getAttribute("kunde_Id")!=null){
-            tempKunde = kundeRepository.tagFatIKunde((Integer) session.getAttribute("kunde_Id"));
+            tempKunde = kundeRepository.hentKunde((Integer) session.getAttribute("kunde_Id"));
         }
         model.addAttribute("startDato", session.getAttribute("startDato"));
         model.addAttribute("slutDato", session.getAttribute("slutDato"));
@@ -121,7 +120,7 @@ public class LejeAftaleController {
 
         LejeAftale lejeAftale = new LejeAftale(kunde_Id,vognNummer,startDato,slutDato,detaljer);
 
-        aftaleRepository.nyAftaleLogik(lejeAftale);
+        aftaleRepository.gemLejeAftale(lejeAftale);
 
         return "redirect:/";
     }
@@ -152,7 +151,7 @@ public class LejeAftaleController {
         if (bool){
             LejeAftale lejeAftale = new LejeAftale(kunde_Id,vognNummer,startDato,slutDato,detaljer);
 
-            aftaleRepository.nyAftaleLogik(lejeAftale);
+            aftaleRepository.gemLejeAftale(lejeAftale);
 
             return "redirect:/";
         }

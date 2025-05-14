@@ -2,7 +2,6 @@ package com.g6.data24d_s2_g6_eksamensprojekt.controller;
 
 import com.g6.data24d_s2_g6_eksamensprojekt.model.Bil;
 import com.g6.data24d_s2_g6_eksamensprojekt.model.LejeAftale;
-import com.g6.data24d_s2_g6_eksamensprojekt.model.Notation;
 import com.g6.data24d_s2_g6_eksamensprojekt.repository.AftaleRepository;
 import com.g6.data24d_s2_g6_eksamensprojekt.repository.BilRepository;
 import com.g6.data24d_s2_g6_eksamensprojekt.repository.NotationRepository;
@@ -14,8 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-
-import java.util.List;
 
 @Controller
 public class NotationController
@@ -48,7 +45,7 @@ public class NotationController
 
         if (aftale != null)
         {
-            bil = bilRepository.tagFatIBil(aftale.getVognNummer());
+            bil = bilRepository.hentBil(aftale.getVognNummer());
 
             model.addAttribute("lejeAftale", aftale);
             model.addAttribute("bil", bil);
@@ -87,11 +84,11 @@ public class NotationController
 
         if (aftale != null)
         {
-            notationRepository.addNotation(aftale.getVognNummer(), aftale.getAftale_Id(), notation, pris);
+            notationRepository.gemNotation(aftale.getVognNummer(), aftale.getAftale_Id(), notation, pris);
             return "redirect:/VisLejeAftale?aftaleId=" + aftale.getAftale_Id();
         }
 
-        notationRepository.addNotation(bil.getVognNummer(), null, notation, pris);
+        notationRepository.gemNotation(bil.getVognNummer(), null, notation, pris);
         return "redirect:/VisBil?vognNummer=" + bil.getVognNummer();
     }
 }

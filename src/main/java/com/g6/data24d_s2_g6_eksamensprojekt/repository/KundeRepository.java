@@ -1,8 +1,6 @@
 package com.g6.data24d_s2_g6_eksamensprojekt.repository;
 
-import com.g6.data24d_s2_g6_eksamensprojekt.model.Bil;
 import com.g6.data24d_s2_g6_eksamensprojekt.model.Kunde;
-import com.g6.data24d_s2_g6_eksamensprojekt.model.LejeAftale;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -21,14 +19,14 @@ public class KundeRepository {
     };
 
     //tager fat i LejeAftale ud fra et id
-    public Kunde tagFatIKunde(int kunde_Id){
+    public Kunde hentKunde(int kunde_Id){
         List<Kunde> lejeAftaleList= jdbcTemplate.query("select * from kunde where kunde_Id=?",rowMapper,kunde_Id);
         if (lejeAftaleList.size()==1){
             return lejeAftaleList.getFirst();
         }
         return null;
     }
-    public List<Kunde> getKunder()
+    public List<Kunde> hentKunder()
     {
         List<Kunde> kundeList = jdbcTemplate.query("select * from kunde",rowMapper);
         return kundeList;
