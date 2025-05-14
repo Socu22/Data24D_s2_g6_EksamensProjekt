@@ -53,18 +53,25 @@ footer {
     bottom: 0.5rem;
 }
 
-section {
-    max-width: fit-content;
-    margin-left: auto;
-    margin-right: auto;
-}
-
 main {
     --ekstra: calc(var(--primær-margin) + 1rem);
     margin-left:  var(--ekstra);
     margin-right: var(--ekstra);
     padding: 0;
     display: -ms-flexbox;
+}
+
+section {
+    max-width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+aside {
+    display: flex;
+    justify-content: space-between;
+    flex-grow: 1;
+    margin: var(--primær-margin);
 }
 
 button {
@@ -112,6 +119,7 @@ p.vognNr {
     border-color: red;
     border-width: medium;
     padding: .15rem;
+    margin: 1rem;
     cursor: pointer;
     text-align: center;
     font-weight: bold;
@@ -144,8 +152,13 @@ div.kort {
 }
 
 div.kort div{
-    border-left: 1mm solid lightgray;
     display: block;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+div.kort div:not(:first-of-type){
+    border-left: 1mm solid lightgray;
 }
 
 ul {
