@@ -13,7 +13,12 @@
 <header th:insert="~{fragments :: header}"></header>
 <main>
     <header class="underHeader" th:insert="~{fragments :: aftaleKort}"></header>
-    <!-- skriv side-specific html her -->
+    <aside>
+        <form th:action="@{/NyNotation}" th:method="get">
+            <button type="submit">Registrér Ny Notation</button>
+        </form>
+        <div th:insert="~{fragments :: notationListe}"></div>
+    </aside>
 </main>
 </body>
 </html>
