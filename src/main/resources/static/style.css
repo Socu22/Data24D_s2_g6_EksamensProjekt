@@ -4,7 +4,7 @@
     --primær-farve-mørk:     royalblue; /* #0060b0; */
     --primær-farve-obs:      indianred;
     --primær-farve-obs-mørk: firebrick;
-    --primær-margin:        1.5rem;
+    --primær-margin:        1rem;
 
     --box-kant-farve: black;
     --box-skygge: 0 4px 8px rgba(0,0,0,0.5);
@@ -24,6 +24,8 @@ main, header, footer, section, button, p.vognNr, div.liste {
     margin: var(--primær-margin);
     padding: var(--primær-margin);
     box-shadow: var(--box-skygge);
+
+    min-width: min-content;
 }
 
 main, header, footer, section, button, p.vognNr {
@@ -38,6 +40,7 @@ header div, footer div {
 }
 
 header {
+    justify-content: center;
     position: sticky;
     top: 0.5rem;
 }
@@ -67,10 +70,13 @@ section {
     margin-right: auto;
 }
 
+aside section {
+    margin: var(--primær-margin);
+}
+
 aside {
     display: flex;
     justify-content: space-between;
-    flex-grow: 1;
     margin: var(--primær-margin);
 }
 
@@ -92,7 +98,6 @@ button.logud {
     border-color: var(--primær-farve-obs-mørk);
     background-color: #EEEEEE;
     height: 3rem;
-    width: 5rem;
     margin: initial;
 }
 
@@ -124,7 +129,8 @@ p.vognNr {
     text-align: center;
     font-weight: bold;
     font-size: large;
-    width: fit-content;
+    min-width: max-content;
+    max-width: max-content;
 }
 
 p.stelNummer {
@@ -136,8 +142,15 @@ textarea{
     resize: none;
 }
 
+/*
+aside div {
+    width: 100%;
+    max-width: max-content;
+} */
+
 div.liste {
     padding: 0;
+    min-width: min-content;
 }
 
 div.liste:hover {
@@ -146,21 +159,29 @@ div.liste:hover {
 }
 
 div.kort {
-    justify-content: left;
+    justify-content: space-evenly;
     display: inline-flex;
     align-items: center;
+    width: 100%;
 }
 
 div.kort div{
     display: block;
     margin-top: 1rem;
     margin-bottom: 1rem;
+    min-width: min-content;
+    width: fit-content;
 }
 
 div.kort div:not(:first-of-type){
     border-left: 1mm solid lightgray;
 }
 
+form {
+    text-align-last: justify;
+}
+
 ul {
     list-style-type: none;
+
 }
