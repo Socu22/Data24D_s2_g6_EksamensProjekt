@@ -19,8 +19,8 @@ public class AftaleRepository {
         lejeAftale.setAftale_Id(rs.getInt("aftale_Id"));
         lejeAftale.setKunde_Id(rs.getInt("kunde_Id"));
         lejeAftale.setVognNummer(rs.getString("vognNummer"));
-        lejeAftale.setStartDato(rs.getString("startDato"));
-        lejeAftale.setSlutDato(rs.getString("slutDato"));
+        lejeAftale.setStartDato(rs.getDate("startDato").toLocalDate());
+        lejeAftale.setSlutDato(rs.getDate("slutDato").toLocalDate());
         lejeAftale.setDetaljer(rs.getString("detaljer"));
         return lejeAftale;
     };

@@ -15,6 +15,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.sql.Date;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
@@ -113,15 +114,19 @@ public class LejeAftaleController {
     {
         HttpSession session = BrugerController.faaSession(request, model);
         if(session == null) return "redirect:/Logind";
-        // session.removeAttribute("Aftaler");
 
         LejeAftale aftale = aftaleRepository.hentLejeAftale(id);
 
         aftale.setKunde(kundeRepository.hentKunde(aftale.getKunde_Id()));
 
+        session.setAttribute("lejeAftale", aftale);
         model.addAttribute("lejeAftale", aftale);
         model.addAttribute("bil", bilRepository.hentBil(aftale.getVognNummer()));
         model.addAttribute("notationer", notationRepository.hentNotationer(aftale.getAftale_Id()));
+
+        LocalDate now = LocalDate.now();
+        if (now.isBefore(aftale.getStartDato())) model.addAttribute("foerAftaleStart", true);
+        else if (now.isBefore(aftale.getSlutDato().plusDays(1))) model.addAttribute("foerAftaleSlut", true);
 
         return "visLejeAftale";
     }
@@ -174,7 +179,7 @@ public class LejeAftaleController {
         HttpSession session = faaSession(request, model);
         if(session == null) return "redirect:/Logind";
 
-        LejeAftale lejeAftale = new LejeAftale(kunde_Id,vognNummer,startDato,slutDato,detaljer);
+        LejeAftale lejeAftale = new LejeAftale(kunde_Id, vognNummer, startDato, slutDato, detaljer);
 
         aftaleRepository.gemLejeAftale(lejeAftale);
 

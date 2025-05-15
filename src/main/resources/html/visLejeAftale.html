@@ -14,10 +14,18 @@
 <main>
     <header class="underHeader" th:insert="~{fragments :: aftaleKort}"></header>
     <aside>
-        <form th:action="@{/NyNotation}" th:method="get">
-            <button type="submit">Registrér Ny Notation</button>
-        </form>
-        <div th:insert="~{fragments :: notationListe}"></div>
+        <div style="width: 100%;">
+            <section style="max-width: initial">
+                <p th:text="${lejeAftale.getDetaljer()}">Detaljer</p>
+            </section>
+            <form th:if="${foerAftaleStart}" th:action="@{/SletAftale}" th:method="get">
+                <button type="submit" class="annuller">Aflys Aftale</button>
+            </form>
+            <form th:if="${foerAftaleSlut}" th:action="@{/NyNotation}" th:method="get">
+                <button type="submit">Registrér Ny Notation</button>
+            </form>
+        </div>
+        <div th:insert="~{fragments :: notationListe}" style="width: 100%; max-width: max-content;"></div>
     </aside>
 </main>
 </body>
