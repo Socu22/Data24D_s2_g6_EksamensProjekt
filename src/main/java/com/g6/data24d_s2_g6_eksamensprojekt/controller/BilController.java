@@ -36,42 +36,64 @@ public class BilController {
         if(session == null) return "redirect:/Logind";
 
         List<Bil> biler = bilRepository.hentBiler();
+        List<Lager> lagerList = lagerRepository.hentLager();
+        List<BilType> bilTypeList = bilTypeRepository.hentBilTyper();
         if(session.getAttribute("biler")!=null){
             biler = (List<Bil>) session.getAttribute("biler");
 
         }
         model.addAttribute("biler",biler);
+        model.addAttribute("lagerList",lagerList);
+        model.addAttribute("bilTypeList",bilTypeList);
 
         return "visBiler";
     }
     @GetMapping("OmdirigerVisBiler")
-    public String Omdirigerbil(HttpServletRequest request, Model model){
+    public String Omdirigerbil(HttpServletRequest request, Model model) {
         HttpSession session = faaSession(request, model);
-        if(session == null) return "redirect:/Logind";
+        if (session == null) return "redirect:/Logind";
 
-
-        List<Bil> bilList = new ArrayList<>(); // attribute som overskriver default biler vist;
         String vognNummer = request.getParameter("vognNummer");
-        if (vognNummer!=null){
-            if((vognNummer.length()==7)){
-                bilList = bilRepository.hentBilerUdFraVognNummer(vognNummer);
-            }else {
-                if(vognNummer.length()==17){
-                    bilList = bilRepository.hentBilerUdFraStelNummer(vognNummer); //  behandles som et stelNummer
-                }
-            }
-        } else if (request.getParameter("lager_Id")!=null) {
-            bilList= bilRepository.hentBilerUdFraLager_Id(Integer.parseInt(request.getParameter("lager_Id")));
+        String lager_Id = request.getParameter("lager_Id");
+        String maerke = request.getParameter("maerke");
 
-        } else if (request.getParameter("maerke")!=null){
-            bilList = bilRepository.hentBilerUdFraBilMaerke(request.getParameter("maerke"));
+        List<Bil> bilList = new ArrayList<>();
+
+        // Hvis vognNummer eller stelNummer er givet
+        if (vognNummer != null && !vognNummer.isEmpty()) {
+            if (vognNummer.length() == 7) { // her tjekkes der om det er et vognNummer.
+                bilList = bilRepository.hentBilerUdFraVognNummer(vognNummer);
+            } else if (vognNummer.length() == 17) { // her tjekkes der om det er et stelNummer.
+                String stelNummer = vognNummer; //Sikker på at værdien i vognNummer rent faktisk er et stelNummer
+                bilList = bilRepository.hentBilerUdFraStelNummer(stelNummer);
+            }
+        } else {
+            // Hent alle biler, så filtrering nedenfor virker korrekt
+            bilList = bilRepository.hentBiler();
+
+            if (lager_Id != null && !lager_Id.isEmpty()) {
+                int lager_Id_SomInt = Integer.parseInt(lager_Id);
+                bilList.removeIf(b -> b.getLager_Id() != lager_Id_SomInt);
+            }
+
+            if (maerke != null && !maerke.isEmpty()) {
+                bilList.removeIf(b -> !b.getType().getMaerke().equalsIgnoreCase(maerke));
+            }
         }
 
-        //todo: sum element i et set også ind til session bilList. (krav: lager_Id og maerke skal kunne aktiveres og samles. evt bruge true or false på alle og samle dem som er true sat noget i. vente med submit indtil knap trykkes. )
-        session.setAttribute("biler",bilList); //gemmes is session.
+        session.setAttribute("biler", bilList);
+        return "redirect:/VisBiler";
+    }
+    @GetMapping("VisBilerReset")
+    public String omdirigerVisBilerReset(HttpServletRequest request, Model model){
+        HttpSession session = faaSession(request, model);
+        if (session == null) return "redirect:/Logind";
+
+        session.removeAttribute("biler");
 
         return "redirect:/VisBiler";
     }
+
 
     @GetMapping("/VisBil")
     public String visBil(HttpServletRequest request, Model model){

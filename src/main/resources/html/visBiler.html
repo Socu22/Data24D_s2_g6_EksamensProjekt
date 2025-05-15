@@ -30,21 +30,27 @@
         </div>
       </div>
     </form>
+
     <form th:action="@{/OmdirigerVisBiler}" method="get">
       <div>
         <div>
-          <label for="lager_Id">lager id:</label>
-          <input type="text" id="lager_Id" name="lager_Id" placeholder="Indtast lager id" onchange="this.form.submit()" required autofocus>
+          <select name="lager_Id">
+            <option value="" disabled selected>Vælg lager</option>
+            <option th:each="lager : ${lagerList}" th:value="${lager.lager_Id}" th:text="${lager.navn + '(' + lager.lager_Id + ')'}"></option>
+          </select>
+
+          <select name="maerke">
+            <option value="">Vælg mærke</option>
+            <option th:each="bilType : ${bilTypeList}" th:value="${bilType.maerke}" th:text="${bilType.maerke + '(' + bilType.model + ')'}"></option>
+
+          </select>
+
+          <button type="submit">Filtrer</button>
         </div>
       </div>
     </form>
-    <form th:action="@{/OmdirigerVisBiler}" method="get">
-      <div>
-        <div>
-          <label for="maerke">mærke:</label>
-          <input type="text" id="maerke" name="maerke" placeholder="Indtast mærke" onchange="this.form.submit()" required autofocus>
-        </div>
-      </div>
+    <form th:action="@{/VisBilerReset}" method="get">
+      <button type="submit">Reset</button>
     </form>
 
   </section>
