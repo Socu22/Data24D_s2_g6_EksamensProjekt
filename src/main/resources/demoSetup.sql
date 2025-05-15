@@ -112,14 +112,14 @@ INSERT INTO kunde (navn) VALUES
 
 -- Lejeaftaler (flere rækker, danske detaljer)
 INSERT INTO lejeAftaler (kunde_Id, vognNummer, startDato, slutDato, detaljer) VALUES
-                                                                                  (1, 'CD67890', '2023-01-01', '2023-01-15', 'Lejeaftale for John Doe - januar'),
-                                                                                  (2, 'AB12345', '2023-02-01', '2023-02-28', 'Lejeaftale for Jane Smith - februar'),
-                                                                                  (1, 'EF56789', '2023-03-01', '2023-03-10', 'Lejeaftale for John Doe - marts'),
-                                                                                  (2, 'BH10475', '2023-04-05', '2023-04-20', 'Lejeaftale for Jane Smith - forårstur'),
-                                                                                  (1, 'LD98430', '2023-05-01', '2023-05-15', 'Lejeaftale for John Doe - sommer'),
-                                                                                  (2, 'RP19383', '2023-06-10', '2023-06-25', 'Lejeaftale for Jane Smith - sommerferie'),
-                                                                                  (1, 'CG57492', '2023-07-01', '2023-07-10', 'Korttidsleje for John Doe'),
-                                                                                  (2, 'XY92831', '2023-08-01', '2023-08-15', 'Lejeaftale for Jane Smith - august');
+                                                                                  (1, 'CD67890', '2025-01-01', '2025-01-15', 'Lejeaftale for John Doe - januar'),
+                                                                                  (2, 'AB12345', '2025-02-01', '2025-02-28', 'Lejeaftale for Jane Smith - februar'),
+                                                                                  (1, 'EF56789', '2025-03-01', '2025-03-10', 'Lejeaftale for John Doe - marts'),
+                                                                                  (2, 'BH10475', '2025-04-05', '2025-04-20', 'Lejeaftale for Jane Smith - forårstur'),
+                                                                                  (1, 'LD98430', '2025-05-01', '2025-05-15', 'Lejeaftale for John Doe - sommer'),
+                                                                                  (2, 'RP19383', '2025-06-10', '2025-06-25', 'Lejeaftale for Jane Smith - sommerferie'),
+                                                                                  (1, 'CG57492', '2025-07-01', '2025-07-10', 'Korttidsleje for John Doe'),
+                                                                                  (2, 'XY92831', '2025-08-01', '2025-08-15', 'Lejeaftale for Jane Smith - august');
 
 -- Notationer uden aftale (aftale_Id IS NULL)
 INSERT INTO notationer (aftale_Id, vognNummer, beskrivelse, pris) VALUES
