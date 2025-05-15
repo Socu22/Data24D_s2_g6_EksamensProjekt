@@ -1,7 +1,9 @@
+-- DROP & CREATE database
 DROP DATABASE IF EXISTS bilAbonnementDatabase;
 CREATE DATABASE bilAbonnementDatabase;
 USE bilAbonnementDatabase;
 
+-- Tabeller
 CREATE TABLE medArbejdere(
                              medArbejder_Id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
                              navn VARCHAR(50) NOT NULL,
@@ -45,9 +47,9 @@ CREATE TABLE lejeAftaler(
                             aftale_Id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
                             kunde_Id INT NOT NULL,
                             vognNummer VARCHAR(7) NOT NULL,
-                            startDato date NOT NULL,
+                            startDato DATE NOT NULL,
                             slutDato DATE NOT NULL,
-                            detaljer varchar(255) NOT NULL,
+                            detaljer VARCHAR(255) NOT NULL,
                             FOREIGN KEY (kunde_Id) REFERENCES kunde(kunde_Id),
                             FOREIGN KEY (vognNummer) REFERENCES bil(vognNummer)
 );
@@ -55,9 +57,15 @@ CREATE TABLE lejeAftaler(
 CREATE TABLE notationer(
                            notationer_id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
                            aftale_Id INT,
-                           vognNummer varchar(7) NOT NULL,
+                           vognNummer VARCHAR(7) NOT NULL,
                            beskrivelse VARCHAR(255) NOT NULL,
                            pris DOUBLE NOT NULL,
                            FOREIGN KEY (aftale_Id) REFERENCES lejeAftaler(aftale_Id),
                            FOREIGN KEY (vognNummer) REFERENCES bil(vognNummer)
 );
+
+-- Medarbejdere
+INSERT INTO medArbejdere (navn, adgangskode, stilling) VALUES
+                                                           ('demo1','demo1','Dataregistrering'),
+                                                           ('demo2','demo2','Skade_&_Udbedring'),
+                                                           ('demo3','demo3','Forretningsudviklere');
