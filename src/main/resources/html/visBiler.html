@@ -26,10 +26,12 @@
       <div>
         <div>
           <label for="vognNummer">VognNummer/stelNummer:</label>
-          <input type="text" id="vognNummer" name="vognNummer" placeholder="Indtast vognnummer" maxlength="17"  onchange="this.form.submit()" required autofocus>
+          <input type="text" id="vognNummer" name="vognNummer" placeholder="Indtast vognnummer/stelNummer" maxlength="17"  onchange="this.form.submit()" required autofocus>
         </div>
       </div>
     </form>
+
+
 
     <form th:action="@{/OmdirigerVisBiler}" method="get">
       <div>

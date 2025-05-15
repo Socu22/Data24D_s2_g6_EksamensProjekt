@@ -68,17 +68,10 @@ public class BilController {
                 bilList = bilRepository.hentBilerUdFraStelNummer(stelNummer);
             }
         } else {
-            // Hent alle biler, så filtrering nedenfor virker korrekt
-            bilList = bilRepository.hentBiler();
+            // hvis du vælger lager, mærke eller begge virke den her metode
+            bilList = bilRepository.hentBilerbilerUdFraLager_idEllerOgMaerke(lager_Id,maerke);
 
-            if (lager_Id != null && !lager_Id.isEmpty()) {
-                int lager_Id_SomInt = Integer.parseInt(lager_Id);
-                bilList.removeIf(b -> b.getLager_Id() != lager_Id_SomInt);
-            }
 
-            if (maerke != null && !maerke.isEmpty()) {
-                bilList.removeIf(b -> !b.getType().getMaerke().equalsIgnoreCase(maerke));
-            }
         }
 
         session.setAttribute("biler", bilList);
