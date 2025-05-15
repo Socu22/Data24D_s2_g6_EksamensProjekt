@@ -26,7 +26,7 @@
         <label for="bilType_Id">BilType Id:</label>
         <select id="bilType_Id" name="bilType_Id">
           <option value="" disabled selected>Vælg biltype</option>
-          <option th:each="bilType : ${bilTypeList}" th:value="${bilType.bilType_Id}" th:text="${bilType.bilType_Id}"></option>
+          <option th:each="bilType : ${bilTypeList}" th:value="${bilType.bilType_Id}" th:text="${bilType.maerke + '(' + bilType.bilType_Id + ')'}"></option>
         </select>
       </div>
 
@@ -34,7 +34,7 @@
         <label for="lager_Id">Lager Id:</label>
         <select id="lager_Id" name="lager_Id">
           <option value="" disabled selected>Vælg lager</option>
-          <option th:each="lager : ${lagerList}" th:value="${lager.lager_Id}" th:text="${lager.navn + ' (lager_Id: ' + lager.lager_Id + ')'}"></option>
+          <option th:each="lager : ${lagerList}" th:value="${lager.lager_Id}" th:text="${lager.navn + '(' + lager.lager_Id + ')'}"></option>
         </select>
       </div>
 
