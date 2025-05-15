@@ -13,9 +13,58 @@
 <header th:insert="~{fragments :: header}"></header>
 <main>
     <header class="underHeader">
-        <!-- skriv under header her -->
+        <form th:action="@{/OmdirigerVisLejeAftaler}" method="get">
+            <label>VognNummer: </label>
+            <input type="text" name="vognNummer" placeholder="VognNummer" th:value="${vognNummer}"  onchange="this.form.submit()"  />
+
+            <label>Periode: </label>
+            <select id="periodeNummer" name="periodeNummer" onchange="this.form.submit()" required >
+                <option value="" disabled selected>Vælg en kunde</option>
+                <option   th:selected="${periodeNummer == null || periodeNummer == 0}" value="0">Sidste Uge</option>
+                <option   th:selected="${periodeNummer != null && periodeNummer == 1}" value="1">Sidste Måned</option>
+                <option   th:selected="${periodeNummer != null && periodeNummer == 2}" value="2">Vælg Dag</option>
+                <option   th:selected="${periodeNummer != null && periodeNummer == 3}" value="3">Vælg Periode</option>
+            </select>
+            <div th:if="${periodeNummer == null || periodeNummer == 0}">
+                <label>Sidste Uge</label>
+            </div>
+            <div th:if="${periodeNummer != null && periodeNummer == 1}">
+                <label>Sidste Måned</label>
+            </div>
+            <div th:if="${periodeNummer != null && periodeNummer == 2}">
+                <input  type="date" id="dato" name="dato" th:value="${dato}" onchange="this.form.submit()" />
+            </div>
+            <div th:if="${periodeNummer != null && periodeNummer == 3}">
+                <input  type="date" id="startDato" name="startDato" th:value="${startDato}" onchange="this.form.submit()" />
+                <input  type="date" id="slutDato" name="slutDato" th:value="${slutDato}" onchange="this.form.submit()" />
+            </div>
+        </form>
     </header>
-    <div th:insert="~{fragments :: aftaleListe}"></div>
+    <div th:each="aftale : ${lejeAftaler}" class="liste">
+        <a th:if="${
+    (vognNummer == null || #strings.contains(aftale.getVognNummer(), vognNummer)) &&
+    (dato == null || (dato.isAfter(aftale.getStartLocalDate()) && dato.isBefore(aftale.getSlutLocalDate()))) &&
+    (
+        startDato == null || slutDato == null ||
+        (!slutDato.isBefore(aftale.getStartLocalDate()) && !startDato.isAfter(aftale.getSlutLocalDate()))
+    )}" th:href="@{VisLejeAftale(aftaleId = ${aftale.getAftale_Id()})}" style="color: inherit; text-decoration: none">
+            <div class="kort">
+                <p class="vognNr" th:text="${aftale.getVognNummer()}"></p>
+                <div>
+                    <p>Lejer:</p>
+                    <p th:text="${aftale.kunde_Id}" class="stelNummer" style="font-weight: bold">--Lejers Navn--</p>
+                </div>
+                <div>
+                    <p th:text="'Mnd. Afgift: ' + ${afgift} + 'kr'">Mnd. Afgift:</p>
+                    <p th:text="'Lager: ' + ${lager}">Lager:</p>
+                </div>
+                <div style="text-align: right;">
+                    <p th:text="'Periode: ' + ${aftale.getStartDato()}">Periode: StartDato</p>
+                    <p th:text="${aftale.getSlutDato()}">SlutDato</p>
+                </div>
+            </div>
+        </a>
+    </div>
 </main>
 <footer th:insert="~{fragments :: footer}"></footer>
 </body>

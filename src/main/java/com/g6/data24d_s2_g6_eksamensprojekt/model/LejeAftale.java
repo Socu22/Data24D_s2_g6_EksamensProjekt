@@ -1,5 +1,7 @@
 package com.g6.data24d_s2_g6_eksamensprojekt.model;
 
+import java.time.LocalDate;
+
 public class LejeAftale {
    private int aftale_Id;
    private int kunde_Id;
@@ -56,6 +58,9 @@ public class LejeAftale {
     public String getStartDato() {
         return startDato;
     }
+    public LocalDate getStartLocalDate(){
+        return LocalDate.parse(startDato);
+    }
 
     public void setStartDato(String startDato) {
         this.startDato = startDato;
@@ -63,6 +68,9 @@ public class LejeAftale {
 
     public String getSlutDato() {
         return slutDato;
+    }
+    public LocalDate getSlutLocalDate(){
+        return LocalDate.parse(slutDato);
     }
 
     public void setSlutDato(String slutDato) {

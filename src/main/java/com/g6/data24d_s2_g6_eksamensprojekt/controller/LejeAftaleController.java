@@ -15,6 +15,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 
@@ -42,6 +43,17 @@ public class LejeAftaleController {
         List<Kunde> kunder = kundeRepository.hentKunder();
         HashMap<Integer, Kunde> kunderMapped = new HashMap<>();
 
+        model.addAttribute("vognNummer", session.getAttribute("vognNummer"));
+        model.addAttribute("periodeNummer", session.getAttribute("periodeNummer"));
+        model.addAttribute("startDato", session.getAttribute("startDato"));
+        model.addAttribute("slutDato", session.getAttribute("slutDato"));
+        model.addAttribute("dato", session.getAttribute("dato"));
+        session.removeAttribute("vognNummer");
+        session.removeAttribute("periodeNummer");
+        session.removeAttribute("startDato");
+        session.removeAttribute("slutDato");
+        session.removeAttribute("dato");
+
         for (Kunde kunde: kunder)
         {
             kunderMapped.put(kunde.getKunde_Id(),kunde);
@@ -57,6 +69,44 @@ public class LejeAftaleController {
 
         return "visLejeAftaler";
     }
+    @GetMapping("/OmdirigerVisLejeAftaler")
+    public String omdirigerVisLejeAftaler(HttpServletRequest request, Model model){
+        HttpSession session = BrugerController.faaSession(request, model);
+        if(session == null) return "redirect:/Logind";
+
+        String vognNummer = request.getParameter("vognNummer");
+        Integer periodeNummer = Integer.parseInt(request.getParameter("periodeNummer"));
+        String startDato =  request.getParameter("startDato");
+        String slutDato = request.getParameter("slutDato");
+        String dato = request.getParameter("dato");
+
+        LocalDate startDato_ = null;
+        LocalDate slutDato_ = null;
+        LocalDate dato_ = null;
+
+        if(startDato != null && !startDato.isEmpty()) {
+            startDato_ = LocalDate.parse(startDato);
+            System.out.println("startdato: " + startDato_.toString());
+        }
+        if(slutDato != null && !slutDato.isEmpty()) {
+            slutDato_ = LocalDate.parse(slutDato);
+            System.out.println("slutdato: " + slutDato_.toString());
+        }
+        if(dato != null && !dato.isEmpty()) {
+            dato_ = LocalDate.parse(dato);
+            System.out.println("dato: " + dato_.toString());
+        }
+
+        session.setAttribute("vognNummer", vognNummer);
+        session.setAttribute("periodeNummer", periodeNummer);
+        session.setAttribute("startDato", startDato_);
+        session.setAttribute("slutDato", slutDato_);
+        session.setAttribute("dato", dato_);
+
+
+        return "redirect:/VisLejeAftaler";
+    }
+
 
     @GetMapping("/VisLejeAftale")
     public String visLejeAftale(@RequestParam("aftaleId") int id, HttpServletRequest request, Model model)
@@ -105,6 +155,12 @@ public class LejeAftaleController {
 
         model.addAttribute("kundeList",kundeList);
         model.addAttribute("tempKunde", tempKunde);
+
+        session.removeAttribute("kunde_Id");
+        session.removeAttribute("vognNummer");
+        session.removeAttribute("startDato");
+        session.removeAttribute("slutDato");
+        session.removeAttribute("detaljer");
 
         return "nyLejeAftale";
     }
