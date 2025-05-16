@@ -70,7 +70,7 @@ public class LejeAftale {
         return startDato;
     }
     public LocalDate getStartLocalDate(){
-        return LocalDate.parse(startDato);
+        return startDato;
     }
 
     public void setStartDato(LocalDate startDato) {
@@ -81,7 +81,7 @@ public class LejeAftale {
         return slutDato;
     }
     public LocalDate getSlutLocalDate(){
-        return LocalDate.parse(slutDato);
+        return slutDato;
     }
 
     public void setSlutDato(LocalDate slutDato) {
