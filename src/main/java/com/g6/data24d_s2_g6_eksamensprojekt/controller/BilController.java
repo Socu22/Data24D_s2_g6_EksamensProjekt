@@ -100,19 +100,7 @@ public class BilController {
 
         return "visBil";
     }
-    @GetMapping("/SletBil")
-    public String sletBil(HttpServletRequest request, Model model){
-        HttpSession session = faaSession(request, model);
-        if(session == null) return "redirect:/Logind";
 
-        Bil bil = (Bil) session.getAttribute("bil");
-
-        bilRepository.sletBil(bil.getVognNummer()); // todo: fix så en bil kan slettes
-
-
-
-        return "redirect:visBiler";
-    }
     @GetMapping("/NyBil")
     public String nyBil(HttpServletRequest request, Model model){
         HttpSession session = faaSession(request, model);

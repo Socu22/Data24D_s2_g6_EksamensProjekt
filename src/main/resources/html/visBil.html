@@ -43,9 +43,6 @@
         <form th:action="@{/NyNotation}" th:method="get">
             <button type="submit">Registrér Ny Notation</button>
         </form>
-        <form th:action="@{SletBil}" method="get">
-            <button type="submit" class="annuller">slet Bil </button>
-        </form>
         <div th:insert="~{fragments :: notationListe}"></div>
     </aside>
 
