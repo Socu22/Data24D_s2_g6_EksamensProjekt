@@ -13,7 +13,6 @@ CREATE TABLE medArbejdere(
 
 CREATE TABLE bilType(
     bilType_Id    INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
-    kaldeNavn     VARCHAR(50),
     mærke         VARCHAR(50) NOT NULL,
     model         VARCHAR(50) NOT NULL,
     udstyrsniveau VARCHAR(50) NOT NULL,
