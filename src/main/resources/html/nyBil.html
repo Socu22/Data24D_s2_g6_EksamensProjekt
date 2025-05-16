@@ -26,7 +26,7 @@
         <label for="bilType_Id">BilType Id:</label>
         <select id="bilType_Id" name="bilType_Id">
           <option value="" disabled selected>Vælg biltype</option>
-          <option th:each="bilType : ${bilTypeList}" th:value="${bilType.bilType_Id}" th:text="${bilType.maerke + '(' + bilType.bilType_Id + ')'}"></option>
+          <option th:each="bilType : ${bilTypeList}" th:value="${bilType.bilType_Id}" th:text="${bilType.maerke + '(' + bilType.model + ')'}"></option>
         </select>
       </div>
 
@@ -34,13 +34,19 @@
         <label for="lager_Id">Lager Id:</label>
         <select id="lager_Id" name="lager_Id">
           <option value="" disabled selected>Vælg lager</option>
-          <option th:each="lager : ${lagerList}" th:value="${lager.lager_Id}" th:text="${lager.navn + '(' + lager.lager_Id + ')'}"></option>
+          <option th:each="lager : ${lagerList}" th:value="${lager.lager_Id}" th:text="${lager.navn + '(' + lager.adresse + ')'}"></option>
         </select>
       </div>
 
       <div>
         <label for="status">Status:</label>
-        <input type="text" id="status" name="status" placeholder="Indtast status" maxlength="20" required>
+        <select name="status" id="status">
+          <option value="" disabled selected>Vælg status</option>
+          <option th:value="Tilgængelig">Tilgængelig</option>
+          <option th:value="Vedligeholdelse">Vedligeholdelse</option>
+          <option th:value="Slettet">Slettet</option>
+          <option th:value="Udlejet">Udlejet</option>
+        </select>
       </div>
 
       <div>

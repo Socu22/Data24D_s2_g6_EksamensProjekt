@@ -9,6 +9,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import java.util.List;
+
 import static com.g6.data24d_s2_g6_eksamensprojekt.controller.BrugerController.faaSession;
 
 @Controller
@@ -21,6 +23,9 @@ public class BilTypeController {
         HttpSession session = faaSession(request, model);
         if(session == null) return "redirect:/Logind";
 
+        List<String> maerkeList= bilTypeRepository.hentAlleMaerkerDK();
+        model.addAttribute("maerkeList",maerkeList);
+
 
         return "nyBilType";
     }
@@ -30,7 +35,7 @@ public class BilTypeController {
         if(session == null) return "redirect:/Logind";
 
         int bilType_Id = bilTypeRepository.getNextId();
-        String mærke = request.getParameter("mærke");
+        String mærke = request.getParameter("maerke");
         String modelP = request.getParameter("model");
         String udstyrsniveau = request.getParameter("udstyrsniveau");
         double stålPris = Double.parseDouble(request.getParameter("stålPris"));

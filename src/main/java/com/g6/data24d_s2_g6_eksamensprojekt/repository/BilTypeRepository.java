@@ -6,6 +6,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Repository
@@ -13,6 +14,19 @@ public class BilTypeRepository {
 
     @Autowired
     JdbcTemplate jdbcTemplate;
+
+    public static final List<String> BIL_MAERKER = Arrays.asList(
+            "Alfa Romeo", "Audi", "Aston Martin", "BMW",
+            "Chrysler", "Citroen", "Daewoo", "Ferrari",
+            "Fiat", "Ford", "Honda", "Hyundai",
+            "Jaguar", "Jeep", "Kia", "Lancia",
+            "Landrover", "Lexus", "Lotus", "Maserati",
+            "Mazda", "Mercedes", "MG", "Mitsubishi",
+            "Morgan", "Nissan", "Opel", "Peugeot",
+            "Renault", "Rolls Royce", "Rover", "Saab",
+            "Seat", "Skoda", "Subaru", "Suzuki",
+            "Toyota", "Volvo", "VW"
+    );
 
     private final RowMapper<BilType> rowMapper = (rs, rowNum) -> {
         BilType bilType = new BilType(rs.getInt("bilType_Id"),
@@ -59,6 +73,9 @@ public class BilTypeRepository {
         String sql = "SELECT MAX(bilType_Id) FROM bilType";
         Integer maxWishId = jdbcTemplate.queryForObject(sql, (rs, rowNum) -> rs.getInt(1));
         return (maxWishId != null ? maxWishId + 1 : 1);
+    }
+    public List<String> hentAlleMaerkerDK(){
+        return BIL_MAERKER;
     }
 
 }
