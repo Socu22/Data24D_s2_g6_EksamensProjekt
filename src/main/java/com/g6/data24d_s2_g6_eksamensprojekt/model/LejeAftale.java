@@ -11,6 +11,7 @@ public class LejeAftale {
    private LocalDate startDato;
    private LocalDate slutDato;
    private Kunde kunde;
+   private Bil bil;
 
     public LejeAftale(int aftale_Id, int kunde_Id, String vognNummer, String startDato, String slutDato, String detaljer)
     {
@@ -104,5 +105,15 @@ public class LejeAftale {
     public void setKunde(Kunde kunde)
     {
         this.kunde = kunde;
+    }
+
+    public Bil getBil()
+    {
+        return bil;
+    }
+
+    public void setBil(Bil bil)
+    {
+        this.bil = bil;
     }
 }

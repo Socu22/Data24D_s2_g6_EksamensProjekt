@@ -5,6 +5,7 @@
     --primær-farve-obs:      indianred;
     --primær-farve-obs-mørk: firebrick;
     --primær-margin:        1rem;
+    --sekundær-margin:      0.5rem;
 
     --box-kant-farve: black;
     --box-skygge: 0 4px 8px rgba(0,0,0,0.5);
@@ -42,7 +43,7 @@ header div, footer div {
 header {
     justify-content: center;
     position: sticky;
-    top: 0.5rem;
+    top: var(--sekundær-margin);
 }
 
 header.underHeader {
@@ -53,11 +54,11 @@ header.underHeader {
 
 footer {
     position: sticky;
-    bottom: 0.5rem;
+    bottom: var(--sekundær-margin);
 }
 
 main {
-    --ekstra: calc(var(--primær-margin) + 1rem);
+    --ekstra: calc(var(--primær-margin) * 2);
     margin-left:  var(--ekstra);
     margin-right: var(--ekstra);
     padding: 0;
@@ -82,8 +83,9 @@ aside {
 
 button {
     cursor: pointer;
-    padding: .5rem;
-    margin: .5rem;
+    padding: var(--sekundær-margin);
+    margin: var(--sekundær-margin);
+    margin: initial;
     border-width: medium;
     border-color: var(--primær-farve-mørk);
     background-color: var(--primær-farve);
@@ -98,7 +100,6 @@ button.logud {
     border-color: var(--primær-farve-obs-mørk);
     background-color: #EEEEEE;
     height: 3rem;
-    margin: initial;
 }
 
 button.annuller {
@@ -124,7 +125,7 @@ p.vognNr {
     border-color: red;
     border-width: medium;
     padding: .15rem;
-    margin: 1rem;
+    margin: var(--sekundær-margin);
     cursor: pointer;
     text-align: center;
     font-weight: bold;
@@ -167,8 +168,8 @@ div.kort {
 
 div.kort div{
     display: block;
-    margin-top: 1rem;
-    margin-bottom: 1rem;
+    margin-top: var(--primær-margin);
+    margin-bottom: var(--primær-margin);
     min-width: min-content;
     width: fit-content;
 }
@@ -179,9 +180,9 @@ div.kort div:not(:first-of-type){
 
 form {
     text-align-last: justify;
+    margin: var(--sekundær-margin);
 }
 
 ul {
     list-style-type: none;
-
 }

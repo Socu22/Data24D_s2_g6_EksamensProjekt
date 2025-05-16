@@ -2,6 +2,7 @@ package com.g6.data24d_s2_g6_eksamensprojekt.repository;
 
 import com.g6.data24d_s2_g6_eksamensprojekt.model.Bil;
 import com.g6.data24d_s2_g6_eksamensprojekt.model.BilType;
+import com.g6.data24d_s2_g6_eksamensprojekt.model.Lager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -17,6 +18,8 @@ public class BilRepository
     JdbcTemplate jdbcTemplate;
     @Autowired
     BilTypeRepository bilTypeRepository;
+    @Autowired
+    LagerRepository lagerRepository;
 
     private final RowMapper<Bil> rowMapper = (rs, rowNum) -> {
         Bil bil = new Bil(
@@ -38,9 +41,17 @@ public class BilRepository
 
         List<BilType> bilTyper = bilTypeRepository.hentBilTyper();
         HashMap<Integer, BilType> typerMapped = new HashMap<>();
-
         for (BilType biltype : bilTyper) {typerMapped.put(biltype.getBilType_Id(),biltype);}
-        for (Bil bil : bilList) {bil.setType(typerMapped.get(bil.getBilType_Id()));}
+
+        List<Lager> lagere = lagerRepository.hentLager();
+        HashMap<Integer, Lager> lagereMapped = new HashMap<>();
+        for (Lager lager : lagere) {lagereMapped.put(lager.getLager_Id(),lager);}
+
+        for (Bil bil : bilList)
+        {
+            bil.setType(typerMapped.get(bil.getBilType_Id()));
+            bil.setLager(lagereMapped.get(bil.getLager_Id()));
+        }
 
         return bilList;
     }
