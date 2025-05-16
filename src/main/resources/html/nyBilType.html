@@ -13,8 +13,14 @@
   <section>
     <form th:action="@{/GemNyBilType}" method="get">
       <div>
-        <label for="mærke">Mærke:</label>
-        <input type="text" id="mærke" name="mærke" placeholder="F.eks. Toyota" required autofocus>
+        <label for="maerke">Mærke:</label>
+        <select id="maerke" name="maerke">
+          <option value="" disabled selected>Vælg mærke</option>
+          <option th:each="maerke : ${maerkeList}"
+                  th:value="${maerke}"
+                  th:text="${maerke}">
+          </option>
+        </select>
       </div>
 
       <div>
