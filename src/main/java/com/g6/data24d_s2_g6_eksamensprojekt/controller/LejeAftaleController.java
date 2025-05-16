@@ -203,7 +203,7 @@ public class LejeAftaleController {
             System.out.println("fangede ikke kunde Id");
         }
 
-        String vognNummer = request.getParameter("vognNummer");
+        String vognNummer = request.getParameter("vognNummer"); //Tag fat i et navngivet input element fra tidligere html side
         String startDato = request.getParameter("startDato");
         String slutDato = request.getParameter("slutDato");
         String detaljer = request.getParameter("detaljer");

@@ -82,26 +82,84 @@ public class BilRepository
 
         List<BilType> bilTyper = bilTypeRepository.hentBilTyper();
         HashMap<Integer, BilType> typerMapped = new HashMap<>();
-
         for (BilType biltype : bilTyper) {typerMapped.put(biltype.getBilType_Id(),biltype);}
-        for (Bil bil : bilList) {bil.setType(typerMapped.get(bil.getBilType_Id()));}
+
+        List<Lager> lagere = lagerRepository.hentLager();
+        HashMap<Integer, Lager> lagereMapped = new HashMap<>();
+        for (Lager lager : lagere) {lagereMapped.put(lager.getLager_Id(),lager);}
+
+        for (Bil bil : bilList)
+        {
+            bil.setType(typerMapped.get(bil.getBilType_Id()));
+            bil.setLager(lagereMapped.get(bil.getLager_Id()));
+        }
 
         return bilList;
         }
 
     public List<Bil> hentBilerUdFraStelNummer(String stelNummer) {
-        return jdbcTemplate.query("select * from bil where stelNummer=?",rowMapper,stelNummer);
+
+        List<Bil> bilList = jdbcTemplate.query("select * from bil where stelNummer=?",rowMapper,stelNummer);
+
+        List<BilType> bilTyper = bilTypeRepository.hentBilTyper();
+        HashMap<Integer, BilType> typerMapped = new HashMap<>();
+        for (BilType biltype : bilTyper) {typerMapped.put(biltype.getBilType_Id(),biltype);}
+
+        List<Lager> lagere = lagerRepository.hentLager();
+        HashMap<Integer, Lager> lagereMapped = new HashMap<>();
+        for (Lager lager : lagere) {lagereMapped.put(lager.getLager_Id(),lager);}
+
+        for (Bil bil : bilList)
+        {
+            bil.setType(typerMapped.get(bil.getBilType_Id()));
+            bil.setLager(lagereMapped.get(bil.getLager_Id()));
+        }
+        return bilList;
+
+
     }
 
     public List<Bil> hentBilerUdFraBilMaerke(String bilMærke){
-        return jdbcTemplate.query(
+        List<Bil> bilList = jdbcTemplate.query(
                 "SELECT * FROM bil INNER JOIN bilType b ON bil.bilType_Id = b.bilType_Id WHERE b.mærke = ?",
                 rowMapper,
                 bilMærke
         );
+        List<BilType> bilTyper = bilTypeRepository.hentBilTyper();
+        HashMap<Integer, BilType> typerMapped = new HashMap<>();
+        for (BilType biltype : bilTyper) {typerMapped.put(biltype.getBilType_Id(),biltype);}
+
+        List<Lager> lagere = lagerRepository.hentLager();
+        HashMap<Integer, Lager> lagereMapped = new HashMap<>();
+        for (Lager lager : lagere) {lagereMapped.put(lager.getLager_Id(),lager);}
+
+        for (Bil bil : bilList)
+        {
+            bil.setType(typerMapped.get(bil.getBilType_Id()));
+            bil.setLager(lagereMapped.get(bil.getLager_Id()));
+        }
+        return bilList;
+
+
     }
     public List<Bil> hentBilerUdFraLager_Id(int lager_Id) {
-        return jdbcTemplate.query("select * from bil where lager_Id=?",rowMapper,lager_Id);
+        List<Bil> bilList = jdbcTemplate.query("select * from bil where lager_Id=?",rowMapper,lager_Id);
+
+        List<BilType> bilTyper = bilTypeRepository.hentBilTyper();
+        HashMap<Integer, BilType> typerMapped = new HashMap<>();
+        for (BilType biltype : bilTyper) {typerMapped.put(biltype.getBilType_Id(),biltype);}
+
+        List<Lager> lagere = lagerRepository.hentLager();
+        HashMap<Integer, Lager> lagereMapped = new HashMap<>();
+        for (Lager lager : lagere) {lagereMapped.put(lager.getLager_Id(),lager);}
+
+        for (Bil bil : bilList)
+        {
+            bil.setType(typerMapped.get(bil.getBilType_Id()));
+            bil.setLager(lagereMapped.get(bil.getLager_Id()));
+        }
+        return bilList;
+
     }
 
     public List<Bil> hentBilerbilerUdFraLager_idEllerOgMaerke(String lager_Id, String maerke)
