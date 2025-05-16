@@ -1,11 +1,14 @@
 package com.g6.data24d_s2_g6_eksamensprojekt.repository;
 
+import com.g6.data24d_s2_g6_eksamensprojekt.model.Bil;
+import com.g6.data24d_s2_g6_eksamensprojekt.model.Kunde;
 import com.g6.data24d_s2_g6_eksamensprojekt.model.LejeAftale;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
+import java.util.HashMap;
 import java.util.List;
 
 @Repository
@@ -13,6 +16,11 @@ public class AftaleRepository {
     @Autowired
     JdbcTemplate jdbcTemplate;
 
+    @Autowired
+    KundeRepository kundeRepository;
+
+    @Autowired
+    BilRepository bilRepository;
 
     private final RowMapper<LejeAftale> rowMapper = (rs, rowNum) -> {
         LejeAftale lejeAftale = new LejeAftale();
@@ -33,7 +41,27 @@ public class AftaleRepository {
     //Samler alle lejeAftale objekter sammen i en liste.
     public List<LejeAftale> hentLejeAftaler(){
         List<LejeAftale> lejeAftaleList = jdbcTemplate.query("select * from lejeAftaler",rowMapper);
-        System.out.println(lejeAftaleList);
+
+        List<Bil> biler = bilRepository.hentBiler();
+        HashMap<String, Bil> bilerMapped = new HashMap<>();
+        for (Bil bil : biler)
+        {
+            bilerMapped.put(bil.getVognNummer(),bil);
+        }
+
+        List<Kunde> kunder = kundeRepository.hentKunder();
+        HashMap<Integer, Kunde> kunderMapped = new HashMap<>();
+        for (Kunde kunde: kunder)
+        {
+            kunderMapped.put(kunde.getKunde_Id(),kunde);
+        }
+
+        for (LejeAftale aftale: lejeAftaleList)
+        {
+            aftale.setKunde(kunderMapped.get(aftale.getKunde_Id()));
+            aftale.setBil(bilerMapped.get(aftale.getVognNummer()));
+        }
+
         return lejeAftaleList;
     }
 

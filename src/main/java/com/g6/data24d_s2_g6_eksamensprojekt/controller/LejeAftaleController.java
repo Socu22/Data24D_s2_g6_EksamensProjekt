@@ -40,10 +40,6 @@ public class LejeAftaleController {
         HttpSession session = BrugerController.faaSession(request, model);
         if(session == null) return "redirect:/Logind";
 
-        List<LejeAftale> aftaler = aftaleRepository.hentLejeAftaler();
-        List<Kunde> kunder = kundeRepository.hentKunder();
-        HashMap<Integer, Kunde> kunderMapped = new HashMap<>();
-
         model.addAttribute("vognNummer", session.getAttribute("vognNummer"));
         model.addAttribute("periodeNummer", session.getAttribute("periodeNummer"));
         model.addAttribute("startDato", session.getAttribute("startDato"));
@@ -55,15 +51,19 @@ public class LejeAftaleController {
         session.removeAttribute("slutDato");
         session.removeAttribute("dato");
 
-        for (Kunde kunde: kunder)
-        {
-            kunderMapped.put(kunde.getKunde_Id(),kunde);
-        }
+        double samletAfgift = 0;
+        LocalDate now = LocalDate.now();
+
+        List<LejeAftale> aftaler = aftaleRepository.hentLejeAftaler();
 
         for (LejeAftale aftale: aftaler)
         {
-            aftale.setKunde(kunderMapped.get(aftale.getKunde_Id()));
+            if (aftale.getSlutDato().isAfter(now) && aftale.getStartDato().isBefore(now))
+            {
+                samletAfgift += aftale.getBil().getType().getAfgift(); // todo
+            }
         }
+        model.addAttribute("samletIndkomst", samletAfgift);
 
         model.addAttribute("lejeAftaler", aftaler);
         // todo: udregn dagens indtægt

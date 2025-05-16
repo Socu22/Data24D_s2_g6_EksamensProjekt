@@ -9,6 +9,7 @@ public class Bil
     private BilType type;
     private int lager_Id;
     private String status;
+    private Lager lager;
     private List<Notation> notationer;
     private List<LejeAftale> lejeAftaler;
 
@@ -56,6 +57,16 @@ public class Bil
 
     public int getBilType_Id(){
         return type.getBilType_Id();
+    }
+
+    public Lager getLager()
+    {
+        return lager;
+    }
+
+    public void setLager(Lager lager)
+    {
+        this.lager = lager;
     }
 
     @Override

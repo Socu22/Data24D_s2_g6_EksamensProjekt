@@ -27,31 +27,31 @@
         <button type="submit">Bil Liste</button>
     </form>
     <div>
-        <p>Samlet Indkomst: TODO</p>
+        <p th:text="'Samlet Indkomst: ' + ${samletIndkomst} + 'kr'">Samlet Indkomst: TODO</p>
     </div>
 </div>
 
 <div th:fragment="bilKort">
     <div th:insert="~{fragments :: bilListeKort(
-                                        vognNummer=${bil.toString()},
-                                        bilType=   ${bil.getType.getMaerke()},
-                                        stelNummer=${bil.stelNummer},
-                                        lager=     ${bil.getLager_Id()},
-                                        afgift=    ${bil.getType().afgift}
-                                        )}">
+        vognNummer=${bil.toString()},
+        bilType=   ${bil.getType.getMaerke()},
+        stelNummer=${bil.stelNummer},
+        lager=     ${bil.getLager().getNavn()},
+        afgift=    ${bil.getType().afgift}
+        )}">
     </div>
 </div>
 
 <div th:fragment="aftaleKort">
     <a th:href="@{VisBil(vognNummer = ${bil.getVognNummer()})}" style="color: inherit; text-decoration: none">
         <div th:insert="~{fragments :: aftaleListeKort (
-                                            vognNummer=${bil.toString()},
-                                            kundeNavn= ${lejeAftale.getKunde().getNavn()},
-                                            afgift=    ${bil.getType().afgift},
-                                            lager=     ${bil.getLager_Id()},
-                                            startDato= ${lejeAftale.getStartDato()},
-                                            slutDato=  ${lejeAftale.getSlutDato()}
-                                            )}">
+            vognNummer=${lejeAftale.getBil().toString()},
+            kundeNavn= ${lejeAftale.getKunde().getNavn()},
+            afgift=    ${lejeAftale.getBil().getType().afgift},
+            lager=     ${lejeAftale.getBil().getLager().getNavn()},
+            startDato= ${lejeAftale.getStartDato()},
+            slutDato=  ${lejeAftale.getSlutDato()}
+            )}">
         </div>
     </a>
 </div>
@@ -98,12 +98,12 @@
     <div th:each="Bil : ${biler}" class="liste">
         <a th:href="@{VisBil(vognNummer = ${Bil.getVognNummer()})}" style="color: inherit; text-decoration: none">
             <div th:insert="~{fragments :: bilListeKort(
-                                        vognNummer=${Bil.toString()},
-                                        bilType=   ${Bil.getType.getMaerke()},
-                                        stelNummer=${Bil.getStelNummer()},
-                                        lager=     ${Bil.getLager_Id()},
-                                        afgift=    ${Bil.getType().afgift}
-                                        )}">
+                vognNummer=${Bil.toString()},
+                bilType=   ${Bil.getType.getMaerke()},
+                stelNummer=${Bil.getStelNummer()},
+                lager=     ${Bil.getLager().getNavn()},
+                afgift=    ${Bil.getType().afgift}
+                )}">
             </div>
         </a>
     </div>
@@ -113,13 +113,13 @@
         <div th:each="Aftale : ${lejeAftaler}" class="liste">
             <a th:href="@{VisLejeAftale(aftaleId = ${Aftale.getAftale_Id()})}" style="color: inherit; text-decoration: none">
                 <div th:insert="~{fragments :: aftaleListeKort (
-                                    vognNummer=${Aftale.getVognNummer()},
-                                    kundeNavn= ${Aftale.getKunde().getNavn()},
-                                    afgift=    'placeholder',
-                                    lager=     'placeholder',
-                                    startDato= ${Aftale.getStartDato()},
-                                    slutDato=  ${Aftale.getSlutDato()}
-                                    )}">
+                    vognNummer=${lejeAftale.getBil().toString()},
+                    kundeNavn= ${lejeAftale.getKunde().getNavn()},
+                    afgift=    ${lejeAftale.getBil().getType().afgift},
+                    lager=     ${lejeAftale.getBil().getLager().getNavn()},
+                    startDato= ${Aftale.getStartDato()},
+                    slutDato=  ${Aftale.getSlutDato()}
+                    )}">
                 </div>
             </a>
         </div>
