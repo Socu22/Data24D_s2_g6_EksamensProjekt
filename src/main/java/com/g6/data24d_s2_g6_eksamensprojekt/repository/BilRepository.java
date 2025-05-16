@@ -58,6 +58,20 @@ public class BilRepository
     //tager fat i bil ud fra et vognNummer
     public Bil hentBil(String vognNummer){
         List<Bil> bilList= jdbcTemplate.query("select * from bil where vognNummer=?",rowMapper,vognNummer);
+        List<BilType> bilTyper = bilTypeRepository.hentBilTyper();
+        HashMap<Integer, BilType> typerMapped = new HashMap<>();
+        for (BilType biltype : bilTyper) {typerMapped.put(biltype.getBilType_Id(),biltype);}
+
+        List<Lager> lagere = lagerRepository.hentLager();
+        HashMap<Integer, Lager> lagereMapped = new HashMap<>();
+        for (Lager lager : lagere) {lagereMapped.put(lager.getLager_Id(),lager);}
+
+        for (Bil bil : bilList)
+        {
+            bil.setType(typerMapped.get(bil.getBilType_Id()));
+            bil.setLager(lagereMapped.get(bil.getLager_Id()));
+        }
+
         if (bilList.size()==1){
             Bil bil = bilList.getFirst();
             bil.setType(bilTypeRepository.hentBilType(bil.getBilType_Id()));
