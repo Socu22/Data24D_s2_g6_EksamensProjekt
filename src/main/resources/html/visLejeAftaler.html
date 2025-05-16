@@ -19,7 +19,7 @@
 
             <label>Periode: </label>
             <select id="periodeNummer" name="periodeNummer" onchange="this.form.submit()" required >
-                <option value="" disabled selected>Vælg en kunde</option>
+                <option value="" disabled selected>Vælg en periode/dag</option>
                 <option   th:selected="${periodeNummer == null || periodeNummer == 0}" value="0">Sidste Uge</option>
                 <option   th:selected="${periodeNummer != null && periodeNummer == 1}" value="1">Sidste Måned</option>
                 <option   th:selected="${periodeNummer != null && periodeNummer == 2}" value="2">Vælg Dag</option>
