@@ -10,7 +10,8 @@
 <header th:insert="~{fragments :: header}"></header>
 
 <main>
-  <header class="underHeader" style="padding: 1.5rem;">
+  <header class="underHeader">
+  <section>
     <form th:action="@{NyBil}" method="get">
       <button type="submit">Ny Bil</button>
     </form>
@@ -20,6 +21,10 @@
     <form th:action="@{NyBilType}" method="get">
       <button type="submit">Ny Biltype</button>
     </form>
+  </section>
+  <section>
+
+
     <form th:action="@{/OmdirigerVisBiler}" method="get">
     <div>
       <div>
@@ -28,9 +33,6 @@
       </div>
     </div>
   </form>
-
-
-
     <form th:action="@{/OmdirigerVisBiler}" method="get">
       <div>
         <div>
@@ -52,6 +54,7 @@
     <form th:action="@{/VisBilerReset}" method="get">
       <button type="submit">Reset</button>
     </form>
+  </section>
   </header>
 
   <div th:insert="~{fragments :: bilListe}"></div>
