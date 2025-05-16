@@ -10,7 +10,7 @@
 <header th:insert="~{fragments :: header}"></header>
 
 <main>
-  <header class="underHeader">
+  <header class="underHeader" style="padding: 1.5rem;">
     <form th:action="@{NyBil}" method="get">
       <button type="submit">Ny Bil</button>
     </form>
@@ -20,16 +20,14 @@
     <form th:action="@{NyBilType}" method="get">
       <button type="submit">Ny Biltype</button>
     </form>
-  </header>
-  <section>
     <form th:action="@{/OmdirigerVisBiler}" method="get">
+    <div>
       <div>
-        <div>
-          <label for="vognNummer">VognNummer/stelNummer:</label>
-          <input type="text" id="vognNummer" name="vognNummer" placeholder="Indtast vognnummer/stelNummer" maxlength="17"  onchange="this.form.submit()" required autofocus>
-        </div>
+        <label for="vognNummer">VognNummer/stelNummer:</label>
+        <input type="text" id="vognNummer" name="vognNummer" placeholder="Indtast vognnummer/stelNummer" maxlength="17"  onchange="this.form.submit()" required autofocus>
       </div>
-    </form>
+    </div>
+  </form>
 
 
 
@@ -54,8 +52,7 @@
     <form th:action="@{/VisBilerReset}" method="get">
       <button type="submit">Reset</button>
     </form>
-
-  </section>
+  </header>
 
   <div th:insert="~{fragments :: bilListe}"></div>
 
