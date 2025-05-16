@@ -69,7 +69,7 @@ CREATE TABLE notationer(
 --
 -- Medarbejdere
 INSERT INTO medArbejdere (navn, adgangskode, stilling) VALUES
-    ('demo' ,'demo' ,'Dataregistrering'    ),
+    ('demo' ,'demo' ,'Demo'    ),
     ('demo1','demo1','Dataregistrering'    ),
     ('demo2','demo2','Skade_&_Udbedring'   ),
     ('demo3','demo3','Forretningsudviklere');
