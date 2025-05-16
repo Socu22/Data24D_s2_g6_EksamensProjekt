@@ -178,6 +178,7 @@ public class LejeAftaleController {
                                   HttpServletRequest request, Model model){
         HttpSession session = faaSession(request, model);
         if(session == null) return "redirect:/Logind";
+//todo: husk ny kunde?
 
         LejeAftale lejeAftale = new LejeAftale(kunde_Id, vognNummer, startDato, slutDato, detaljer);
 
