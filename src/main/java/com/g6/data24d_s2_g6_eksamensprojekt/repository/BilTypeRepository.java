@@ -25,7 +25,7 @@ public class BilTypeRepository {
         return bilType;
     };
 
-    public void nyBilTypeLogik(BilType bilType){
+    public void gemBilType(BilType bilType){
         String sql = "INSERT into bilType(" +
                 "bilType_Id," +
                 "mærke," +
@@ -43,10 +43,16 @@ public class BilTypeRepository {
                 bilType.getAfgift(),
                 bilType.getUdledningCo2());
     }
-    public List<BilType> getBilTyper()
+    public List<BilType> hentBilTyper()
     {
         List<BilType> bilTypeList = jdbcTemplate.query("select * from bilType",rowMapper);
         return bilTypeList;
+    }
+    public BilType hentBilType(int bilTypeId)
+    {
+        List<BilType> bilTypeList = jdbcTemplate.query("select * from bilType where bilType_Id = ?",rowMapper, bilTypeId);
+        if (!bilTypeList.isEmpty()) return bilTypeList.getFirst();
+        return null;
     }
 
     public int getNextId() {

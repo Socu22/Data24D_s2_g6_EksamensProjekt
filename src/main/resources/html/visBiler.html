@@ -10,19 +10,56 @@
 <header th:insert="~{fragments :: header}"></header>
 
 <main>
-  <section>
-    <form th:action="@{nyBil}" method="get">
+  <header class="underHeader">
+    <form th:action="@{NyBil}" method="get">
       <button type="submit">Ny Bil</button>
     </form>
-    <form th:action="@{nytLager}" method="get">
+    <form th:action="@{NytLager}" method="get">
       <button type="submit">Nyt Lager</button>
     </form>
-    <form th:action="@{nyBilType}" method="get">
+    <form th:action="@{NyBilType}" method="get">
       <button type="submit">Ny Biltype</button>
     </form>
+  </header>
+  <section>
+    <form th:action="@{/OmdirigerVisBiler}" method="get">
+      <div>
+        <div>
+          <label for="vognNummer">VognNummer/stelNummer:</label>
+          <input type="text" id="vognNummer" name="vognNummer" placeholder="Indtast vognnummer/stelNummer" maxlength="17"  onchange="this.form.submit()" required autofocus>
+        </div>
+      </div>
+    </form>
+
+
+
+    <form th:action="@{/OmdirigerVisBiler}" method="get">
+      <div>
+        <div>
+          <select name="lager_Id">
+            <option value="" disabled selected>Vælg lager</option>
+            <option th:each="lager : ${lagerList}" th:value="${lager.lager_Id}" th:text="${lager.navn + '(' + lager.lager_Id + ')'}"></option>
+          </select>
+
+          <select name="maerke">
+            <option value="">Vælg mærke</option>
+            <option th:each="bilType : ${bilTypeList}" th:value="${bilType.maerke}" th:text="${bilType.maerke + '(' + bilType.model + ')'}"></option>
+
+          </select>
+
+          <button type="submit">Filtrer</button>
+        </div>
+      </div>
+    </form>
+    <form th:action="@{/VisBilerReset}" method="get">
+      <button type="submit">Reset</button>
+    </form>
+
   </section>
 
-  <section>
+  <div th:insert="~{fragments :: bilListe}"></div>
+
+  <!-- <section>
     <table>
       <thead>
       <tr>
@@ -42,18 +79,14 @@
         <td th:text="${bil.lager_Id}"></td>
         <td th:text="${bil.status}"></td>
         <td>
-          <a th:href="@{visBil(vognNummer=${bil.vognNummer})}">
+          <a th:href="@{VisBil(vognNummer=${bil.vognNummer})}">
             <button type="button">Vis</button>
           </a>
         </td>
       </tr>
       </tbody>
     </table>
-  </section>
+  </section> -->
 </main>
-
-<footer>
-  <!-- Skriv side-specifik footer her -->
-</footer>
 </body>
 </html>

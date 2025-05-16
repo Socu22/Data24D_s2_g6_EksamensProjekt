@@ -6,7 +6,7 @@ import java.util.Objects;
 public class Bil
 {
     private final String vognNummer, stelNummer;
-    private final BilType type;
+    private BilType type;
     private int lager_Id;
     private String status;
     private List<Notation> notationer;
@@ -33,6 +33,11 @@ public class Bil
         return type;
     }
 
+    public void setType(BilType type)
+    {
+        this.type = type;
+    }
+
     public int getLager_Id() {
         return lager_Id;
     }
@@ -50,7 +55,6 @@ public class Bil
     }
 
     public int getBilType_Id(){
-
         return type.getBilType_Id();
     }
 

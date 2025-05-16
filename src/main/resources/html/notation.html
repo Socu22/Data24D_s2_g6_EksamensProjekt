@@ -16,18 +16,17 @@
   <header class="underHeader" th:if="${LejeAftale}" th:insert="~{fragments :: aftaleKort}"></header>
 
   <section>
-    <form th:action="@{/BekraeftNotation}" method="get">
+    <form th:action="@{/AnnullerNotation}" method="get" id="annuller"></form>
+    <form th:action="@{/GemNotation}" method="get" id="form">
       <label for="beskrivelse">beskrivelse:</label><br>
       <textarea id="beskrivelse" name="beskrivelse" placeholder="Beskriv Fejl/Mangler" maxlength="255" rows="4" cols="50" required></textarea>
       <br/>
       <label for="pris">Omkostning:</label><br>
       <input type="number" id="pris" name="pris" placeholder="pris" required/>
       <br/>
-      <button type="submit" name="bekraeft" value="true">Bekræft</button>
     </form>
-    <form th:action="@{/AnnullerNotation}" method="get">
-      <button class="annuller" name="bekraeft" value="false">Annullér</button>
-    </form>
+    <button type="submit" form="form">Bekræft</button>
+    <button class="annuller" form="annuller">Annullér</button>
   </section>
 </main>
 </body>

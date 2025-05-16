@@ -2,20 +2,17 @@ package com.g6.data24d_s2_g6_eksamensprojekt.controller;
 
 import com.g6.data24d_s2_g6_eksamensprojekt.model.Bil;
 import com.g6.data24d_s2_g6_eksamensprojekt.model.LejeAftale;
-import com.g6.data24d_s2_g6_eksamensprojekt.model.Notation;
 import com.g6.data24d_s2_g6_eksamensprojekt.repository.AftaleRepository;
 import com.g6.data24d_s2_g6_eksamensprojekt.repository.BilRepository;
 import com.g6.data24d_s2_g6_eksamensprojekt.repository.NotationRepository;
+
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Controller
 public class NotationController
@@ -29,36 +26,34 @@ public class NotationController
     @Autowired
     AftaleRepository aftaleRepository; // ! kun for testing !
 
-    @GetMapping("/OpretNotation")
-    public String opretNotation(HttpServletRequest request, Model model)
+    @GetMapping("/NyNotation")
+    public String nyNotation(HttpServletRequest request, Model model)
     {
         HttpSession session = BrugerController.faaSession(request, model);
+        if(session == null) return "redirect:/Logind";
 
-        List<Notation> liste;
-        LejeAftale aftale = null;
-        Bil bil           = null;
+        LejeAftale aftale = (LejeAftale) session.getAttribute("lejeAftale");
+        Bil bil           = (Bil) session.getAttribute("bil");
 
-        if (session != null)
+        /*
+        if (bil == null || aftale == null) // ! udelukkende for testing !
         {
-            aftale = (LejeAftale) session.getAttribute("LejeAftale");
-            bil    = (Bil) session.getAttribute("Bil");
+            aftale = aftaleRepository.tagFatILejeAftale(1); // ! udelukkende for testing !
+            bil = bilRepository.tagFatIBil(aftale.getVognNummer()); // ! udelukkende for testing !
         }
-
-        aftale = aftaleRepository.tagFatILejeAftale(1); // ! udelukkende for testing !
-        bil = bilRepository.tagFatIBil(aftale.getVognNummer()); // ! udelukkende for testing !
-        model.addAttribute("Biler", bilRepository.getBiler());
+         */
 
         if (aftale != null)
         {
-            // ? liste = notationRepository.getNotationer(aftale);
+            bil = bilRepository.hentBil(aftale.getVognNummer());
 
-            model.addAttribute("LejeAftale", aftale);
+            model.addAttribute("lejeAftale", aftale);
+            model.addAttribute("bil", bil);
+            session.setAttribute("bil", bil);
         }
-        if (bil != null)
+        else // hvis ikke der er en lejeaftale, må man være kommet her fra en bil.
         {
-            // ? liste = notationRepository.getNotationer(bil);
-
-            model.addAttribute("Bil", bil);
+            model.addAttribute("bil", bil);
         }
 
         return "notation";
@@ -68,36 +63,32 @@ public class NotationController
     public String annullerNotation(HttpServletRequest request, Model model)
     {
         HttpSession session = BrugerController.faaSession(request, model);
-        if (session.getAttribute("LejeAftale") != null) return "redirect:/"; // todo: LejeAftale-visning
-        return "redirect:/"; // todo: BilKatalog-visning
+
+        LejeAftale aftale = (LejeAftale) session.getAttribute("lejeAftale");
+        Bil bil           = (Bil)        session.getAttribute("bil");
+
+        if (aftale != null) return "redirect:/VisLejeAftale?aftaleId=" + aftale.getAftale_Id();
+        return "redirect:/VisBil?vognNummer=" + bil.getVognNummer();
     }
 
-    @GetMapping("/BekraeftNotation")
-    public String bekraeftNotation(@RequestParam("bekraeft") boolean bekraeft, HttpServletRequest request, Model model)
+    @GetMapping("/GemNotation")
+    public String gemNotation(HttpServletRequest request, Model model)
     {
         HttpSession session = BrugerController.faaSession(request, model);
 
-        if (bekraeft)
-        {
-            if (session.getAttribute("LejeAftale") != null) return "redirect:/"; // todo: LejeAftale-visning
-            return "redirect:/"; // todo: BilKatalog-visning
-        }
-
-        Bil bil           = (Bil)        session.getAttribute("Bil");
-        LejeAftale aftale = (LejeAftale) session.getAttribute("LejeAftale");
+        LejeAftale aftale = (LejeAftale) session.getAttribute("lejeAftale");
+        Bil bil           = (Bil)        session.getAttribute("bil");
 
         String notation   = request.getParameter("beskrivelse");
         double pris       = Double.parseDouble(request.getParameter("pris"));
 
         if (aftale != null)
         {
-            notationRepository.addNotation(aftale.getVognNummer(), aftale.getAftale_Id(), notation, pris);
-
-            return "redirect:/"; // todo: LejeAftale-visning
+            notationRepository.gemNotation(aftale.getVognNummer(), aftale.getAftale_Id(), notation, pris);
+            return "redirect:/VisLejeAftale?aftaleId=" + aftale.getAftale_Id();
         }
 
-        notationRepository.addNotation(bil.getVognNummer(), null, notation, pris);
-
-        return "redirect:/"; // todo: BilKatalog-visning
+        notationRepository.gemNotation(bil.getVognNummer(), null, notation, pris);
+        return "redirect:/VisBil?vognNummer=" + bil.getVognNummer();
     }
 }

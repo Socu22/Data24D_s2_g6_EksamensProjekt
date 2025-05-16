@@ -2,16 +2,58 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <div th:fragment="header">
-    <img th:src="@{/img/BILABONNEMENT_logo.svg}" alt="Manglende Logo" style="height: 3rem"/>
     <div>
-        <form th:action="@{/LogUd}" th:method="get" th:if="${aktivBruger}" style="margin-right: 1rem">
-            <input type="checkbox" id="valuta">
-            <label for="valuta">dkk/eur</label>
-        </form>
+        <img th:src="@{/img/BILABONNEMENT_logo.svg}" alt="Manglende Logo" style="height: 3rem"/>
+        <span th:if="${aktivBruger}" th:text="'Bruger: ' + ${aktivBruger.navn}" style="text-align: left; font-size: x-large; margin-left: 1rem"></span>
+    </div>
+    <div th:if="${aktivBruger}">
+        <div>
+            <form th:action="@{/Registrer}" th:method="get" style="margin-right: 1rem">
+                <button type="submit">Registrér Ny Burger</button>
+            </form>
+            <form th:action="@{/LogUd}" th:method="get" style="margin-right: 1rem">
+                <input type="checkbox" id="valuta">
+                <label for="valuta">dkk/eur</label>
+            </form>
+        </div>
         <form th:action="@{/LogUd}" th:method="get">
             <button type="submit" class="logud">Log Ud</button>
         </form>
     </div>
+</div>
+
+<div th:fragment="footer">
+    <form th:action="@{/VisBiler}" th:method="get">
+        <button type="submit">Bil Liste</button>
+    </form>
+    <div>
+        <p>Samlet Indkomst: TODO</p>
+    </div>
+</div>
+
+<div th:fragment="bilKort">
+    <div th:insert="~{fragments :: bilListeKort(
+                                        vognNummer=${bil.toString()},
+                                        bilType=   ${bil.getType.getMaerke()},
+                                        stelNummer=${bil.stelNummer},
+                                        lager=     ${bil.getLager_Id()},
+                                        afgift=    ${bil.getType().afgift}
+                                        )}">
+    </div>
+</div>
+
+<div th:fragment="aftaleKort">
+    <a th:href="@{VisBil(vognNummer = ${bil.getVognNummer()})}" style="color: inherit; text-decoration: none">
+        <div th:insert="~{fragments :: aftaleListeKort (
+                                            vognNummer=${bil.toString()},
+                                            kundeNavn= ${lejeAftale.getKunde().getNavn()},
+                                            afgift=    ${bil.getType().afgift},
+                                            lager=     ${bil.getLager_Id()},
+                                            startDato= ${lejeAftale.getStartDato()},
+                                            slutDato=  ${lejeAftale.getSlutDato()}
+                                            )}">
+        </div>
+    </a>
 </div>
 
 <div th:fragment="aftaleListeKort (vognNummer, kundeNavn, afgift, lager, startDato, slutDato)" class="kort">
@@ -42,59 +84,56 @@
     </div>
 </div>
 
-<div th:fragment="bilKort">
-    <div th:insert="~{fragments :: bilListeKort(
-                                        vognNummer=${Bil.toString()},
-                                        bilType=${Bil.getType().bilTypeId},
-                                        stelNummer=${Bil.stelNummer},
-                                        lager=${Bil.getLager_Id()},
-                                        afgift=${Bil.getType().afgift}
-                                        )}">
+<div th:fragment="notationListeKort (beskrivelse, omkostning)" class="kort">
+    <div>
+        <p th:text="${beskrivelse}">--Beskrivelse--</p>
     </div>
-</div>
-
-<div th:fragment="aftaleKort">
-    <div th:insert="~{fragments :: aftaleListeKort (
-                                        vognNummer=${Bil.toString()},
-                                        kundeNavn=${LejeAftale.kunde_Id},
-                                        afgift=${Bil.getType().afgift},
-                                        lager=${Bil.getLager_Id()},
-                                        startDato=${LejeAftale.getStartDato()},
-                                        slutDato=${LejeAftale.getSlutDato()}
-                                        )}">
+    <div>
+        <p th:text="'Omkostning: '">Omkostning:</p>
+        <p th:text="${omkostning} + 'kr'">--kr</p>
     </div>
 </div>
 
 <div th:fragment="bilListe">
-    <div th:each="Bil_ : ${Biler}" class="liste">
-        <div th:insert="~{fragments :: bilListeKort(
-                                    vognNummer=${Bil_.toString()},
-                                    bilType=${Bil_.getType().bilTypeId},
-                                    stelNummer=${Bil_.stelNummer},
-                                    lager=${Bil_.getLager_Id()},
-                                    afgift=${Bil_.getType().afgift}
-                                    )}">
-        </div>
+    <div th:each="Bil : ${biler}" class="liste">
+        <a th:href="@{VisBil(vognNummer = ${Bil.getVognNummer()})}" style="color: inherit; text-decoration: none">
+            <div th:insert="~{fragments :: bilListeKort(
+                                        vognNummer=${Bil.toString()},
+                                        bilType=   ${Bil.getType.getMaerke()},
+                                        stelNummer=${Bil.getStelNummer()},
+                                        lager=     ${Bil.getLager_Id()},
+                                        afgift=    ${Bil.getType().afgift}
+                                        )}">
+            </div>
+        </a>
     </div>
 </div>
 
 <div th:fragment="aftaleListe">
-    <div th:each="Aftale_ : ${LejeAftaler}" class="liste">
-        <div th:insert="~{fragments :: aftaleListeKort (
-                                        vognNummer=${Aftale_.getVognNummer},
-                                        kundeNavn=${Aftale_.kunde_Id},
-                                        afgift='placeholder',
-                                        lager='placeholder',
-                                        startDato=${Aftale_.getStartDato()},
-                                        slutDato=${Aftale_.getSlutDato()}
-                                        )}">
+        <div th:each="Aftale : ${lejeAftaler}" class="liste">
+            <a th:href="@{VisLejeAftale(aftaleId = ${Aftale.getAftale_Id()})}" style="color: inherit; text-decoration: none">
+                <div th:insert="~{fragments :: aftaleListeKort (
+                                    vognNummer=${Aftale.getVognNummer()},
+                                    kundeNavn= ${Aftale.getKunde().getNavn()},
+                                    afgift=    'placeholder',
+                                    lager=     'placeholder',
+                                    startDato= ${Aftale.getStartDato()},
+                                    slutDato=  ${Aftale.getSlutDato()}
+                                    )}">
+                </div>
+            </a>
         </div>
-    </div>
 </div>
 
-<div th:fragment="footer">
-    <div>
-        <p>Footer</p>
+<div th:fragment="notationListe">
+    <div th:each="Notation : ${notationer}" class="liste">
+        <a th:href="@{VisBil(vognNummer = ${Notation.getVognNummer()})}" style="color: inherit; text-decoration: none">
+            <div th:insert="~{fragments :: notationListeKort (
+                                    beskrivelse=${Notation.getBeskrivelse()},
+                                    omkostning= ${Notation.getPris()}
+                                    )}">
+            </div>
+        </a>
     </div>
 </div>
 

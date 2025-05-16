@@ -7,7 +7,8 @@
 </head>
 <style>
     .fade-out {
-        animation: fadeOut 3s ease-in-out forwards;
+        animation: fadeOut 4s ease-in-out forwards;
+        color: darkred;
     }
 
     @keyframes fadeOut {
@@ -19,36 +20,37 @@
 <body>
 <header th:insert="~{fragments :: header}"></header>
 <section>
-    <div class="fade-out" th:unless="${registrerBesked} == 'Ny bruger lavet'">
-        <label style="color: darkred" th:text="${registrerBesked}"></label>
-    </div>
-    <div class="fade-out" th:if="${registrerBesked} == 'Ny bruger lavet'">
-        <label style="color: green" th:text="${registrerBesked}"></label>
-    </div>
-        <label >Brugernavn:</label>
-        <input type="text" name="navn" placeholder="navn" th:value="${navn}"  autofocus="autofocus" required form="OmReg" /> <br/>
+    <form th:action="@{/OmdirigerRegistrer}" method="get" id="OmReg" >
+        <div class="fade-out" th:unless="${registrerBesked} == 'Ny bruger lavet'">
+            <label style="color: darkred" th:text="${registrerBesked}"></label>
+        </div>
+        <div class="fade-out" th:if="${registrerBesked} == 'Ny bruger lavet'">
+            <label style="color: green" th:text="${registrerBesked}"></label>
+        </div>
+        <label >Navn:</label>
+        <input type="text" name="navn" placeholder="navn" th:value="${navn}"  autofocus="autofocus"   />
+        <label th:if="${manglendeInput == 0}" class="fade-out">Mangler Navn</label><br/>
         <label >Adgangskode:</label>
-        <input type="password" name="adgangskode" placeholder="adgangskode" th:value="${adgangskode}"  required form="OmReg" /> <br/>
+        <input type="password" name="adgangskode" placeholder="adgangskode" th:value="${adgangskode}"   />
+        <label th:if="${manglendeInput == 1}" class="fade-out">Mangler Adgangskode</label><br/>
         <label >Verificer Adgangskode:</label>
-        <input type="password" name="adgangskode2" placeholder=" verificer adgangskode" th:value="${adgangskode2}"  required form="OmReg" /> <br/>
+        <input type="password" name="adgangskode2" placeholder=" verificer adgangskode" th:value="${adgangskode2}"    />
+        <label th:if="${manglendeInput == 2}" class="fade-out">Mangler Verificer Adgangskode</label><br/>
         <label >Stilling:</label>
 
 
         <details >
             <summary th:text="${stilling}"></summary>
-            <form th:action="@{/Stilling}" method="get"  >
-                <button type="submit" name="stilling" value="Dataregistrering" >Dataregistrering</button>
-            </form>
-            <form th:action="@{/Stilling}" method="get"   >
-                <button type="submit" name="stilling" value="Skade og Udbedring" >Skade og Udbedring</button>
-            </form>
-            <form th:action="@{/Stilling}" method="get"   >
-                <button type="submit" name="stilling" value="Forretningsudvikler" >Forretningsudvikler</button>
-            </form>
+                <button type="submit"  name="stilling" value="Dataregistrering" >Dataregistrering</button>
+
+                <button type="submit"  name="stilling" value="Skade og Udbedring" >Skade og Udbedring</button>
+
+                <button type="submit"  name="stilling" value="Forretningsudvikler" >Forretningsudvikler</button>
+
         </details>
 
-    <form th:action="@{/OmdirigerRegistrer}" method="get" id="OmReg" >
-        <button type="submit" name="stilling" th:value="${stilling}">Registrer</button>
+
+        <button type="submit"  name="stilling" th:value="${stilling} + '_'">Registrer</button>
     </form>
 
 </section>

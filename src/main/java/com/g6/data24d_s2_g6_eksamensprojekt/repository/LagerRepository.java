@@ -24,20 +24,20 @@ public class LagerRepository {
         return lager;
     };
         //Laver et nyt lager og opdaterer databasen
-    public void nytLagerLogik(Lager nytLager){
+    public void gemLager(Lager nytLager){
         String sql = "INSERT into lager (navn, adresse) values (?,?)";
         jdbcTemplate.update(sql, nytLager.getNavn(),nytLager.getAdresse());
     }
 
     //Samler alle lager objekter sammen i en liste. ?brugbart?
-   public List<Lager> samleLagerIListeLogik(){
+   public List<Lager> hentLager(){
         List<Lager> lagerList = jdbcTemplate.query("select * from lager",rowMapper);
         System.out.println(lagerList);
         return lagerList;
    }
 
    //tager fat i lager ud fra et navn
-   public Lager tagFatILageret(String navn){
+   public Lager hentLager(String navn){
        List<Lager> lagerList= jdbcTemplate.query("select * from lager where navn=?",rowMapper,navn);
         if (lagerList.size()==1){
             return lagerList.getFirst();
@@ -46,7 +46,7 @@ public class LagerRepository {
    }
 
    //sletter hvis der kun er en lager med samme navn
-    public boolean sletLageret(String navn){
+    public boolean sletLager(String navn){
         List <Lager> count= jdbcTemplate.query("select * from lager where navn=?",rowMapper,navn);
         int value;
         if (count.size()==1){

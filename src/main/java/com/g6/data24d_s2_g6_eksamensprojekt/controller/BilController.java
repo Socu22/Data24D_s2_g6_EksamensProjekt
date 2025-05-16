@@ -13,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.g6.data24d_s2_g6_eksamensprojekt.controller.BrugerController.faaSession;
@@ -29,31 +30,78 @@ public class BilController {
     LagerRepository lagerRepository;
 
 
-    @GetMapping("visBiler")
-    public String getVisBiler(HttpServletRequest request, Model model){
+    @GetMapping("/VisBiler")
+    public String visBiler(HttpServletRequest request, Model model){
         HttpSession session = faaSession(request, model);
         if(session == null) return "redirect:/Logind";
 
-        List<Bil> bilList = bilRepository.getBiler();
-        model.addAttribute("bilList",bilList);
+        List<Bil> biler = bilRepository.hentBiler();
+        List<Lager> lagerList = lagerRepository.hentLager();
+        List<BilType> bilTypeList = bilTypeRepository.hentBilTyper();
+        if(session.getAttribute("biler")!=null){
+            biler = (List<Bil>) session.getAttribute("biler");
 
+        }
+        model.addAttribute("biler",biler);
+        model.addAttribute("lagerList",lagerList);
+        model.addAttribute("bilTypeList",bilTypeList);
 
         return "visBiler";
     }
-    @GetMapping("visBil")
-    public String getVisBil(HttpServletRequest request, Model model){
+    @GetMapping("OmdirigerVisBiler")
+    public String Omdirigerbil(HttpServletRequest request, Model model) {
+        HttpSession session = faaSession(request, model);
+        if (session == null) return "redirect:/Logind";
+
+        String vognNummer = request.getParameter("vognNummer");
+        String lager_Id = request.getParameter("lager_Id");
+        String maerke = request.getParameter("maerke");
+
+        List<Bil> bilList = new ArrayList<>();
+
+        // Hvis vognNummer eller stelNummer er givet
+        if (vognNummer != null && !vognNummer.isEmpty()) {
+            if (vognNummer.length() == 7) { // her tjekkes der om det er et vognNummer.
+                bilList = bilRepository.hentBilerUdFraVognNummer(vognNummer);
+            } else if (vognNummer.length() == 17) { // her tjekkes der om det er et stelNummer.
+                String stelNummer = vognNummer; //Sikker på at værdien i vognNummer rent faktisk er et stelNummer
+                bilList = bilRepository.hentBilerUdFraStelNummer(stelNummer);
+            }
+        } else {
+            // hvis du vælger lager, mærke eller begge virke den her metode
+            bilList = bilRepository.hentBilerbilerUdFraLager_idEllerOgMaerke(lager_Id,maerke);
+
+
+        }
+
+        session.setAttribute("biler", bilList);
+        return "redirect:/VisBiler";
+    }
+    @GetMapping("VisBilerReset")
+    public String omdirigerVisBilerReset(HttpServletRequest request, Model model){
+        HttpSession session = faaSession(request, model);
+        if (session == null) return "redirect:/Logind";
+
+        session.removeAttribute("biler");
+
+        return "redirect:/VisBiler";
+    }
+
+
+    @GetMapping("/VisBil")
+    public String visBil(HttpServletRequest request, Model model){
         HttpSession session = faaSession(request, model);
         if(session == null) return "redirect:/Logind";
 
         String vognNummer = request.getParameter("vognNummer");
-        Bil bil = bilRepository.tagFatIBil(vognNummer);
+        Bil bil = bilRepository.hentBil(vognNummer);
         session.setAttribute("bil",bil);
         model.addAttribute("bil", bil);
 
         return "visBil";
     }
-    @GetMapping("sletBil")
-    public String postSletBil(HttpServletRequest request, Model model){
+    @GetMapping("/SletBil")
+    public String sletBil(HttpServletRequest request, Model model){
         HttpSession session = faaSession(request, model);
         if(session == null) return "redirect:/Logind";
 
@@ -65,22 +113,22 @@ public class BilController {
 
         return "redirect:visBiler";
     }
-    @GetMapping("nyBil")
-    public String getNyBil(HttpServletRequest request, Model model){
+    @GetMapping("/NyBil")
+    public String nyBil(HttpServletRequest request, Model model){
         HttpSession session = faaSession(request, model);
         if(session == null) return "redirect:/Logind";
 
 
-        List<BilType> bilTypeList = bilTypeRepository.getBilTyper();
-        List<Lager> lagerList =lagerRepository.samleLagerIListeLogik();
+        List<BilType> bilTypeList = bilTypeRepository.hentBilTyper();
+        List<Lager> lagerList =lagerRepository.hentLager();
         model.addAttribute("lagerList",lagerList);
         model.addAttribute("bilTypeList",bilTypeList);
 
 
         return "nyBil";
     }
-    @GetMapping("laverNyBil")
-    public String postLaverNyBil (HttpServletRequest request, Model model){
+    @GetMapping("/GemNyBil")
+    public String gemNyBil(HttpServletRequest request, Model model){
         HttpSession session = faaSession(request, model);
         if(session == null) return "redirect:/Logind";
 
@@ -92,7 +140,7 @@ public class BilController {
 
         Bil bil = new Bil(vognNummer,stelNummer,new BilType(bilType_Id),lager_Id,status);
 
-        bilRepository.nyBilLogik(bil);
+        bilRepository.gemBil(bil);
         return "redirect:/";
     }
 }

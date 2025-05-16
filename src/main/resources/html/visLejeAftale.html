@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" th:href="@{style.css}">
+    <title>Title</title>
+</head>
+
+<!-- Venlist ikke lav lokal styling for ting som kunne gå igen i andre html -->
+<style></style>
+
+<body>
+<header th:insert="~{fragments :: header}"></header>
+<main>
+    <header class="underHeader" th:insert="~{fragments :: aftaleKort}"></header>
+    <aside>
+        <div style="width: 100%;">
+            <section style="max-width: initial">
+                <p th:text="${lejeAftale.getDetaljer()}">Detaljer</p>
+            </section>
+            <form th:if="${foerAftaleStart}" th:action="@{/SletAftale}" th:method="get">
+                <button type="submit" class="annuller">Aflys Aftale</button>
+            </form>
+            <form th:if="${foerAftaleSlut}" th:action="@{/NyNotation}" th:method="get">
+                <button type="submit">Registrér Ny Notation</button>
+            </form>
+        </div>
+        <div th:insert="~{fragments :: notationListe}" style="width: 100%; max-width: max-content;"></div>
+    </aside>
+</main>
+</body>
+</html>
