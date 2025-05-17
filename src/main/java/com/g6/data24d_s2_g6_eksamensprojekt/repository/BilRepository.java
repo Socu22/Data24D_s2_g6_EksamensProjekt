@@ -21,6 +21,8 @@ public class BilRepository
     @Autowired
     LagerRepository lagerRepository;
 
+    public static List<String> STATUSSER = List.of("Tilgængelig","Vedligeholdelse","Udlejet","Slettet");
+
     private final RowMapper<Bil> rowMapper = (rs, rowNum) -> {
         Bil bil = new Bil(
                 rs.getString("vognNummer"),
@@ -93,7 +95,7 @@ public class BilRepository
         return bygBiler(biler);
     }
 
-    public List<Bil> hentBilerbilerUdFraLager_idEllerOgMaerke(String lager_Id, String maerke)
+    public List<Bil> hentBilerbilerUdFraLager_idEllerOgMaerke(String lager_Id, String maerke, String status)
     {
         List<Bil> bilList = hentBiler(); // todo: formuler sql til dette
         if (lager_Id != null && !lager_Id.isEmpty()) {
@@ -103,6 +105,9 @@ public class BilRepository
 
         if (maerke != null && !maerke.isEmpty()) {
             bilList.removeIf(b -> !b.getType().getMaerke().equalsIgnoreCase(maerke));
+        }
+        if (status != null && !status.isEmpty()) {
+            bilList.removeIf(b -> !b.getStatus().equalsIgnoreCase(status));
         }
         return bygBiler(bilList);
     }
@@ -124,5 +129,9 @@ public class BilRepository
         }
 
         return biler;
+    }
+    public List<String> hentStatusser(){
+
+        return STATUSSER;
     }
 }

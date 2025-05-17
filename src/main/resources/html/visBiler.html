@@ -44,13 +44,18 @@
           <select name="maerke">
             <option value="">Vælg mærke</option>
             <option th:each="bilType : ${bilTypeList}" th:value="${bilType.maerke}" th:text="${bilType.maerke + '(' + bilType.model + ')'}"></option>
+          </select>
 
+          <select name="status">
+            <option value="">Vælg mærke</option>
+            <option th:each="status : ${statusList}" th:value="${status}" th:text="${status}"></option>
           </select>
 
           <button type="submit">Filtrer</button>
         </div>
       </div>
     </form>
+
     <form th:action="@{/VisBilerReset}" method="get">
       <button type="submit">Reset</button>
     </form>

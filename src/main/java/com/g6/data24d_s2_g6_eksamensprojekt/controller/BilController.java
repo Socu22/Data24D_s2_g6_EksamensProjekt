@@ -38,6 +38,7 @@ public class BilController {
         List<Bil> biler = bilRepository.hentBiler();
         List<Lager> lagerList = lagerRepository.hentLager();
         List<BilType> bilTypeList = bilTypeRepository.hentBilTyper();
+        List<String> statusList = bilRepository.hentStatusser();
         if(session.getAttribute("biler")!=null){
             biler = (List<Bil>) session.getAttribute("biler");
 
@@ -45,6 +46,7 @@ public class BilController {
         model.addAttribute("biler",biler);
         model.addAttribute("lagerList",lagerList);
         model.addAttribute("bilTypeList",bilTypeList);
+        model.addAttribute("statusList",statusList);
 
         return "visBiler";
     }
@@ -56,6 +58,7 @@ public class BilController {
         String vognNummer = request.getParameter("vognNummer");
         String lager_Id = request.getParameter("lager_Id");
         String maerke = request.getParameter("maerke");
+        String status = request.getParameter("status");
 
         List<Bil> bilList = new ArrayList<>();
 
@@ -67,11 +70,9 @@ public class BilController {
                 String stelNummer = vognNummer; //Sikker på at værdien i vognNummer rent faktisk er et stelNummer
                 bilList = bilRepository.hentBilerUdFraStelNummer(stelNummer);
             }
-        } else {
+        } else if(maerke != null || lager_Id != null||status!=null) {
             // hvis du vælger lager, mærke eller begge virke den her metode
-            bilList = bilRepository.hentBilerbilerUdFraLager_idEllerOgMaerke(lager_Id,maerke);
-
-
+            bilList = bilRepository.hentBilerbilerUdFraLager_idEllerOgMaerke(lager_Id,maerke,status);
         }
 
         session.setAttribute("biler", bilList);
