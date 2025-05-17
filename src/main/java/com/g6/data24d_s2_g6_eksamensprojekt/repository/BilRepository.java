@@ -45,6 +45,12 @@ public class BilRepository
 
         return bygBiler(biler);
     }
+    public List<Bil> hentEksisteredeBiler()
+    {
+        List<Bil> biler = jdbcTemplate.query("select * from bil where status!='Slettet'",rowMapper);
+
+        return bygBiler(biler);
+    }
 
     //tager fat i bil ud fra et vognNummer
     public Bil hentBil(String vognNummer){
@@ -52,10 +58,18 @@ public class BilRepository
         if (bilList.isEmpty()) return null;
         return bygBiler(bilList).getFirst();
     }
+    public boolean sletBil(String vognNummer){
+        List<Bil> bilList= jdbcTemplate.query("select * from bil where vognNummer=?",rowMapper,vognNummer);
+        System.out.println(bilList);
+        if (bilList.isEmpty()) return false; else {
+            jdbcTemplate.update("update bil set status='Slettet' where vognNummer=?",vognNummer);
+            return true;
+        }
+    }
 
     // todo: dette er allerede faciliteret af ovenstående metode
     public List<Bil> hentBilerUdFraVognNummer(String vognNummer){
-        List<Bil> bilList = jdbcTemplate.query("select * from bil where vognNummer=?",rowMapper,vognNummer);
+        List<Bil> bilList = jdbcTemplate.query("select * from bil where vognNummer=? and status!='Slettet'",rowMapper,vognNummer);
 
         return bygBiler(bilList);
     }
@@ -63,7 +77,7 @@ public class BilRepository
     // todo: kan dette skrives sammen i metoden 'hentBil', ved at chekke længden af given String
     public List<Bil> hentBilerUdFraStelNummer(String stelNummer) {
 
-        List<Bil> bilList = jdbcTemplate.query("select * from bil where stelNummer=?",rowMapper,stelNummer);
+        List<Bil> bilList = jdbcTemplate.query("select * from bil where stelNummer=? and status!='Slettet'",rowMapper,stelNummer);
 
         List<BilType> bilTyper = bilTypeRepository.hentBilTyper();
         HashMap<Integer, BilType> typerMapped = new HashMap<>();
@@ -83,21 +97,21 @@ public class BilRepository
 
     }
 
-    public List<Bil> hentBilerUdFraBilMaerke(String bilMærke){
-        List<Bil> biler = jdbcTemplate.query(
-                "SELECT * FROM bil INNER JOIN bilType b ON bil.bilType_Id = b.bilType_Id WHERE b.mærke = ?",
-                     rowMapper,
-                     bilMærke);
-        return bygBiler(biler);
-    }
-    public List<Bil> hentBilerUdFraLager_Id(int lager_Id) {
-        List<Bil> biler = jdbcTemplate.query("select * from bil where lager_Id=?",rowMapper,lager_Id);
-        return bygBiler(biler);
-    }
+//    public List<Bil> hentBilerUdFraBilMaerke(String bilMærke){
+//        List<Bil> biler = jdbcTemplate.query(
+//                "SELECT * FROM bil INNER JOIN bilType b ON bil.bilType_Id = b.bilType_Id WHERE b.mærke = ?",
+//                     rowMapper,
+//                     bilMærke);
+//        return bygBiler(biler);
+//    }
+//    public List<Bil> hentBilerUdFraLager_Id(int lager_Id) {
+//        List<Bil> biler = jdbcTemplate.query("select * from bil where lager_Id=?",rowMapper,lager_Id);
+//        return bygBiler(biler);
+//    }
 
-    public List<Bil> hentBilerbilerUdFraLager_idEllerOgMaerke(String lager_Id, String maerke, String status)
+    public List<Bil> hentBilerbilerUdFraLager_idEllerOgMaerkeEllerOgStatus(String lager_Id, String maerke, String status)
     {
-        List<Bil> bilList = hentBiler(); // todo: formuler sql til dette
+        List<Bil> bilList = hentEksisteredeBiler(); // todo: formuler sql til dette
         if (lager_Id != null && !lager_Id.isEmpty()) {
             int lager_Id_SomInt = Integer.parseInt(lager_Id);
             bilList.removeIf(b -> b.getLager_Id() != lager_Id_SomInt);

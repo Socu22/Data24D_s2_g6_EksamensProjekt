@@ -35,10 +35,11 @@ public class BilController {
         HttpSession session = faaSession(request, model);
         if(session == null) return "redirect:/Logind";
 
-        List<Bil> biler = bilRepository.hentBiler();
+        List<Bil> biler = bilRepository.hentEksisteredeBiler();
         List<Lager> lagerList = lagerRepository.hentLager();
         List<BilType> bilTypeList = bilTypeRepository.hentBilTyper();
-        List<String> statusList = bilRepository.hentStatusser();
+        List<String> statusList = bilRepository.hentStatusser().subList(0,3);
+
         if(session.getAttribute("biler")!=null){
             biler = (List<Bil>) session.getAttribute("biler");
 
@@ -72,7 +73,7 @@ public class BilController {
             }
         } else if(maerke != null || lager_Id != null||status!=null) {
             // hvis du vælger lager, mærke eller begge virke den her metode
-            bilList = bilRepository.hentBilerbilerUdFraLager_idEllerOgMaerke(lager_Id,maerke,status);
+            bilList = bilRepository.hentBilerbilerUdFraLager_idEllerOgMaerkeEllerOgStatus(lager_Id,maerke,status);
         }
 
         session.setAttribute("biler", bilList);
@@ -95,6 +96,9 @@ public class BilController {
         if(session == null) return "redirect:/Logind";
 
         String vognNummer = request.getParameter("vognNummer");
+        session.setAttribute("vognNummer",vognNummer);
+
+
         Bil bil = bilRepository.hentBil(vognNummer);
         session.setAttribute("bil",bil);
         model.addAttribute("bil", bil);
@@ -132,4 +136,21 @@ public class BilController {
         bilRepository.gemBil(bil);
         return "redirect:/";
     }
+    @GetMapping("/SletBil")
+    public String sletBil(HttpServletRequest request, Model model){
+        HttpSession session = faaSession(request, model);
+        if(session == null) return "redirect:/Logind";
+
+        String vognNummer= (String) session.getAttribute("vognNummer");
+        System.out.println(vognNummer+"_2");
+
+
+
+        boolean bool = bilRepository.sletBil(vognNummer);
+       if (!bool){
+           System.out.println("Fangede ikke en bil(sletBil)");
+       }
+        return "redirect:/";
+    }
+
 }

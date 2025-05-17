@@ -142,7 +142,7 @@ public class LejeAftaleController {
         HttpSession session = faaSession(request, model);
         if(session == null) return "redirect:/Logind";
 
-        List<Bil> bilList = bilRepository.hentBiler();
+        List<Bil> bilList = bilRepository.hentEksisteredeBiler();
         //Bil bil = bilList.getFirst();
         Bil bil = null;
         if(session.getAttribute("vognNummer") != null){

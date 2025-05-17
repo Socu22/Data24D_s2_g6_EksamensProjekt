@@ -42,12 +42,12 @@
           </select>
 
           <select name="maerke">
-            <option value="">Vælg mærke</option>
+            <option value="" disabled selected>Vælg mærke</option>
             <option th:each="bilType : ${bilTypeList}" th:value="${bilType.maerke}" th:text="${bilType.maerke + '(' + bilType.model + ')'}"></option>
           </select>
 
           <select name="status">
-            <option value="">Vælg mærke</option>
+            <option value="" disabled selected>Vælg mærke</option>
             <option th:each="status : ${statusList}" th:value="${status}" th:text="${status}"></option>
           </select>
 
