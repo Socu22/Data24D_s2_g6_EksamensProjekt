@@ -35,16 +35,7 @@ public class BilRepository
         jdbcTemplate.update(sql, bil.getVognNummer(),bil.getStelNummer(),bil.getBilType_Id(),bil.getLager_Id(),bil.getStatus());
     }
 
-    public boolean sletBil(String vognNummer){
-        List <Bil> count= jdbcTemplate.query("select * from bil where vognNummer=?",rowMapper,vognNummer);
-        if (count.size()==1){
-            jdbcTemplate.update("delete from bil where vognNummer=?",vognNummer);
-            return true;
-        }
-        else{
-            return false;
-        }
-    }
+
 
     public List<Bil> hentBiler()
     {
