@@ -45,11 +45,14 @@ public class LejeAftaleController {
         model.addAttribute("startDato", session.getAttribute("startDato"));
         model.addAttribute("slutDato", session.getAttribute("slutDato"));
         model.addAttribute("dato", session.getAttribute("dato"));
+        model.addAttribute("kundeNavn", session.getAttribute("kundeNavn"));
         session.removeAttribute("vognNummer");
         session.removeAttribute("periodeNummer");
         session.removeAttribute("startDato");
         session.removeAttribute("slutDato");
         session.removeAttribute("dato");
+        session.removeAttribute("kundeNavn");
+
 
         double samletAfgift = 0;
         LocalDate now = LocalDate.now();
@@ -80,6 +83,7 @@ public class LejeAftaleController {
         String startDato =  request.getParameter("startDato");
         String slutDato = request.getParameter("slutDato");
         String dato = request.getParameter("dato");
+        String kundeNavn = request.getParameter("kundeNavn");
 
         LocalDate startDato_ = null;
         LocalDate slutDato_ = null;
@@ -103,6 +107,7 @@ public class LejeAftaleController {
         session.setAttribute("startDato", startDato_);
         session.setAttribute("slutDato", slutDato_);
         session.setAttribute("dato", dato_);
+        session.setAttribute("kundeNavn", kundeNavn);
 
 
         return "redirect:/VisLejeAftaler";
