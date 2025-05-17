@@ -124,6 +124,8 @@ public class LejeAftaleController {
 
         aftale.setKunde(kundeRepository.hentKunde(aftale.getKunde_Id()));
 
+        aftale.setBil(bilRepository.hentBil(aftale.getVognNummer()));
+
         session.setAttribute("lejeAftale", aftale);
         model.addAttribute("lejeAftale", aftale);
         model.addAttribute("bil", bilRepository.hentBil(aftale.getVognNummer()));
