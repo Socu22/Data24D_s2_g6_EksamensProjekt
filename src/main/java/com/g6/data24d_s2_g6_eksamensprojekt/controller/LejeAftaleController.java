@@ -127,6 +127,7 @@ public class LejeAftaleController {
         aftale.setBil(bilRepository.hentBil(aftale.getVognNummer()));
 
         session.setAttribute("lejeAftale", aftale);
+        session.setAttribute("lejeAftale_Id",aftale.getAftale_Id());
         model.addAttribute("lejeAftale", aftale);
         model.addAttribute("bil", bilRepository.hentBil(aftale.getVognNummer()));
         model.addAttribute("notationer", notationRepository.hentNotationer(aftale.getAftale_Id()));
@@ -136,6 +137,14 @@ public class LejeAftaleController {
         else if (now.isBefore(aftale.getSlutDato().plusDays(1))) model.addAttribute("foerAftaleSlut", true);
 
         return "visLejeAftale";
+    }
+    @GetMapping("SletLejeAftale")
+    public String sletLejeAftale(HttpServletRequest request, Model model){
+        HttpSession session = BrugerController.faaSession(request, model,  new String[]{"data"});
+        if(session == null) return "redirect:/Logind";
+
+        aftaleRepository.sletLejeAftale(Integer.parseInt(request.getParameter("lejeAftale_Id")));
+        return "redirect:VisLejeAftaler";
     }
 
     //logikken når man trykke på vælg bil.
@@ -182,9 +191,7 @@ public class LejeAftaleController {
         HttpSession session = faaSession(request, model,  new String[]{"data"});
         if(session == null) return "redirect:/Logind";
 
-        LejeAftale lejeAftale = new LejeAftale(kunde);
 
-        aftaleRepository.gemLejeAftale(lejeAftale);
 
         return "redirect:/";
     }
