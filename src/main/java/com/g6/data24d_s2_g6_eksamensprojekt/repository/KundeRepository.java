@@ -18,10 +18,10 @@ public class KundeRepository {
         Kunde kunde = new Kunde(rs.getInt("kunde_Id"), rs.getString("navn"));
         return kunde;
     };
-    //todo: hust at brug getmapping
-    public void gemNyKunde(Kunde nyKunde){
+    //todo: husk at brug getmapping
+    public void gemNyKunde(String nyKunde){
         String sql = "INSERT into kunde (navn) values (?)";
-        jdbcTemplate.update(sql, nyKunde.getNavn());
+        jdbcTemplate.update(sql, nyKunde);
     }
     //tager fat i LejeAftale ud fra et id
     public Kunde hentKunde(int kunde_Id){
