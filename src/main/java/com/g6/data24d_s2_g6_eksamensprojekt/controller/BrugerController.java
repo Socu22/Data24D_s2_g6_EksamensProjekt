@@ -25,7 +25,7 @@ public class BrugerController {
     public String logInd(HttpServletRequest request, Model model) {
         HttpSession session = request.getSession(false);
         if(session != null)
-            return "redirect:/";
+            return "redirect:/VisLejeAftaler";
 
         String brugerIkkeFundet = request.getParameter("d");
         model.addAttribute("brugerIkkeFundet", brugerIkkeFundet);
@@ -83,7 +83,7 @@ public class BrugerController {
     }
     @GetMapping("/OmdirigerRegistrer")
     public String omdirigerRegistrer(HttpServletRequest request, Model model) {
-        HttpSession session = faaSession(request, model, new String[]{"data", "Skade", "forretnings"});
+        HttpSession session = faaSession(request, model, new String[]{"forretnings"});
         if(session == null) return "redirect:/Logind";
 
 
@@ -141,7 +141,9 @@ public class BrugerController {
             Bruger bruger = (Bruger) session.getAttribute("aktivBruger");
             boolean hasAccess = false;
             for (String stilling : stillinger) {
-                if(bruger.getStilling().toLowerCase().contains(stilling.toLowerCase().toCharArray()[0] + "")){}
+                String s = stilling.toLowerCase().toCharArray()[0] + "";
+                //System.out.println(bruger.getStilling().toLowerCase().toCharArray()[0] + ", " + stilling.toLowerCase().toCharArray()[0] + " , " +(bruger.getStilling().toLowerCase().toCharArray()[0] == stilling.toLowerCase().toCharArray()[0]) );
+                if(bruger.getStilling().toLowerCase().toCharArray()[0] == stilling.toLowerCase().toCharArray()[0])
                     hasAccess = true;
             }
             if(!hasAccess)

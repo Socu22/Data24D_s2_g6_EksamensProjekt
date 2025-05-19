@@ -11,7 +11,7 @@
 
 <main>
   <header class="underHeader">
-  <section>
+  <section th:if="${aktivBruger.getStilling().toLowerCase().startsWith('f')}">
     <form th:action="@{NyBil}" method="get">
       <button type="submit">Ny Bil</button>
     </form>

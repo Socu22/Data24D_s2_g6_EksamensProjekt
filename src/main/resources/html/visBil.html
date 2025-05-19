@@ -37,13 +37,13 @@
         </table>
     </section> -->
     <aside>
-        <form th:action="@{NyLejeAftale}" method="get">
+        <form th:if="${aktivBruger.getStilling().toLowerCase().startsWith('d')}" th:action="@{NyLejeAftale}" method="get">
             <button type="submit" >ny LejeAftale </button>
         </form>
-        <form th:action="@{/NyNotation}" th:method="get">
+        <form th:if="${aktivBruger.getStilling().toLowerCase().startsWith('d') || aktivBruger.getStilling().toLowerCase().startsWith('s')}" th:action="@{/NyNotation}" th:method="get">
             <button type="submit">Registrér Ny Notation</button>
         </form>
-        <form th:action="@{SletBil}" method="get">
+        <form th:if="${aktivBruger.getStilling().toLowerCase().startsWith('f')}" th:action="@{SletBil}" method="get">
             <button type="submit" class="annuller">slet Bil </button>
         </form>
         <div th:insert="~{fragments :: notationListe}"></div>

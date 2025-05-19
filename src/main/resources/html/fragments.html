@@ -8,7 +8,7 @@
     </div>
     <div th:if="${aktivBruger}">
         <div>
-            <form th:action="@{/Registrer}" th:method="get" style="margin-right: 1rem">
+            <form th:if="${aktivBruger.getStilling().toLowerCase().startsWith('f')}" th:action="@{/Registrer}" th:method="get" style="margin-right: 1rem">
                 <button type="submit">Registrér Ny Burger</button>
             </form>
             <form th:action="@{/LogUd}" th:method="get" style="margin-right: 1rem">
