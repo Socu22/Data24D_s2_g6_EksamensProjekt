@@ -19,9 +19,9 @@ public class KundeRepository {
         return kunde;
     };
     //todo: hust at brug getmapping
-    public void gemKunde(Kunde nytKunde){
+    public void gemNyKunde(Kunde nyKunde){
         String sql = "INSERT into kunde (navn) values (?)";
-        jdbcTemplate.update(sql, nytKunde.getNavn());
+        jdbcTemplate.update(sql, nyKunde.getNavn());
     }
     //tager fat i LejeAftale ud fra et id
     public Kunde hentKunde(int kunde_Id){

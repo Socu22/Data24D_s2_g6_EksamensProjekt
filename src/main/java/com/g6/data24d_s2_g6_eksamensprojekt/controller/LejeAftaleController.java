@@ -176,18 +176,13 @@ public class LejeAftaleController {
 
         return "nyLejeAftale";
     }
-    @GetMapping("/GemNyLejeAftale")
-    public String gemNyLejeAftale(@RequestParam("kunde_Id") int kunde_Id,
-                                  @RequestParam("vognNummer") String vognNummer,
-                                  @RequestParam("startDato") String startDato,
-                                  @RequestParam("slutDato") String slutDato,
-                                  @RequestParam("detaljer") String detaljer,
+    @GetMapping("/GemNyKunde")
+    public String gemNyKunde(@RequestParam("vognNummer") String kunde,
                                   HttpServletRequest request, Model model){
         HttpSession session = faaSession(request, model);
         if(session == null) return "redirect:/Logind";
-//todo: husk ny kunde?
 
-        LejeAftale lejeAftale = new LejeAftale(kunde_Id, vognNummer, startDato, slutDato, detaljer);
+        LejeAftale lejeAftale = new LejeAftale(kunde);
 
         aftaleRepository.gemLejeAftale(lejeAftale);
 
