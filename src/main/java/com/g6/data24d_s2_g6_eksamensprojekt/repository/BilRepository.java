@@ -60,7 +60,6 @@ public class BilRepository
     }
     public boolean sletBil(String vognNummer){
         List<Bil> bilList= jdbcTemplate.query("select * from bil where vognNummer=?",rowMapper,vognNummer);
-        System.out.println(bilList);
         if (bilList.isEmpty()) return false; else {
             jdbcTemplate.update("update bil set status='Slettet' where vognNummer=?",vognNummer);
             return true;
@@ -109,21 +108,40 @@ public class BilRepository
 //        return bygBiler(biler);
 //    }
 
-    public List<Bil> hentBilerbilerUdFraLager_idEllerOgMaerkeEllerOgStatus(String lager_Id, String maerke, String status)
-    {
-        List<Bil> bilList = hentEksisteredeBiler(); // todo: formuler sql til dette
-        if (lager_Id != null && !lager_Id.isEmpty()) {
-            int lager_Id_SomInt = Integer.parseInt(lager_Id);
-            bilList.removeIf(b -> b.getLager_Id() != lager_Id_SomInt);
-        }
+    public List<Bil> hentEksisteredeBilerSoegFunktion(String lager_Id, String maerke, String status) {
+        List<Bil> bilList = hentEksisteredeBiler();
 
-        if (maerke != null && !maerke.isEmpty()) {
-            bilList.removeIf(b -> !b.getType().getMaerke().equalsIgnoreCase(maerke));
-        }
-        if (status != null && !status.isEmpty()) {
-            bilList.removeIf(b -> !b.getStatus().equalsIgnoreCase(status));
-        }
+        bilList = filtrerEfterLagerId(bilList, lager_Id);
+        bilList = filtrerEfterMaerke(bilList, maerke);
+        bilList = filtrerEfterStatus(bilList, status);
+
         return bygBiler(bilList);
+    }
+
+    private List<Bil> filtrerEfterLagerId(List<Bil> biler, String lager_Id) {
+        if (lager_Id != null && !lager_Id.isEmpty()) {
+            try {
+                int lagerIdInt = Integer.parseInt(lager_Id);
+                biler.removeIf(b -> b.getLager_Id() != lagerIdInt);
+            } catch (NumberFormatException e) {
+                System.out.println("fejl i filtrer lager_Id");
+            }
+        }
+        return biler;
+    }
+
+    private List<Bil> filtrerEfterMaerke(List<Bil> biler, String maerke) {
+        if (maerke != null && !maerke.isEmpty()) {
+            biler.removeIf(b -> !b.getType().getMaerke().equalsIgnoreCase(maerke));
+        }
+        return biler;
+    }
+
+    private List<Bil> filtrerEfterStatus(List<Bil> biler, String status) {
+        if (status != null && !status.isEmpty()) {
+            biler.removeIf(b -> !b.getStatus().equalsIgnoreCase(status));
+        }
+        return biler;
     }
 
     private List<Bil> bygBiler(List<Bil> biler)

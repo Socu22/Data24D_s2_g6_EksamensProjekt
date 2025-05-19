@@ -73,7 +73,7 @@ public class BilController {
             }
         } else if(maerke != null || lager_Id != null||status!=null) {
             // hvis du vælger lager, mærke eller begge virke den her metode
-            bilList = bilRepository.hentBilerbilerUdFraLager_idEllerOgMaerkeEllerOgStatus(lager_Id,maerke,status);
+            bilList = bilRepository.hentEksisteredeBilerSoegFunktion(lager_Id,maerke,status);
         }
 
         session.setAttribute("biler", bilList);
