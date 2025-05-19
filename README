@@ -1,1 +1,41 @@
-https://www.makeareadme.com/
+🚀 Projektopsætning til bilAbonnementDatabase i IntelliJ
+    🔧 1. Opret databaseforbindelse i IntelliJ
+        Klik på Database-ikonet i højre side (cylinderformet ikon).
+
+        Tryk på "+" → Data Source → vælg MySQL.
+        Udfyld disse felter:
+            Host: localhost (eller dit eksterne link, fx Azure)
+            Port: 3306 (eller dit eget portnummer)
+            User: fx root
+            Password: fx 1234
+
+        Hvis IntelliJ beder om det, download nødvendige MySQL-drivere.
+        Tryk på Test Connection for at sikre, at forbindelsen virker.
+        Tryk Apply og OK.
+        Kopiér JDBC-linket nederst i konfigurationen (fx jdbc:mysql://localhost:3306).
+
+    🗃️ 2. Kør SQL-scriptet (opret databasen + tabeller)
+
+    Før du kan bruge databasen i dine miljøvariabler, skal den oprettes med følgende script.
+    ➤ Metode A: IntelliJ SQL Console
+        I Database-panelet, højreklik på din MySQL-forbindelse → vælg New → Console.
+        Indsæt og kør følgende SQL-script:
+            setup/demoSetup,
+                a. kun struktur + brugere: 3 demo1-2-3
+                b. struktur + brugere: 3 demo1-2-3 + alt andet
+        ✅ Når dette er kørt, findes databasen bilAbonnementDatabase, og du kan nu tilføje den til JDBC-linket.
+
+    🌍 3. Indstil miljøvariabler i projektet
+        Find Projekt2Gruppe6S2Application i dropdown øverst → vælg Edit Configurations.
+        Tryk på Modify Options → vælg Environment Variables.
+        Klik på papirikonet og tilføj følgende:
+            Name	Value (eksempel)
+            databaseUrl	jdbc:mysql://localhost:3306/bilAbonnementDatabase
+            databaseUsername	root (eller dit brugernavn)
+            databasePassword	1234 (eller din adgangskode)
+    🐳 4. Brug Docker (valgfrit)
+            Hvis du ikke har MySQL installeret lokalt, kan du køre følgende i PowerShell:
+                mkdir ~\mysql
+                docker run --name mysqldb -p xxxx:3306 -v ~/mysql:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=1234 mysql:8.1.0
+
+            Database tilgængelig på localhost:xxxx med brugernavn 'root' og password '1234'.
