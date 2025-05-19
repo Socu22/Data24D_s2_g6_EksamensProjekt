@@ -15,7 +15,6 @@
         Kopiér JDBC-linket nederst i konfigurationen (fx jdbc:mysql://localhost:3306).
 
     🗃️ 2. Kør SQL-scriptet (opret databasen + tabeller)
-
     Før du kan bruge databasen i dine miljøvariabler, skal den oprettes med følgende script.
     ➤ Metode A: IntelliJ SQL Console
         I Database-panelet, højreklik på din MySQL-forbindelse → vælg New → Console.
@@ -37,5 +36,4 @@
             Hvis du ikke har MySQL installeret lokalt, kan du køre følgende i PowerShell:
                 mkdir ~\mysql
                 docker run --name mysqldb -p xxxx:3306 -v ~/mysql:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=1234 mysql:8.1.0
-
             Database tilgængelig på localhost:xxxx med brugernavn 'root' og password '1234'.
