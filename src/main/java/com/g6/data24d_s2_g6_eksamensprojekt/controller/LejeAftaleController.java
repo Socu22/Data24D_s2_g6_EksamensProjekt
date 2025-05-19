@@ -127,7 +127,7 @@ public class LejeAftaleController {
         aftale.setBil(bilRepository.hentBil(aftale.getVognNummer()));
 
         session.setAttribute("lejeAftale", aftale);
-        session.setAttribute("lejeAftale_Id",aftale.getAftale_Id());
+        session.setAttribute("lejeAftale_Id",id);
         model.addAttribute("lejeAftale", aftale);
         model.addAttribute("bil", bilRepository.hentBil(aftale.getVognNummer()));
         model.addAttribute("notationer", notationRepository.hentNotationer(aftale.getAftale_Id()));
@@ -143,7 +143,7 @@ public class LejeAftaleController {
         HttpSession session = BrugerController.faaSession(request, model,  new String[]{"data"});
         if(session == null) return "redirect:/Logind";
 
-        aftaleRepository.sletLejeAftale(Integer.parseInt(request.getParameter("lejeAftale_Id")));
+        aftaleRepository.sletLejeAftale((int)session.getAttribute("lejeAftale_Id"));
         return "redirect:VisLejeAftaler";
     }
 
