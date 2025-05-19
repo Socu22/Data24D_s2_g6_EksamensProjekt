@@ -32,7 +32,7 @@ public class BilController {
 
     @GetMapping("/VisBiler")
     public String visBiler(HttpServletRequest request, Model model){
-        HttpSession session = faaSession(request, model);
+        HttpSession session = faaSession(request, model,  new String[]{"data", "Skade", "forretnings"});
         if(session == null) return "redirect:/Logind";
 
         List<Bil> biler = bilRepository.hentEksisteredeBiler();
@@ -53,7 +53,7 @@ public class BilController {
     }
     @GetMapping("OmdirigerVisBiler")
     public String Omdirigerbil(HttpServletRequest request, Model model) {
-        HttpSession session = faaSession(request, model);
+        HttpSession session = faaSession(request, model,  new String[]{"data", "Skade", "forretnings"});
         if (session == null) return "redirect:/Logind";
 
         String vognNummer = request.getParameter("vognNummer");
@@ -81,7 +81,7 @@ public class BilController {
     }
     @GetMapping("VisBilerReset")
     public String omdirigerVisBilerReset(HttpServletRequest request, Model model){
-        HttpSession session = faaSession(request, model);
+        HttpSession session = faaSession(request, model,  new String[]{"data", "Skade", "forretnings"});
         if (session == null) return "redirect:/Logind";
 
         session.removeAttribute("biler");
@@ -92,7 +92,7 @@ public class BilController {
 
     @GetMapping("/VisBil")
     public String visBil(HttpServletRequest request, Model model){
-        HttpSession session = faaSession(request, model);
+        HttpSession session = faaSession(request, model,  new String[]{"data", "Skade", "forretnings"});
         if(session == null) return "redirect:/Logind";
 
         String vognNummer = request.getParameter("vognNummer");
@@ -108,7 +108,7 @@ public class BilController {
 
     @GetMapping("/NyBil")
     public String nyBil(HttpServletRequest request, Model model){
-        HttpSession session = faaSession(request, model);
+        HttpSession session = faaSession(request, model, new String[]{"forretnings"});
         if(session == null) return "redirect:/Logind";
 
 
@@ -122,7 +122,7 @@ public class BilController {
     }
     @GetMapping("/GemNyBil")
     public String gemNyBil(HttpServletRequest request, Model model){
-        HttpSession session = faaSession(request, model);
+        HttpSession session = faaSession(request, model,  new String[]{"forretnings"});
         if(session == null) return "redirect:/Logind";
 
         String vognNummer= (String) request.getParameter("vognNummer");
@@ -138,7 +138,7 @@ public class BilController {
     }
     @GetMapping("/SletBil")
     public String sletBil(HttpServletRequest request, Model model){
-        HttpSession session = faaSession(request, model);
+        HttpSession session = faaSession(request, model,  new String[]{"forretnings"});
         if(session == null) return "redirect:/Logind";
 
         String vognNummer= (String) session.getAttribute("vognNummer");

@@ -17,7 +17,7 @@ public class BrugerController {
 
     @GetMapping("/")
     public String hjemmeSide(HttpServletRequest request, Model model) {
-        HttpSession session = faaSession(request, model);
+        HttpSession session = faaSession(request, model,  new String[]{"data", "Skade", "forretnings"});
         if(session == null) return "redirect:/Logind";
         return "index";
     }
@@ -55,7 +55,7 @@ public class BrugerController {
     }
     @GetMapping("/Registrer")
     public String registrer(HttpServletRequest request, Model model) {
-        HttpSession session = faaSession(request, model);
+        HttpSession session = faaSession(request, model,  new String[]{"forretnings"});
         if(session == null) return "redirect:/Logind";
 
         model.addAttribute("registrerBesked", session.getAttribute("registrerBesked"));
@@ -83,7 +83,7 @@ public class BrugerController {
     }
     @GetMapping("/OmdirigerRegistrer")
     public String omdirigerRegistrer(HttpServletRequest request, Model model) {
-        HttpSession session = faaSession(request, model);
+        HttpSession session = faaSession(request, model, new String[]{"data", "Skade", "forretnings"});
         if(session == null) return "redirect:/Logind";
 
 
@@ -135,10 +135,20 @@ public class BrugerController {
         session.setAttribute("aktivBruger", bruger);
         model.addAttribute("aktivBruger", bruger);
     }
-    static public HttpSession faaSession(HttpServletRequest request, Model model){
+    static public HttpSession faaSession(HttpServletRequest request, Model model, String[] stillinger){
         HttpSession session = request.getSession(false);
-        if(session != null)
-            model.addAttribute("aktivBruger",session.getAttribute("aktivBruger"));
+        if(session != null){
+            Bruger bruger = (Bruger) session.getAttribute("aktivBruger");
+            boolean hasAccess = false;
+            for (String stilling : stillinger) {
+                if(bruger.getStilling().toLowerCase().contains(stilling.toLowerCase().toCharArray()[0] + "")){}
+                    hasAccess = true;
+            }
+            if(!hasAccess)
+                return null;
+            model.addAttribute("aktivBruger",bruger);
+        }
+
 
         return session;
     }

@@ -20,7 +20,7 @@ public class BilTypeController {
 
     @GetMapping("/NyBilType")
     public String getNyBilType(HttpServletRequest request, Model model){
-        HttpSession session = faaSession(request, model);
+        HttpSession session = faaSession(request, model,  new String[]{"forretnings"});
         if(session == null) return "redirect:/Logind";
 
         List<String> maerkeList= bilTypeRepository.hentAlleMaerkerDK();
@@ -31,7 +31,7 @@ public class BilTypeController {
     }
     @GetMapping("/GemNyBilType")
     public String gemNyBilType(HttpServletRequest request, Model model){
-        HttpSession session = faaSession(request, model);
+        HttpSession session = faaSession(request, model,  new String[]{"forretnings"});
         if(session == null) return "redirect:/Logind";
 
         int bilType_Id = bilTypeRepository.getNextId();

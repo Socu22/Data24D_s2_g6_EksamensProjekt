@@ -21,7 +21,7 @@ public class LagerController {
 
     @GetMapping("/NytLager")
     public String nytLager(HttpServletRequest request, Model model){
-        HttpSession session = faaSession(request, model);
+        HttpSession session = faaSession(request, model,  new String[]{"forretnings"});
         if(session == null) return "redirect:/Logind";
 
         return "nytLager";
@@ -30,7 +30,7 @@ public class LagerController {
     public String gemNytLager(@RequestParam("navn") String navn,
                                @RequestParam("adresse") String adresse,
                                HttpServletRequest request, Model model){
-        HttpSession session = faaSession(request, model);
+        HttpSession session = faaSession(request, model,  new String[]{"forretnings"});
         if(session == null) return "redirect:/Logind";
 
         Lager nytLager = new Lager(navn,adresse);

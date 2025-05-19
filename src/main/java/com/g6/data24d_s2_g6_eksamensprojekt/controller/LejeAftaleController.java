@@ -37,7 +37,7 @@ public class LejeAftaleController {
     @GetMapping("/VisLejeAftaler")
     public String visLejeAftaler(HttpServletRequest request, Model model)
     {
-        HttpSession session = BrugerController.faaSession(request, model);
+        HttpSession session = BrugerController.faaSession(request, model,  new String[]{"data", "Skade", "forretnings"});
         if(session == null) return "redirect:/Logind";
 
         model.addAttribute("vognNummer", session.getAttribute("vognNummer"));
@@ -75,7 +75,7 @@ public class LejeAftaleController {
     }
     @GetMapping("/OmdirigerVisLejeAftaler")
     public String omdirigerVisLejeAftaler(HttpServletRequest request, Model model){
-        HttpSession session = BrugerController.faaSession(request, model);
+        HttpSession session = BrugerController.faaSession(request, model,  new String[]{"data", "Skade", "forretnings"});
         if(session == null) return "redirect:/Logind";
 
         String vognNummer = request.getParameter("vognNummer");
@@ -117,7 +117,7 @@ public class LejeAftaleController {
     @GetMapping("/VisLejeAftale")
     public String visLejeAftale(@RequestParam("aftaleId") int id, HttpServletRequest request, Model model)
     {
-        HttpSession session = BrugerController.faaSession(request, model);
+        HttpSession session = BrugerController.faaSession(request, model,  new String[]{"data", "Skade", "forretnings"});
         if(session == null) return "redirect:/Logind";
 
         LejeAftale aftale = aftaleRepository.hentLejeAftale(id);
@@ -141,7 +141,7 @@ public class LejeAftaleController {
     //logikken når man trykke på vælg bil.
     @GetMapping("/NyLejeAftale")
     public String nyLejeAftale(Model model, HttpServletRequest request){
-        HttpSession session = faaSession(request, model);
+        HttpSession session = faaSession(request, model,  new String[]{"data"});
         if(session == null) return "redirect:/Logind";
 
         List<Bil> bilList = bilRepository.hentEksisteredeBiler();
@@ -179,7 +179,7 @@ public class LejeAftaleController {
     @GetMapping("/GemNyKunde")
     public String gemNyKunde(@RequestParam("vognNummer") String kunde,
                                   HttpServletRequest request, Model model){
-        HttpSession session = faaSession(request, model);
+        HttpSession session = faaSession(request, model,  new String[]{"data"});
         if(session == null) return "redirect:/Logind";
 
         LejeAftale lejeAftale = new LejeAftale(kunde);
@@ -190,7 +190,7 @@ public class LejeAftaleController {
     }
     @GetMapping("/OmdirigerNyLejeAftale")
     public String omdirigerNyLejeAftale(Model model, HttpServletRequest request){
-        HttpSession session = faaSession(request, model);
+        HttpSession session = faaSession(request, model,  new String[]{"data"});
         if(session == null) return "redirect:/Logind";
 
         int aftale_Id=0;
