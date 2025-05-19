@@ -18,7 +18,7 @@
     Før du kan bruge databasen i dine miljøvariabler, skal den oprettes med følgende script.
     ➤ Metode A: IntelliJ SQL Console
         I Database-panelet, højreklik på din MySQL-forbindelse → vælg New → Console.
-        Indsæt og kør følgende SQL-script:
+        Indsæt og kør følgende SQL-script ved at højre klikke og tryk 'grøn play' icon:
             setup/demoSetup,
                 a. kun struktur + brugere: 3 demo1-2-3
                 b. struktur + brugere: 3 demo1-2-3 + alt andet
