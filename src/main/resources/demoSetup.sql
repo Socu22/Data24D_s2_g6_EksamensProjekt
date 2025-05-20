@@ -5,66 +5,59 @@ USE bilAbonnementDatabase;
 
 -- Tabeller
 CREATE TABLE medArbejdere(
-    medArbejder_Id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
-    navn           VARCHAR(50) NOT NULL,
-    adgangskode    VARCHAR(50) NOT NULL,
-    stilling       VARCHAR(50) NOT NULL
+                             medArbejder_Id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+                             navn VARCHAR(50) NOT NULL,
+                             adgangskode VARCHAR(50) NOT NULL,
+                             stilling VARCHAR(50) NOT NULL
 );
 
 CREATE TABLE bilType(
-    bilType_Id    INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
-    mærke         VARCHAR(50) NOT NULL,
-    model         VARCHAR(50) NOT NULL,
-    udstyrsniveau VARCHAR(50) NOT NULL,
-    stålPris      DOUBLE      NOT NULL,
-    afgift        DOUBLE      NOT NULL,
-    udledning_Co2 DOUBLE      NOT NULL
+                        bilType_Id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+                        mærke VARCHAR(50) NOT NULL,
+                        model VARCHAR(50) NOT NULL,
+                        udstyrsniveau VARCHAR(50) NOT NULL,
+                        stålPris DOUBLE NOT NULL,
+                        afgift DOUBLE NOT NULL,
+                        udledning_Co2 DOUBLE NOT NULL
 );
 
 CREATE TABLE lager(
-    lager_Id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
-    navn     VARCHAR(50) NOT NULL,
-    adresse  VARCHAR(50) NOT NULL
+                      lager_Id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+                      navn VARCHAR(50) NOT NULL,
+                      adresse VARCHAR(50) NOT NULL
 );
 
 CREATE TABLE bil(
-    vognNummer VARCHAR(7) PRIMARY KEY NOT NULL,
-    stelNummer VARCHAR(17)   NOT NULL,
-    bilType_Id INT           NOT NULL,
-    lager_Id   INT           NOT NULL,
-    status     VARCHAR(20)   NOT NULL,
-    kørteKm    DOUBLE        DEFAULT 0,
-    FOREIGN KEY (bilType_Id) REFERENCES bilType(bilType_Id),
-    FOREIGN KEY (lager_Id)   REFERENCES lager  (lager_Id),
-    UNIQUE      (stelNummer)
-);
-
-CREATE TABLE kunde(
-    kunde_Id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
-    navn     VARCHAR(50) NOT NULL
+                    vognNummer VARCHAR(7) PRIMARY KEY NOT NULL,
+                    stelNummer VARCHAR(17) NOT NULL,
+                    bilType_Id INT NOT NULL,
+                    lager_Id INT NOT NULL,
+                    status VARCHAR(20) NOT NULL,
+                    kørteKm    DOUBLE  DEFAULT 0,
+                    UNIQUE (stelNummer),
+                    FOREIGN KEY (bilType_Id) REFERENCES bilType(bilType_Id),
+                    FOREIGN KEY (lager_Id) REFERENCES lager(lager_Id)
 );
 
 CREATE TABLE lejeAftaler(
-    aftale_Id  INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
-    kunde_Id   INT           NOT NULL,
-    vognNummer VARCHAR(7)    NOT NULL,
-    startDato  DATE          NOT NULL,
-    slutDato   DATE          NOT NULL,
-    detaljer   VARCHAR(255)  NOT NULL,
-    FOREIGN KEY (kunde_Id)   REFERENCES kunde(kunde_Id),
-    FOREIGN KEY (vognNummer) REFERENCES bil  (vognNummer)
+                            aftale_Id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+                            kunde_Navn varchar(50) NOT NULL,
+                            vognNummer VARCHAR(7) NOT NULL,
+                            startDato DATE NOT NULL,
+                            slutDato DATE,
+                            detaljer VARCHAR(255) NOT NULL,
+                            FOREIGN KEY (vognNummer) REFERENCES bil(vognNummer)
 );
 
 CREATE TABLE notationer(
-    notationer_id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
-    aftale_Id     INT,
-    vognNummer    VARCHAR(7)   NOT NULL,
-    beskrivelse   VARCHAR(255) NOT NULL,
-    pris          DOUBLE       NOT NULL,
-    FOREIGN KEY (aftale_Id)  REFERENCES lejeAftaler(aftale_Id),
-    FOREIGN KEY (vognNummer) REFERENCES bil        (vognNummer)
+                           notationer_id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+                           aftale_Id INT,
+                           vognNummer VARCHAR(7) NOT NULL,
+                           beskrivelse VARCHAR(255) NOT NULL,
+                           pris DOUBLE NOT NULL,
+                           FOREIGN KEY (aftale_Id) REFERENCES lejeAftaler(aftale_Id),
+                           FOREIGN KEY (vognNummer) REFERENCES bil(vognNummer)
 );
-
 
 --
 -- Medarbejdere
@@ -82,7 +75,7 @@ INSERT INTO bilType (mærke, model, udstyrsniveau, stålPris, afgift, udledning_
     ('BMW',        '320i',    'Sport',       350000, 70000, 120),
     ('Audi',       'A3',      'Business',    330000, 66000, 110),
     ('Volkswagen', 'Golf',    'Comfortline', 280000, 56000, 100),
-    ('Hyundai',    'Ioniq',   'Electric',    300000, 0,     0  );
+    ('Hyundai',    'Ioniq',   'Electric',    300000, 11,     1  );
 
 -- Lagerlokationer (6 stk.)
 INSERT INTO lager (navn, adresse) VALUES
@@ -109,29 +102,25 @@ INSERT INTO bil (vognNummer, stelNummer, bilType_Id, lager_Id, status) VALUES
     ('TE48923', 'KM8J33A40GU265431', 4, 3, 'Slettet'        ),
     ('CG57492', '5UXWX9C5XG0D34567', 5, 4, 'Tilgængelig'    );
 
--- Kunder
-INSERT INTO kunde (navn) VALUES
-    ('John Doe'),
-    ('Jane Smith');
 
--- Lejeaftaler (flere rækker, danske detaljer)
-INSERT INTO lejeAftaler (kunde_Id, vognNummer, startDato, slutDato, detaljer) VALUES
-    (1, 'CD67890', '2025-01-01', '2025-01-15', 'Lejeaftale for John Doe - januar'       ),
-    (2, 'AB12345', '2025-02-01', '2025-02-28', 'Lejeaftale for Jane Smith - februar'    ),
-    (1, 'EF56789', '2025-03-01', '2025-03-10', 'Lejeaftale for John Doe - marts'        ),
-    (2, 'BH10475', '2025-04-05', '2025-04-20', 'Lejeaftale for Jane Smith - forårstur'  ),
-    (1, 'LD98430', '2025-05-01', '2025-06-14', 'Lejeaftale for John Doe - sommer'       ),
-    (2, 'RP19383', '2025-06-10', '2025-06-25', 'Lejeaftale for Jane Smith - sommerferie'),
-    (1, 'CG57492', '2025-07-01', '2025-07-10', 'Korttidsleje for John Doe'              ),
-    (2, 'XY92831', '2025-08-01', '2025-08-15', 'Lejeaftale for Jane Smith - august'     );
+-- Lejeaftaler
+INSERT INTO lejeAftaler (kunde_Navn, vognNummer, startDato, slutDato, detaljer) VALUES
+    ('Joe', 'CD67890', '2025-01-01', '2025-01-15', 'JoeTest'),
+    ('Joe', 'AB12345', '2025-02-01', '2025-02-28', 'JoeTest'),
+    ('Joe', 'EF56789', '2025-03-01', '2025-03-10', 'JoeTest'),
+    ('Joe', 'BH10475', '2025-04-05', '2025-04-20', 'JoeTest'),
+    ('Joe', 'LD98430', '2025-05-01', '2025-06-14', 'JoeTest'),
+    ('Joe', 'RP19383', '2025-06-10', '2025-06-25', 'JoeTest'),
+    ('Joe', 'CG57492', '2025-07-01', '2025-07-10', 'JoeTest'),
+    ('Joe', 'XY92831', '2025-08-01', '2025-08-15', 'JoeTest');
 
 -- Notationer uden aftale (aftale_Id IS NULL)
 INSERT INTO notationer (aftale_Id, vognNummer, beskrivelse, pris) VALUES
     (NULL, 'XY92831', 'Ridse på venstre dør',      1500),
-    (NULL, 'BH10475', 'Service udført',            0   ),
+    (NULL, 'BH10475', 'Service udført',            11   ),
     (NULL, 'KU73190', 'Skift af dæk',              3500),
     (NULL, 'TE48923', 'Lakskade udbedret',         2200),
-    (NULL, 'LD98430', 'Bil rengjort og klargjort', 0   );
+    (NULL, 'LD98430', 'Bil rengjort og klargjort', 11   );
 
 -- Notationer med aftale (aftale_Id IS NOT NULL)
 INSERT INTO notationer (aftale_Id, vognNummer, beskrivelse, pris) VALUES
