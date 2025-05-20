@@ -21,7 +21,7 @@ public class BilRepository
     @Autowired
     LagerRepository lagerRepository;
 
-    public static List<String> STATUSSER = List.of("Tilgængelig","Vedligeholdelse","Udlejet","Slettet");
+    public static List<String> STATUSSER = List.of("tilgængelig","udlejet","solgt");
 
     private final RowMapper<Bil> rowMapper = (rs, rowNum) -> {
         Bil bil = new Bil(
@@ -47,7 +47,7 @@ public class BilRepository
     }
     public List<Bil> hentEksisteredeBiler()
     {
-        List<Bil> biler = jdbcTemplate.query("select * from bil where status!='Slettet'",rowMapper);
+        List<Bil> biler = jdbcTemplate.query("select * from bil where status!='solgt'",rowMapper);
 
         return bygBiler(biler);
     }
@@ -58,7 +58,7 @@ public class BilRepository
         if (bilList.isEmpty()) return null;
         return bygBiler(bilList).getFirst();
     }
-    public boolean sletBil(String vognNummer){
+    public boolean sletBil(String vognNummer){// todo: den her metode er outDateded.
         List<Bil> bilList= jdbcTemplate.query("select * from bil where vognNummer=?",rowMapper,vognNummer);
         if (bilList.isEmpty()) return false; else {
             jdbcTemplate.update("update bil set status='Slettet' where vognNummer=?",vognNummer);
@@ -66,17 +66,17 @@ public class BilRepository
         }
     }
 
-    // todo: dette er allerede faciliteret af ovenstående metode
+
     public List<Bil> hentBilerUdFraVognNummer(String vognNummer){
-        List<Bil> bilList = jdbcTemplate.query("select * from bil where vognNummer=? and status!='Slettet'",rowMapper,vognNummer);
+        List<Bil> bilList = jdbcTemplate.query("select * from bil where vognNummer=? and status!='solgt'",rowMapper,vognNummer);
 
         return bygBiler(bilList);
     }
 
-    // todo: kan dette skrives sammen i metoden 'hentBil', ved at chekke længden af given String
+
     public List<Bil> hentBilerUdFraStelNummer(String stelNummer) {
 
-        List<Bil> bilList = jdbcTemplate.query("select * from bil where stelNummer=? and status!='Slettet'",rowMapper,stelNummer);
+        List<Bil> bilList = jdbcTemplate.query("select * from bil where stelNummer=? and status!='solgt'",rowMapper,stelNummer);
 
         List<BilType> bilTyper = bilTypeRepository.hentBilTyper();
         HashMap<Integer, BilType> typerMapped = new HashMap<>();
