@@ -33,6 +33,7 @@ CREATE TABLE bil(
     bilType_Id INT           NOT NULL,
     lager_Id   INT           NOT NULL,
     status     VARCHAR(20)   NOT NULL,
+    kørteKm    DOUBLE        DEFAULT 0,
     FOREIGN KEY (bilType_Id) REFERENCES bilType(bilType_Id),
     FOREIGN KEY (lager_Id)   REFERENCES lager  (lager_Id),
     UNIQUE      (stelNummer)
@@ -119,7 +120,7 @@ INSERT INTO lejeAftaler (kunde_Id, vognNummer, startDato, slutDato, detaljer) VA
     (2, 'AB12345', '2025-02-01', '2025-02-28', 'Lejeaftale for Jane Smith - februar'    ),
     (1, 'EF56789', '2025-03-01', '2025-03-10', 'Lejeaftale for John Doe - marts'        ),
     (2, 'BH10475', '2025-04-05', '2025-04-20', 'Lejeaftale for Jane Smith - forårstur'  ),
-    (1, 'LD98430', '2025-05-01', '2025-05-15', 'Lejeaftale for John Doe - sommer'       ),
+    (1, 'LD98430', '2025-05-01', '2025-06-14', 'Lejeaftale for John Doe - sommer'       ),
     (2, 'RP19383', '2025-06-10', '2025-06-25', 'Lejeaftale for Jane Smith - sommerferie'),
     (1, 'CG57492', '2025-07-01', '2025-07-10', 'Korttidsleje for John Doe'              ),
     (2, 'XY92831', '2025-08-01', '2025-08-15', 'Lejeaftale for Jane Smith - august'     );

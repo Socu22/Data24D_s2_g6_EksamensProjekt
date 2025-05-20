@@ -123,6 +123,7 @@ public class LejeAftaleController {
         LejeAftale aftale = aftaleRepository.hentLejeAftale(id);
 
         aftale.setKunde(kundeRepository.hentKunde(aftale.getKunde_Id()));
+        aftale.setBil(bilRepository.hentBil(aftale.getVognNummer()));
 
         aftale.setBil(bilRepository.hentBil(aftale.getVognNummer()));
 

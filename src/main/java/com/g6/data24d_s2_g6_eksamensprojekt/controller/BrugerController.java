@@ -1,13 +1,20 @@
 package com.g6.data24d_s2_g6_eksamensprojekt.controller;
 
 import com.g6.data24d_s2_g6_eksamensprojekt.model.Bruger;
+import com.g6.data24d_s2_g6_eksamensprojekt.model.Kunde;
+import com.g6.data24d_s2_g6_eksamensprojekt.model.Person;
+import com.g6.data24d_s2_g6_eksamensprojekt.model.Programmer;
 import com.g6.data24d_s2_g6_eksamensprojekt.repository.BrugerRepository;
+import com.g6.data24d_s2_g6_eksamensprojekt.repository.Repository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 @Controller
 public class BrugerController {
@@ -129,6 +136,15 @@ public class BrugerController {
         return "redirect:/Registrer";
     }
 
+    @PostMapping("/saetValuta")
+    @ResponseStatus(HttpStatus.RESET_CONTENT)
+    public void saetValuta(HttpServletRequest request, Model model)
+    {
+        HttpSession session = faaSession(request, model, new String[0]);
+        assert session != null;
+        session.setAttribute("valuta", request.getParameter("valutaCheck"));
+    }
+
     private void saetSession(HttpServletRequest request, Bruger bruger, Model model) {
         HttpSession session = request.getSession();
         session.setMaxInactiveInterval(1200);
@@ -139,18 +155,19 @@ public class BrugerController {
         HttpSession session = request.getSession(false);
         if(session != null){
             Bruger bruger = (Bruger) session.getAttribute("aktivBruger");
-            boolean hasAccess = false;
+            boolean hasAccess = true;
             for (String stilling : stillinger) {
+                hasAccess = false;
                 String s = stilling.toLowerCase().toCharArray()[0] + "";
                 //System.out.println(bruger.getStilling().toLowerCase().toCharArray()[0] + ", " + stilling.toLowerCase().toCharArray()[0] + " , " +(bruger.getStilling().toLowerCase().toCharArray()[0] == stilling.toLowerCase().toCharArray()[0]) );
                 if(bruger.getStilling().toLowerCase().toCharArray()[0] == stilling.toLowerCase().toCharArray()[0])
-                    hasAccess = true;
+                {hasAccess = true; break;}
             }
             if(!hasAccess)
                 return null;
             model.addAttribute("aktivBruger",bruger);
+            model.addAttribute("valuta", session.getAttribute("valuta"));
         }
-
 
         return session;
     }
