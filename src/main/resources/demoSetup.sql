@@ -33,6 +33,7 @@ CREATE TABLE bil(
     bilType_Id INT           NOT NULL,
     lager_Id   INT           NOT NULL,
     status     VARCHAR(20)   NOT NULL,
+    kørteKm    DOUBLE        DEFAULT 0,
     FOREIGN KEY (bilType_Id) REFERENCES bilType(bilType_Id),
     FOREIGN KEY (lager_Id)   REFERENCES lager  (lager_Id),
     UNIQUE      (stelNummer)
