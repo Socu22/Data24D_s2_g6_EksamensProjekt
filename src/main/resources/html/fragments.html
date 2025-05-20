@@ -21,7 +21,7 @@
         </form>
     </div>
     <script th:inline="javascript">
-        var euro = [[${valuta}]];
+        var euro = [[$,{valuta}]];
         function omregn()
         {
             var v = "kr";
@@ -65,7 +65,7 @@
     <a th:href="@{VisBil(vognNummer = ${lejeAftale.getBil().getVognNummer()})}" style="color: inherit; text-decoration: none">
         <div th:insert="~{fragments :: aftaleListeKort (
             vognNummer=${lejeAftale.getBil().toString()},
-            kundeNavn= ${lejeAftale.getKunde().getNavn()},
+            kundeNavn= ${lejeAftale.getKunde_Navn()},
             afgift=    ${lejeAftale.getBil().getType().afgift},
             lager=     ${lejeAftale.getBil().getLager().getNavn()},
             startDato= ${lejeAftale.getStartDato()},

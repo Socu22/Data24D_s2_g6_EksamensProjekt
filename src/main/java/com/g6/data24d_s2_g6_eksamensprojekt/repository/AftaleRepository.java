@@ -25,16 +25,22 @@ public class AftaleRepository {
     private final RowMapper<LejeAftale> rowMapper = (rs, rowNum) -> {
         LejeAftale lejeAftale = new LejeAftale();
         lejeAftale.setAftale_Id(rs.getInt("aftale_Id"));
-        lejeAftale.setKunde_Id(rs.getInt("kunde_Id"));
+        lejeAftale.setKunde_Navn(rs.getString("kunde_Navn"));
         lejeAftale.setVognNummer(rs.getString("vognNummer"));
         lejeAftale.setStartDato(rs.getDate("startDato").toLocalDate());
-        lejeAftale.setSlutDato(rs.getDate("slutDato").toLocalDate());
+        try {
+            lejeAftale.setSlutDato(rs.getDate("slutDato").toLocalDate());
+
+        }catch (NullPointerException e){
+            lejeAftale.setSlutDato(null);
+
+        }
         lejeAftale.setDetaljer(rs.getString("detaljer"));
         return lejeAftale;
     };
     //Laver en ny aftale og opdaterer databasen
     public void gemLejeAftale(LejeAftale lejeAftale){
-        String sql = "INSERT into lejeAftaler (kunde_Id, vognNummer, startDato, slutDato, detaljer ) values (?,?,?,?,?)";
+        String sql = "INSERT into lejeAftaler (kunde_Navn, vognNummer, startDato, slutDato, detaljer ) values (?,?,?,?,?)";
         jdbcTemplate.update(sql, lejeAftale.getKunde_Id(),lejeAftale.getVognNummer(),lejeAftale.getStartDato(),lejeAftale.getSlutDato(),lejeAftale.getDetaljer());
     }
 
@@ -49,16 +55,18 @@ public class AftaleRepository {
             bilerMapped.put(bil.getVognNummer(),bil);
         }
 
-        List<Kunde> kunder = kundeRepository.hentKunder();
+        /*List<Kunde> kunder = kundeRepository.hentKunder();
         HashMap<Integer, Kunde> kunderMapped = new HashMap<>();
         for (Kunde kunde: kunder)
         {
             kunderMapped.put(kunde.getKunde_Id(),kunde);
         }
 
+         */
+
         for (LejeAftale aftale: lejeAftaleList)
         {
-            aftale.setKunde(kunderMapped.get(aftale.getKunde_Id()));
+            //aftale.setKunde(kunderMapped.get(aftale.getKunde_Id()));
             aftale.setBil(bilerMapped.get(aftale.getVognNummer()));
         }
 

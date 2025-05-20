@@ -5,7 +5,7 @@ import java.time.LocalDate;
 
 public class LejeAftale {
    private int aftale_Id;
-   private int kunde_Id;
+   private String kunde_Navn;
    private String vognNummer;
    private String detaljer;
    private LocalDate startDato;
@@ -13,27 +13,27 @@ public class LejeAftale {
    private Kunde kunde;
    private Bil bil;
 
-    public LejeAftale(int aftale_Id, int kunde_Id, String vognNummer, String startDato, String slutDato, String detaljer)
+    public LejeAftale(int aftale_Id, String kunde_Navn, String vognNummer, String startDato, String slutDato, String detaljer)
     {
-        this(aftale_Id,kunde_Id,vognNummer,Date.valueOf(startDato),Date.valueOf(slutDato),detaljer);
+        this(aftale_Id,kunde_Navn,vognNummer,Date.valueOf(startDato),Date.valueOf(slutDato),detaljer);
     }
 
-    public LejeAftale(int aftale_Id, int kunde_Id, String vognNummer, Date startDato, Date slutDato, String detaljer) {
+    public LejeAftale(int aftale_Id, String kunde_Navn, String vognNummer, Date startDato, Date slutDato, String detaljer) {
         this.aftale_Id = aftale_Id;
-        this.kunde_Id = kunde_Id;
+        this.kunde_Navn = kunde_Navn;
         this.vognNummer = vognNummer;
         this.startDato = startDato.toLocalDate();
         this.slutDato = slutDato.toLocalDate();
         this.detaljer = detaljer;
     }
 
-    public LejeAftale(int kunde_Id, String vognNummer, String startDato, String slutDato, String detaljer)
+    public LejeAftale(String kunde_Navn, String vognNummer, String startDato, String slutDato, String detaljer)
     {
-        this(kunde_Id,vognNummer,Date.valueOf(startDato),Date.valueOf(slutDato),detaljer);
+        this(kunde_Navn,vognNummer,Date.valueOf(startDato),Date.valueOf(slutDato),detaljer);
     }
 
-    public LejeAftale(int kunde_Id, String vognNummer, Date startDato, Date slutDato, String detaljer) {
-        this.kunde_Id = kunde_Id;
+    public LejeAftale(String kunde_Navn, String vognNummer, Date startDato, Date slutDato, String detaljer) {
+        this.kunde_Navn = kunde_Navn;
         this.vognNummer = vognNummer;
         this.startDato = startDato.toLocalDate();
         this.slutDato = slutDato.toLocalDate();
@@ -51,12 +51,20 @@ public class LejeAftale {
         this.aftale_Id = aftale_Id;
     }
 
-    public int getKunde_Id() {
-        return kunde_Id;
+    public String getKunde_Navn() {
+        return kunde_Navn;
     }
 
-    public void setKunde_Id(int kunde_Id) {
-        this.kunde_Id = kunde_Id;
+    public void setKunde_Navn(String kunde_Navn) {
+        this.kunde_Navn = kunde_Navn;
+    }
+
+    public String getKunde_Id() {
+        return getKunde_Navn();
+    }// todo: den her metode skal ændres alle steder
+
+    public void setKunde_Id(String kunde_Navn) {
+        this.kunde_Navn = kunde_Navn;
     }
 
     public String getVognNummer() {

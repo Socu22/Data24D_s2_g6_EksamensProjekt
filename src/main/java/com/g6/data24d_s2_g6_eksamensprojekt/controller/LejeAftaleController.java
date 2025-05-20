@@ -61,10 +61,11 @@ public class LejeAftaleController {
 
         for (LejeAftale aftale: aftaler)
         {
-            if (aftale.getSlutDato().isAfter(now) && aftale.getStartDato().isBefore(now))
-            {
-                samletAfgift += aftale.getBil().getType().getAfgift(); // todo
-            }
+
+//            if (aftale.getSlutDato().isAfter(now) && aftale.getStartDato().isBefore(now))
+//            {
+//                samletAfgift += aftale.getBil().getType().getAfgift(); // todo
+//            }
         }
         model.addAttribute("samletIndkomst", samletAfgift);
 
@@ -122,7 +123,7 @@ public class LejeAftaleController {
 
         LejeAftale aftale = aftaleRepository.hentLejeAftale(id);
 
-        aftale.setKunde(kundeRepository.hentKunde(aftale.getKunde_Id()));
+        //aftale.setKunde(kundeRepository.hentKunde(aftale.getKunde_Id()));
         aftale.setBil(bilRepository.hentBil(aftale.getVognNummer()));
 
         aftale.setBil(bilRepository.hentBil(aftale.getVognNummer()));
@@ -132,10 +133,10 @@ public class LejeAftaleController {
         model.addAttribute("lejeAftale", aftale);
         model.addAttribute("bil", bilRepository.hentBil(aftale.getVognNummer()));
         model.addAttribute("notationer", notationRepository.hentNotationer(aftale.getAftale_Id()));
-
-        LocalDate now = LocalDate.now();
-        if (now.isBefore(aftale.getStartDato())) model.addAttribute("foerAftaleStart", true);
-        else if (now.isBefore(aftale.getSlutDato().plusDays(1))) model.addAttribute("foerAftaleSlut", true);
+        // todo: LocalDate i visLejeAftale skal fikses her!!!
+//        LocalDate now = LocalDate.now();
+//        if (now.isBefore(aftale.getStartDato())) model.addAttribute("foerAftaleStart", true);
+//        else if (now.isBefore(aftale.getSlutDato().plusDays(1))) model.addAttribute("foerAftaleSlut", true);
 
         return "visLejeAftale";
     }
@@ -161,12 +162,12 @@ public class LejeAftaleController {
             bil = bilRepository.hentBil((String) session.getAttribute("vognNummer"));
         }
 
-        List<Kunde> kundeList = kundeRepository.hentKunder();
-        //Kunde kunde =kundeList.getFirst();
-        Kunde tempKunde = null;
-        if(session.getAttribute("kunde_Id")!=null){
-            tempKunde = kundeRepository.hentKunde((Integer) session.getAttribute("kunde_Id"));
-        }
+//        List<Kunde> kundeList = kundeRepository.hentKunder();
+//        //Kunde kunde =kundeList.getFirst();
+//        Kunde tempKunde = null;
+//        if(session.getAttribute("kunde_Id")!=null){
+//            tempKunde = kundeRepository.hentKunde((Integer) session.getAttribute("kunde_Id"));
+//        }
         model.addAttribute("startDato", session.getAttribute("startDato"));
         model.addAttribute("slutDato", session.getAttribute("slutDato"));
         model.addAttribute("detaljer", session.getAttribute("detaljer"));
@@ -175,10 +176,10 @@ public class LejeAftaleController {
         model.addAttribute("bil", bil);
 
 
-        model.addAttribute("kundeList",kundeList);
-        model.addAttribute("tempKunde", tempKunde);
+       // model.addAttribute("kundeList",kundeList);
+       // model.addAttribute("tempKunde", tempKunde);
 
-        session.removeAttribute("kunde_Id");
+       // session.removeAttribute("kunde_Id");
         session.removeAttribute("vognNummer");
         session.removeAttribute("startDato");
         session.removeAttribute("slutDato");
@@ -186,55 +187,46 @@ public class LejeAftaleController {
 
         return "nyLejeAftale";
     }
-    @GetMapping("/GemNyKunde")
-    public String gemNyKunde(@RequestParam("vognNummer") String kunde,
-                                  HttpServletRequest request, Model model){
-        HttpSession session = faaSession(request, model,  new String[]{"data"});
-        if(session == null) return "redirect:/Logind";
 
-
-
-        return "redirect:/";
-    }
     @GetMapping("/OmdirigerNyLejeAftale")
     public String omdirigerNyLejeAftale(Model model, HttpServletRequest request){
         HttpSession session = faaSession(request, model,  new String[]{"data"});
         if(session == null) return "redirect:/Logind";
 
         int aftale_Id=0;
-        int kunde_Id=0;
+        //int kunde_Id=0;
+        String kunde_Navn;
         try {
             aftale_Id = Integer.parseInt(request.getParameter("aftale_Id"));
         }catch (NumberFormatException n){
             System.out.println("fangede ikke aftale Id");
         }
-        try {
-            kunde_Id = Integer.parseInt(request.getParameter("kunde_Id"));
-        }catch (NumberFormatException n){
-            System.out.println("fangede ikke kunde Id");
-        }
+        kunde_Navn =request.getParameter("kunde_Navn");
 
         String vognNummer = request.getParameter("vognNummer"); //Tag fat i et navngivet input element fra tidligere html side
         String startDato = request.getParameter("startDato");
         String slutDato = request.getParameter("slutDato");
         String detaljer = request.getParameter("detaljer");
         boolean bool = Boolean.parseBoolean(request.getParameter("submitKnap"));
-        System.out.println(aftale_Id + " , " + kunde_Id + " , " + vognNummer + " , " + startDato + " , " + slutDato + " , " + detaljer + " , " + bool );
+        System.out.println(aftale_Id + " , " + kunde_Navn + " , " + vognNummer + " , " + startDato + " , " + slutDato + " , " + detaljer + " , " + bool );
         if (bool){
-            LejeAftale lejeAftale = new LejeAftale(kunde_Id,vognNummer,startDato,slutDato,detaljer);
+            LejeAftale lejeAftale = new LejeAftale(kunde_Navn,vognNummer,startDato,slutDato,detaljer);
 
             aftaleRepository.gemLejeAftale(lejeAftale);
 
             return "redirect:/";
         }
         session.setAttribute("aftale_Id",aftale_Id);
-        session.setAttribute("kunde_Id",kunde_Id);
+        //session.setAttribute("kunde_Id",kunde_Id);
+        session.setAttribute("kunde_Id",kunde_Navn);
         session.setAttribute("vognNummer",vognNummer);
         session.setAttribute("startDato",startDato);
         session.setAttribute("slutDato",slutDato);
         session.setAttribute("detaljer",detaljer);
         return "redirect:/NyLejeAftale";
     }
+
+    
 
 
 }
