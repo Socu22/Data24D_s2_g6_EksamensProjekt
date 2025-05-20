@@ -9,17 +9,35 @@ public class Bil
     private BilType type;
     private int lager_Id;
     private String status;
+    private double kørteKm;
     private Lager lager;
     private List<Notation> notationer;
     private List<LejeAftale> lejeAftaler;
 
 
+    public Bil(String vognNummer, String stelNummer, BilType type, int lager_Id, String status,double kørteKm) {
+        this.vognNummer = vognNummer;
+        this.stelNummer = stelNummer;
+        this.type = type;
+        this.lager_Id = lager_Id;
+        this.status = status;
+        this.kørteKm=kørteKm;
+    }
     public Bil(String vognNummer, String stelNummer, BilType type, int lager_Id, String status) {
         this.vognNummer = vognNummer;
         this.stelNummer = stelNummer;
         this.type = type;
         this.lager_Id = lager_Id;
         this.status = status;
+
+    }
+
+    public double getKørteKm() {
+        return kørteKm;
+    }
+
+    public void setKørteKm(double kørteKm) {
+        this.kørteKm = kørteKm;
     }
 
     public String getVognNummer() {

@@ -29,7 +29,8 @@ public class BilRepository
                 rs.getString("stelNummer"),
                 new BilType(rs.getInt("bilType_Id")),
                 rs.getInt("lager_Id"),
-                rs.getString("status"));
+                rs.getString("status"),
+                rs.getDouble("kørteKm"));
         return bil;
     };
     public void gemBil(Bil bil){
