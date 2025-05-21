@@ -57,7 +57,7 @@
     )}" th:href="@{VisLejeAftale(aftaleId = ${Aftale.getAftale_Id()})}" style="color: inherit; text-decoration: none">
             <div th:insert="~{fragments :: aftaleListeKort (
                                     vognNummer=${Aftale.getBil().toString()},
-                                    kundeNavn= ${Aftale.getKunde().getNavn()},
+                                    kundeNavn= ${Aftale.getKunde_Navn()},
                                     afgift=    ${Aftale.getBil().getType().getAfgift()},
                                     lager=     ${Aftale.getBil().getLager().getNavn()},
                                     startDato= ${Aftale.getStartDato()},

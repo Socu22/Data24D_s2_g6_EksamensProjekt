@@ -33,24 +33,19 @@ CREATE TABLE bil(
                     bilType_Id INT NOT NULL,
                     lager_Id INT NOT NULL,
                     status VARCHAR(20) NOT NULL,
+                    kørteKm    DOUBLE  DEFAULT 0,
                     UNIQUE (stelNummer),
                     FOREIGN KEY (bilType_Id) REFERENCES bilType(bilType_Id),
                     FOREIGN KEY (lager_Id) REFERENCES lager(lager_Id)
 );
 
-CREATE TABLE kunde(
-                      kunde_Id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
-                      navn VARCHAR(50) NOT NULL
-);
-
 CREATE TABLE lejeAftaler(
                             aftale_Id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
-                            kunde_Id INT NOT NULL,
+                            kunde_Navn varchar(50) NOT NULL,
                             vognNummer VARCHAR(7) NOT NULL,
                             startDato DATE NOT NULL,
-                            slutDato DATE NOT NULL,
+                            slutDato DATE,
                             detaljer VARCHAR(255) NOT NULL,
-                            FOREIGN KEY (kunde_Id) REFERENCES kunde(kunde_Id),
                             FOREIGN KEY (vognNummer) REFERENCES bil(vognNummer)
 );
 

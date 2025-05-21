@@ -11,15 +11,34 @@
             <form th:if="${aktivBruger.getStilling().toLowerCase().startsWith('f')}" th:action="@{/Registrer}" th:method="get" style="margin-right: 1rem">
                 <button type="submit">Registrér Ny Burger</button>
             </form>
-            <form th:action="@{/LogUd}" th:method="get" style="margin-right: 1rem">
-                <input type="checkbox" id="valuta">
-                <label for="valuta">dkk/eur</label>
+            <form th:action="@{/saetValuta}" th:method="post" style="margin-right: 1rem">
+                <input type="checkbox" name="valutaCheck" id="valutaCheck" th:value="${valuta}" th:checked="${valuta}" onchange="omregn(); this.form.submit();">
+                <label for="valutaCheck">dkk/eur</label>
             </form>
         </div>
         <form th:action="@{/LogUd}" th:method="get">
             <button type="submit" class="logud">Log Ud</button>
         </form>
     </div>
+    <script th:inline="javascript">
+        var euro = [[$,{valuta}]];
+        function omregn()
+        {
+            var v = "kr";
+            var f = 1;
+            if (!euro)
+            {
+                v = "€";
+                f = 0.13;
+            }
+            for (var i = 0; i < document.getElementsByClassName("valuta").length; i++)
+            {
+                document.getElementsByClassName("valuta").item(i).innerHTML = (document.getElementsByClassName("valuta").item(i).title * f) + v;
+            }
+            euro = !euro;
+            document.getElementById("valutaCheck").value = euro;
+        }
+    </script>
 </div>
 
 <div th:fragment="footer">
@@ -27,7 +46,7 @@
         <button type="submit">Bil Liste</button>
     </form>
     <div>
-        <p th:text="'Samlet Indkomst: ' + ${samletIndkomst} + 'kr'">Samlet Indkomst: TODO</p>
+        <p>Samlet Indkomst: <span class="valuta" th:title="${samletIndkomst}" th:text="${samletIndkomst} + 'kr'"></span></p>
     </div>
 </div>
 
@@ -43,10 +62,10 @@
 </div>
 
 <div th:fragment="aftaleKort">
-    <a th:href="@{VisBil(vognNummer = ${bil.getVognNummer()})}" style="color: inherit; text-decoration: none">
+    <a th:href="@{VisBil(vognNummer = ${lejeAftale.getBil().getVognNummer()})}" style="color: inherit; text-decoration: none">
         <div th:insert="~{fragments :: aftaleListeKort (
             vognNummer=${lejeAftale.getBil().toString()},
-            kundeNavn= ${lejeAftale.getKunde().getNavn()},
+            kundeNavn= ${lejeAftale.getKunde_Navn()},
             afgift=    ${lejeAftale.getBil().getType().afgift},
             lager=     ${lejeAftale.getBil().getLager().getNavn()},
             startDato= ${lejeAftale.getStartDato()},
@@ -63,7 +82,7 @@
         <p th:text="${kundeNavn}" class="stelNummer" style="font-weight: bold">--Lejers Navn--</p>
     </div>
     <div>
-        <p th:text="'Mnd. Afgift: ' + ${afgift} + 'kr'">Mnd. Afgift:</p>
+        <p>Mnd. Afgift: <span class="valuta" th:title="${afgift}" th:text="${afgift} + 'kr'"></span></p>
         <p th:text="'Lager: ' + ${lager}">Lager:</p>
     </div>
     <div style="text-align: right;">
@@ -80,7 +99,8 @@
     </div>
     <div>
         <p th:text="'Lager: ' + ${lager}">Lager:</p>
-        <p th:text="'Mnd. Afgift: ' + ${afgift} + 'kr'">Mnd. Afgift:</p>
+        <p th:unless="${valuta}">Mnd. Afgift: <span class="valuta" th:title="${afgift}" th:text="${afgift} + 'kr'"></span></p>
+        <p th:if="${valuta}">Mnd. Afgift: <span class="valuta" th:title="${afgift}" th:text="${afgift}*0.13 + '€'"></span></p>
     </div>
 </div>
 

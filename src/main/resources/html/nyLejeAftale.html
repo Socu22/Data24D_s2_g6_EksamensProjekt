@@ -69,34 +69,34 @@
                 </select>
             </div>
 
-            <div>
-                <label for="startDato">Startdato:</label>
-                <input type="date" id="startDato" name="startDato" th:value="${startDato}" required />
-            </div>
+              <div>
+                  <label for="startDato">Startdato:</label>
+                  <input type="date" id="startDato" name="startDato" th:value="${startDato}" required />
+              </div>
 
-            <div>
-                <label for="slutDato">Slutdato:</label>
-                <input type="date" id="slutDato" name="slutDato" th:value="${slutDato}" required />
-            </div>
+              <div>
+                  <label for="slutDato">Slutdato:</label>
+                  <input type="date" id="slutDato" name="slutDato" th:value="${slutDato}" required />
+              </div>
 
-            <div>
-                <label for="detaljer">Detaljer:</label>
-                <textarea id="detaljer" name="detaljer" th:text="${detaljer}" placeholder="Beskriv afhentningen" maxlength="255" rows="4" required></textarea>
-            </div>
+              <div>
+                  <label for="detaljer">Detaljer:</label>
+                  <textarea id="detaljer" name="detaljer" th:text="${detaljer}" placeholder="Beskriv afhentningen" maxlength="255" rows="4" required></textarea>
+              </div>
 
-            <div>
-                <button type="submit" name="submitKnap" value="True">Bekræft lejeaftale</button>
-            </div>
-        </form>
+              <div>
+                  <button type="submit" name="submitKnap" value="True">Bekræft lejeaftale</button>
+              </div>
+          </form>
 
-        <form th:action="@{/VisLejeAftaler}" method="get">
-            <button type="submit" class="annuller">Tilbage til forsiden</button>
-        </form>
-    </section>
-</main>
+          <form th:action="@{/VisLejeAftaler}" method="get">
+              <button type="submit" class="annuller">Tilbage til forsiden</button>
+          </form>
+      </section>
+  </main>
 
-<footer>
-    <!-- skriv side-specific footer her -->
+  <footer>
+      <!-- skriv side-specific footer her -->
 </footer>
 </body>
 </html>

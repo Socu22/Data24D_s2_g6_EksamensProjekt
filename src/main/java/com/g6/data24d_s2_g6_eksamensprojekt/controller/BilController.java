@@ -38,7 +38,7 @@ public class BilController {
         List<Bil> biler = bilRepository.hentEksisteredeBiler();
         List<Lager> lagerList = lagerRepository.hentLager();
         List<BilType> bilTypeList = bilTypeRepository.hentBilTyper();
-        List<String> statusList = bilRepository.hentStatusser().subList(0,3);
+        List<String> statusList = bilRepository.hentStatusser().subList(0,2);
 
         if(session.getAttribute("biler")!=null){
             biler = (List<Bil>) session.getAttribute("biler");
