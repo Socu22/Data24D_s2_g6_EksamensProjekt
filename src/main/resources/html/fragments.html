@@ -21,7 +21,7 @@
         </form>
     </div>
     <script th:inline="javascript">
-        var euro = [[$,{valuta}]];
+        var euro = [[${valuta}]];
         function omregn()
         {
             var v = "kr";
@@ -78,11 +78,12 @@
 <div th:fragment="aftaleListeKort (vognNummer, kundeNavn, afgift, lager, startDato, slutDato)" class="kort">
     <p class="vognNr" th:text="${vognNummer}"></p>
     <div>
-        <p>Lejer:</p>
+        <p>Kunde:</p>
         <p th:text="${kundeNavn}" class="stelNummer" style="font-weight: bold">--Lejers Navn--</p>
     </div>
     <div>
-        <p>Mnd. Afgift: <span class="valuta" th:title="${afgift}" th:text="${afgift} + 'kr'"></span></p>
+        <p th:unless="${valuta}">Mnd. Afgift: <span class="valuta" th:title="${afgift}" th:text="${afgift} + 'kr'"></span></p>
+        <p th:if="${valuta}">Mnd. Afgift: <span class="valuta" th:title="${afgift}" th:text="${afgift}*0.13 + '€'"></span></p>
         <p th:text="'Lager: ' + ${lager}">Lager:</p>
     </div>
     <div style="text-align: right;">
@@ -110,7 +111,8 @@
     </div>
     <div>
         <p th:text="'Omkostning: '">Omkostning:</p>
-        <p th:text="${omkostning} + 'kr'">--kr</p>
+        <p th:unless="${valuta}"><span class="valuta" th:title="${omkostning}" th:text="${omkostning} + 'kr'"></span></p>
+        <p th:if="${valuta}"><span class="valuta" th:title="${omkostning}" th:text="${omkostning}*0.13 + '€'"></span></p>
     </div>
 </div>
 
