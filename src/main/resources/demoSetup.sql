@@ -61,10 +61,10 @@ CREATE TABLE notationer(
 
 -- Medarbejdere
 INSERT INTO medArbejdere (navn, adgangskode, stilling) VALUES
-('demo', 'demo', 'Demo'),
-('demo1', 'demo1', 'Dataregistrering'),
-('demo2', 'demo2', 'Skade_&_Udbedring'),
-('demo3', 'demo3', 'Forretningsudviklere');
+('demo' , 'demo' , 'DEMO'),
+('demo1', 'demo1', 'DATA'),
+('demo2', 'demo2', 'SKADE'),
+('demo3', 'demo3', 'FORRETNING');
 
 -- Biltyper
 INSERT INTO bilType (mærke, model, udstyrsniveau, stålPris, afgift, udledning_Co2) VALUES
@@ -87,19 +87,19 @@ INSERT INTO lager (navn, adresse) VALUES
 
 -- Biler (inkl. kørteKm for simulere vore logik for solgte biler)
 INSERT INTO bil (vognNummer, stelNummer, bilType_Id, lager_Id, status, kørteKm) VALUES
-('AB12345', 'WAUZZZ8V4DN674512', 1, 1, 'tilgængelig', 0),
-('CD67890', '1HGBH41JXMN109169', 2, 2, 'tilgængelig', 0),
-('EF56789', '1FMCU0C72CK451093', 3, 3, 'tilgængelig', 0),
-('XY92831', '1HGCM82633A004321', 4, 4, 'tilgængelig', 0),
-('QT63829', '2FTRX18W1XCA98765', 5, 4, 'tilgængelig', 0),
-('BH10475', 'WDBUF70J94A345678', 6, 5, 'udlejet', 0),
-('KU73190', '3N1AB7AP7HY256789', 7, 5, 'udlejet', 0),
-('ZA87364', 'JN1CV6EK9BM234567', 4, 6, 'udlejet', 0),
-('MW28374', '1N4AL3AP9FC198765', 5, 6, 'udlejet', 0),
-('LD98430', 'WA1DGAFE6FD017654', 6, 1, 'solgt', 120000),
-('RP19383', 'SALWR2VF2FA623890', 7, 2, 'solgt', 98000),
-('TE48923', 'KM8J33A40GU265431', 4, 3, 'solgt', 110500),
-('CG57492', '5UXWX9C5XG0D34567', 5, 4, 'solgt', 102000);
+('AB12345', 'WAUZZZ8V4DN674512', 1, 1, 'TILGAENGELIG', 0),
+('CD67890', '1HGBH41JXMN109169', 2, 2, 'TILGAENGELIG', 0),
+('EF56789', '1FMCU0C72CK451093', 3, 3, 'TILGAENGELIG', 0),
+('XY92831', '1HGCM82633A004321', 4, 4, 'TILGAENGELIG', 0),
+('QT63829', '2FTRX18W1XCA98765', 5, 4, 'UNLIMITED', 0),
+('BH10475', 'WDBUF70J94A345678', 6, 5, 'UNLIMITED', 0),
+('KU73190', '3N1AB7AP7HY256789', 7, 5, 'UNLIMITED', 0),
+('ZA87364', 'JN1CV6EK9BM234567', 4, 6, 'LIMITED', 0),
+('MW28374', '1N4AL3AP9FC198765', 5, 6, 'LIMITED', 0),
+('LD98430', 'WA1DGAFE6FD017654', 6, 1, 'SOLGT', 120000),
+('RP19383', 'SALWR2VF2FA623890', 7, 2, 'SOLGT', 98000),
+('TE48923', 'KM8J33A40GU265431', 4, 3, 'SOLGT', 110500),
+('CG57492', '5UXWX9C5XG0D34567', 5, 4, 'SOLGT', 102000);
 
 -- Lejeaftaler (kun for biler med status 'udlejet' eller 'solgt')
 
