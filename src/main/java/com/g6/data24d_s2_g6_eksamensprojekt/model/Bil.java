@@ -5,10 +5,18 @@ import java.util.Objects;
 
 public class Bil
 {
+    public enum Status
+    {
+        SOLGT,
+        LIMITED,
+        UNLIMITED,
+        TILGAENGELIG;
+    }
+
     private final String vognNummer, stelNummer;
     private BilType type;
     private int lager_Id;
-    private String status;
+    private Status status;
     private double kørteKm;
     private Lager lager;
     private List<Notation> notationer;
@@ -20,7 +28,7 @@ public class Bil
         this.stelNummer = stelNummer;
         this.type = type;
         this.lager_Id = lager_Id;
-        this.status = status;
+        this.status = Status.valueOf(status);
         this.kørteKm=kørteKm;
     }
     public Bil(String vognNummer, String stelNummer, BilType type, int lager_Id, String status) {
@@ -28,7 +36,7 @@ public class Bil
         this.stelNummer = stelNummer;
         this.type = type;
         this.lager_Id = lager_Id;
-        this.status = status;
+        this.status = Status.valueOf(status);
 
     }
 
@@ -66,11 +74,11 @@ public class Bil
     }
 
     public String getStatus() {
-        return status;
+        return status.name();
     }
 
     public void setStatus(String status) {
-        this.status = status;
+        this.status = Status.valueOf(status);
     }
 
     public int getBilType_Id(){
