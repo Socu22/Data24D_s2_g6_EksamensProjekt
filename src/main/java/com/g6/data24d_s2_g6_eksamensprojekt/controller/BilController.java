@@ -14,6 +14,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static com.g6.data24d_s2_g6_eksamensprojekt.controller.BrugerController.faaSession;
@@ -38,7 +39,7 @@ public class BilController {
         List<Bil> biler = bilRepository.hentEksisteredeBiler();
         List<Lager> lagerList = lagerRepository.hentLager();
         List<BilType> bilTypeList = bilTypeRepository.hentBilTyper();
-        List<String> statusList = bilRepository.hentStatusser().subList(0,2);
+        List<String> statusList = List.of(Bil.Status.TILGAENGELIG.name(),Bil.Status.LIMITED.name(), Bil.Status.UNLIMITED.name());
 
         if(session.getAttribute("biler")!=null){
             biler = (List<Bil>) session.getAttribute("biler");
@@ -114,8 +115,10 @@ public class BilController {
 
         List<BilType> bilTypeList = bilTypeRepository.hentBilTyper();
         List<Lager> lagerList =lagerRepository.hentLager();
+        List<String> statusList = List.of(Bil.Status.TILGAENGELIG.name(),Bil.Status.LIMITED.name(), Bil.Status.UNLIMITED.name());
         model.addAttribute("lagerList",lagerList);
         model.addAttribute("bilTypeList",bilTypeList);
+        model.addAttribute("statusList",statusList);
 
 
         return "nyBil";

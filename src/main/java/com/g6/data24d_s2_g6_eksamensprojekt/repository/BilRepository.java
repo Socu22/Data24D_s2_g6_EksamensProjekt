@@ -21,7 +21,7 @@ public class BilRepository
     @Autowired
     LagerRepository lagerRepository;
 
-    public static List<String> STATUSSER = List.of("tilgængelig","udlejet","solgt");
+
 
     private final RowMapper<Bil> rowMapper = (rs, rowNum) -> {
         Bil bil = new Bil(
@@ -163,8 +163,5 @@ public class BilRepository
 
         return biler;
     }
-    public List<String> hentStatusser(){
 
-        return STATUSSER;
-    }
 }
