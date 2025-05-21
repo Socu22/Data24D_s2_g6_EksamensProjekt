@@ -1,13 +1,11 @@
 package com.g6.data24d_s2_g6_eksamensprojekt.controller;
 
 import com.g6.data24d_s2_g6_eksamensprojekt.model.Bruger;
-import com.g6.data24d_s2_g6_eksamensprojekt.model.Kunde;
-import com.g6.data24d_s2_g6_eksamensprojekt.model.Person;
-import com.g6.data24d_s2_g6_eksamensprojekt.model.Programmer;
 import com.g6.data24d_s2_g6_eksamensprojekt.repository.BrugerRepository;
-import com.g6.data24d_s2_g6_eksamensprojekt.repository.Repository;
+
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -160,7 +158,7 @@ public class BrugerController {
                 hasAccess = false;
                 String s = stilling.toLowerCase().toCharArray()[0] + "";
                 //System.out.println(bruger.getStilling().toLowerCase().toCharArray()[0] + ", " + stilling.toLowerCase().toCharArray()[0] + " , " +(bruger.getStilling().toLowerCase().toCharArray()[0] == stilling.toLowerCase().toCharArray()[0]) );
-                if(bruger.getStilling().toLowerCase().toCharArray()[0] == stilling.toLowerCase().toCharArray()[0])
+                if(bruger.getStilling().equals("DEMO") || bruger.getStilling().toLowerCase().toCharArray()[0] == stilling.toLowerCase().toCharArray()[0])
                 {hasAccess = true; break;}
             }
             if(!hasAccess)
