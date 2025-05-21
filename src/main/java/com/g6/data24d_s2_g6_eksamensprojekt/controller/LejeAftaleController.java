@@ -186,12 +186,10 @@ public class LejeAftaleController {
         return "nyLejeAftale";
     }
     @GetMapping("/GemNyKunde")
-    public String gemNyKunde(@RequestParam("vognNummer") String kunde,
+    public String gemNyKunde(@RequestParam("nyKunde") String nyKunde,
                                   HttpServletRequest request, Model model){
         HttpSession session = faaSession(request, model,  new String[]{"data"});
         if(session == null) return "redirect:/Logind";
-
-
 
         return "redirect:/";
     }
@@ -202,17 +200,9 @@ public class LejeAftaleController {
 
         int aftale_Id=0;
         int kunde_Id=0;
-        try {
-            aftale_Id = Integer.parseInt(request.getParameter("aftale_Id"));
-        }catch (NumberFormatException n){
-            System.out.println("fangede ikke aftale Id");
-        }
-        try {
-            kunde_Id = Integer.parseInt(request.getParameter("kunde_Id"));
-        }catch (NumberFormatException n){
-            System.out.println("fangede ikke kunde Id");
-        }
 
+        String nyKunde = request.getParameter("kunde");
+        aftale_Id = kundeRepository.gemNyKunde(nyKunde);
         String vognNummer = request.getParameter("vognNummer"); //Tag fat i et navngivet input element fra tidligere html side
         String startDato = request.getParameter("startDato");
         String slutDato = request.getParameter("slutDato");

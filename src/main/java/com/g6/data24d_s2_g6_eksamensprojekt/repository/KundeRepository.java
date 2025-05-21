@@ -19,9 +19,9 @@ public class KundeRepository {
         return kunde;
     };
     //todo: husk at brug getmapping
-    public void gemNyKunde(String nyKunde){
+    public int gemNyKunde(String nyKunde){
         String sql = "INSERT into kunde (navn) values (?)";
-        jdbcTemplate.update(sql, nyKunde);
+        return jdbcTemplate.update(sql, nyKunde);
     }
     //tager fat i LejeAftale ud fra et id
     public Kunde hentKunde(int kunde_Id){
