@@ -79,20 +79,8 @@ public class BilRepository
 
         List<Bil> bilList = jdbcTemplate.query("select * from bil where stelNummer=? and status!='solgt'",rowMapper,stelNummer);
 
-        List<BilType> bilTyper = bilTypeRepository.hentBilTyper();
-        HashMap<Integer, BilType> typerMapped = new HashMap<>();
-        for (BilType biltype : bilTyper) {typerMapped.put(biltype.getBilType_Id(),biltype);}
 
-        List<Lager> lagere = lagerRepository.hentLager();
-        HashMap<Integer, Lager> lagereMapped = new HashMap<>();
-        for (Lager lager : lagere) {lagereMapped.put(lager.getLager_Id(),lager);}
-
-        for (Bil bil : bilList)
-        {
-            bil.setType(typerMapped.get(bil.getBilType_Id()));
-            bil.setLager(lagereMapped.get(bil.getLager_Id()));
-        }
-        return bilList;
+        return bygBiler(bilList);
 
 
     }

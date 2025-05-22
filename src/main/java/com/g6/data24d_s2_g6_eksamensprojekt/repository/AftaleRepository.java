@@ -82,7 +82,7 @@ public class AftaleRepository {
         return null;
     }
 
-    //sletter lejeAftale med specifikt id.
+    //todo: slet Outdated sletLejAftale metode
     public boolean sletLejeAftale(int aftale_Id){
         List <LejeAftale> count= jdbcTemplate.query("select * from lejeAftaler where aftale_Id=?",rowMapper,aftale_Id);
         if (count.size()==1){
