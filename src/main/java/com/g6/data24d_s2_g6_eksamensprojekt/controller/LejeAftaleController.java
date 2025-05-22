@@ -233,14 +233,37 @@ public class LejeAftaleController {
         kunde_Navn =request.getParameter("kunde_Navn");
         String vognNummer = request.getParameter("vognNummer"); //Tag fat i et navngivet input element fra tidligere html side
         String startDato = request.getParameter("startDato");
-        System.out.println(startDato+"_Test");
-
 
         String slutDato = request.getParameter("slutDato");
+        if(checkBoxBool){
+            Date startDate = Date.valueOf(startDato);
+            Date slutDate;
+
+            LocalDate startDateAsLocalDate = startDate.toLocalDate();
+            LocalDate slutDateAsLocalDate = startDateAsLocalDate.plusMonths(5);
+            slutDate = Date.valueOf(slutDateAsLocalDate);
+            slutDato= slutDate.toString();
+            session.setAttribute("slutDato", slutDate.toString());
+            System.out.println(slutDate+"_Test");
+
+
+
+        }else {
+            Date startDate = Date.valueOf(startDato);
+            Date slutDate;
+
+            LocalDate startDateAsLocalDate = startDate.toLocalDate();
+            LocalDate slutDateAsLocalDate = startDateAsLocalDate.plusMonths(3);
+            slutDate = Date.valueOf(slutDateAsLocalDate);
+            session.setAttribute("slutDato", slutDate.toString());
+            System.out.println(slutDate+"_Test");
+        }
+
         String detaljer = request.getParameter("detaljer");
         boolean gemLejeAftaleBool = Boolean.parseBoolean(request.getParameter("submitKnap"));
 
         if (gemLejeAftaleBool){
+            System.out.println(slutDato+"INportant");
 
             LejeAftale lejeAftale = new LejeAftale(kunde_Navn,vognNummer,startDato,slutDato,detaljer);
 
@@ -261,30 +284,7 @@ public class LejeAftaleController {
         session.setAttribute("vognNummer",vognNummer);
         session.setAttribute("startDato",startDato);
         //todo: set slutDato til at blive 5 eller 3 måneder frem i tiden
-//        if(checkBoxBool){
-//            Date startDate = Date.valueOf(startDato);
-//            Date slutDate;
-//
-//            LocalDate startDateAsLocalDate = startDate.toLocalDate();
-//            LocalDate slutDateAsLocalDate = startDateAsLocalDate.plusMonths(5);
-//            slutDate = Date.valueOf(slutDateAsLocalDate);
-//            session.setAttribute("slutDato", slutDate.toString());
-//            System.out.println(slutDate+"_Test");
-//
-//
-//        }else if(!checkBoxBool){
-//            Date startDate = Date.valueOf(startDato);
-//            Date slutDate;
-//
-//            LocalDate startDateAsLocalDate = startDate.toLocalDate();
-//            LocalDate slutDateAsLocalDate = startDateAsLocalDate.plusMonths(3);
-//            slutDate = Date.valueOf(slutDateAsLocalDate);
-//            session.setAttribute("slutDato", slutDate.toString());
-//            System.out.println(slutDate+"_Test");
-//        }else {
-//            session.setAttribute("slutDato",slutDato);
-//
-//        }
+
         session.setAttribute("slutDato",slutDato);
 
 
