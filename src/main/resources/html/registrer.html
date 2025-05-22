@@ -19,6 +19,7 @@
 </style>
 <body>
 <header th:insert="~{fragments :: header}"></header>
+
 <section>
     <form th:action="@{/OmdirigerRegistrer}" method="get" id="OmReg" >
         <div class="fade-out" th:unless="${registrerBesked} == 'Ny bruger lavet'">
@@ -28,31 +29,44 @@
             <label style="color: green" th:text="${registrerBesked}"></label>
         </div>
         <label >Navn:</label>
-        <input type="text" name="navn" placeholder="navn" th:value="${navn}"  autofocus="autofocus"   />
-        <label th:if="${manglendeInput == 0}" class="fade-out">Mangler Navn</label><br/>
+        <input type="text" name="navn" placeholder="navn" th:value="${navn}"  autofocus="autofocus"  required /><br/>
+        <!-- <label th:if="${manglendeInput == 0}" class="fade-out">Mangler Navn</label><br/>-->
         <label >Adgangskode:</label>
-        <input type="password" name="adgangskode" placeholder="adgangskode" th:value="${adgangskode}"   />
-        <label th:if="${manglendeInput == 1}" class="fade-out">Mangler Adgangskode</label><br/>
+        <input type="password" name="adgangskode" placeholder="adgangskode" th:value="${adgangskode}" required  /><br/>
+        <!-- <label th:if="${manglendeInput == 1}" class="fade-out">Mangler Adgangskode</label><br/>-->
         <label >Verificer Adgangskode:</label>
-        <input type="password" name="adgangskode2" placeholder=" verificer adgangskode" th:value="${adgangskode2}"    />
-        <label th:if="${manglendeInput == 2}" class="fade-out">Mangler Verificer Adgangskode</label><br/>
-        <label >Stilling:</label>
+        <input type="password" name="adgangskode2" placeholder=" verificer adgangskode" th:value="${adgangskode2}" required   /><br/>
+        <!-- <label th:if="${manglendeInput == 2}" class="fade-out">Mangler Verificer Adgangskode</label><br/>-->
+        <label >Stilling:</label><br/>
 
 
-        <details >
-            <summary th:text="${stilling}"></summary>
-                <button type="submit"  name="stilling" value="Dataregistrering" >Dataregistrering</button>
+        <select id="stilling" name="stilling"  required>
+            <option  selected name="stilling" value="Dataregistrering"  >Dataregistrering</option>
+            <option  name="stilling" value="Skade og Udbedring"  >Skade og Udbedring</option>
+            <option   name="stilling" value="Forretningsudvikler"  >Forretningsudvikler</option>
+        </select>
 
-                <button type="submit"  name="stilling" value="Skade og Udbedring" >Skade og Udbedring</button>
+        <!--  <details >
+             <summary th:text="${stilling}"></summary>
+                 <button type="submit"  name="stilling" value="Dataregistrering" >Dataregistrering</button>
 
-                <button type="submit"  name="stilling" value="Forretningsudvikler" >Forretningsudvikler</button>
+                 <button type="submit"  name="stilling" value="Skade og Udbedring" >Skade og Udbedring</button>
 
-        </details>
+                 <button type="submit"  name="stilling" value="Forretningsudvikler" >Forretningsudvikler</button>
 
+         </details>
+         -->
 
-        <button type="submit"  name="stilling" th:value="${stilling} + '_'">Registrer</button>
+        <button type="submit" >Registrer</button>
+
     </form>
-
 </section>
+<form th:action="@{/OmdirigerSoegBruger}" method="get">
+    <button type="submit">Rediger Eksisterende Bruger</button>
+</form>
+
+
+
+
 </body>
 </html>
