@@ -122,17 +122,19 @@ public class LejeAftaleController {
         if(session == null) return "redirect:/Logind";
 
         LejeAftale aftale = aftaleRepository.hentLejeAftale(id);
+        Bil bil =bilRepository.hentBil(aftale.getVognNummer());
 
         //aftale.setKunde(kundeRepository.hentKunde(aftale.getKunde_Id()));
-        aftale.setBil(bilRepository.hentBil(aftale.getVognNummer()));
+        aftale.setBil(bil);
 
-        aftale.setBil(bilRepository.hentBil(aftale.getVognNummer()));
+        aftale.setBil(bil);
 
         session.setAttribute("lejeAftale", aftale);
         session.setAttribute("lejeAftale_Id",id);
         model.addAttribute("lejeAftale", aftale);
-        model.addAttribute("bil", bilRepository.hentBil(aftale.getVognNummer()));
+        model.addAttribute("bil", bil);
         model.addAttribute("notationer", notationRepository.hentNotationer(aftale.getAftale_Id()));
+        session.setAttribute("bil",bil);
         // todo: LocalDate i visLejeAftale skal fikses her!!!
 //        LocalDate now = LocalDate.now();
 //        if (now.isBefore(aftale.getStartDato())) model.addAttribute("foerAftaleStart", true);
@@ -147,6 +149,22 @@ public class LejeAftaleController {
 
         aftaleRepository.sletLejeAftale((int)session.getAttribute("lejeAftale_Id"));
         return "redirect:VisLejeAftaler";
+    }
+
+    @GetMapping("/AfslutLejeAftale")
+    public String afslutLejeAftale(HttpServletRequest request, Model model){
+        HttpSession session = BrugerController.faaSession(request, model,  new String[]{"data"});
+        if(session == null) return "redirect:/Logind";
+
+
+        // todo: skal kunne dukke op i de 2 dage efter slutDato.
+        boolean lejeAftaleErOvreBool = true;
+        Bil bil = (Bil) session.getAttribute("bil");
+        if(lejeAftaleErOvreBool){
+            bilRepository.saetStatus(bil,Bil.Status.SOLGT.name());
+
+        }
+        return "redirect:/";
     }
 
     //logikken når man trykke på vælg bil.
@@ -168,18 +186,24 @@ public class LejeAftaleController {
 //        if(session.getAttribute("kunde_Id")!=null){
 //            tempKunde = kundeRepository.hentKunde((Integer) session.getAttribute("kunde_Id"));
 //        }
+        String kunde_Navn = null;
+        if ((String) session.getAttribute("kunde_Navn")!=null){
+            kunde_Navn=(String) session.getAttribute("kunde_Navn");
+        }
+        model.addAttribute("kunde_Navn",kunde_Navn);
         model.addAttribute("startDato", session.getAttribute("startDato"));
         model.addAttribute("slutDato", session.getAttribute("slutDato"));
         model.addAttribute("detaljer", session.getAttribute("detaljer"));
 
         model.addAttribute("bilList",bilList);
         model.addAttribute("bil", bil);
+        session.setAttribute("bil",bil);
 
 
        // model.addAttribute("kundeList",kundeList);
        // model.addAttribute("tempKunde", tempKunde);
-
        // session.removeAttribute("kunde_Id");
+        session.removeAttribute("kunde_Navn");
         session.removeAttribute("vognNummer");
         session.removeAttribute("startDato");
         session.removeAttribute("slutDato");
@@ -194,39 +218,80 @@ public class LejeAftaleController {
         if(session == null) return "redirect:/Logind";
 
         int aftale_Id=0;
-        //int kunde_Id=0;
         String kunde_Navn;
         try {
             aftale_Id = Integer.parseInt(request.getParameter("aftale_Id"));
         }catch (NumberFormatException n){
             System.out.println("fangede ikke aftale Id");
         }
-        kunde_Navn =request.getParameter("kunde_Navn");
+        boolean checkBoxBool = Boolean.parseBoolean(request.getParameter("checkBox"));
+        System.out.println(checkBoxBool+"_test");
 
-        String nyKunde = request.getParameter("kunde");
-        aftale_Id = kundeRepository.gemNyKunde(nyKunde);
+        Bil bil = (Bil) session.getAttribute("bil");
+        System.out.println(bil.getStatus()+"_test");
+        //----
+        kunde_Navn =request.getParameter("kunde_Navn");
         String vognNummer = request.getParameter("vognNummer"); //Tag fat i et navngivet input element fra tidligere html side
         String startDato = request.getParameter("startDato");
+        System.out.println(startDato+"_Test");
+
+
         String slutDato = request.getParameter("slutDato");
         String detaljer = request.getParameter("detaljer");
-        boolean bool = Boolean.parseBoolean(request.getParameter("submitKnap"));
-        System.out.println(aftale_Id + " , " + kunde_Navn + " , " + vognNummer + " , " + startDato + " , " + slutDato + " , " + detaljer + " , " + bool );
-        if (bool){
+        boolean gemLejeAftaleBool = Boolean.parseBoolean(request.getParameter("submitKnap"));
+
+        if (gemLejeAftaleBool){
+
             LejeAftale lejeAftale = new LejeAftale(kunde_Navn,vognNummer,startDato,slutDato,detaljer);
 
             aftaleRepository.gemLejeAftale(lejeAftale);
 
+            if(checkBoxBool){
+
+                bilRepository.saetStatus(bil,Bil.Status.LIMITED.name());
+            }else {
+                bilRepository.saetStatus(bil,Bil.Status.UNLIMITED.name());
+            }
+            session.removeAttribute("bil");
+
             return "redirect:/";
         }
         session.setAttribute("aftale_Id",aftale_Id);
-        //session.setAttribute("kunde_Id",kunde_Id);
-        session.setAttribute("kunde_Id",kunde_Navn);
+        session.setAttribute("kunde_Navn",kunde_Navn);
         session.setAttribute("vognNummer",vognNummer);
         session.setAttribute("startDato",startDato);
+        //todo: set slutDato til at blive 5 eller 3 måneder frem i tiden
+//        if(checkBoxBool){
+//            Date startDate = Date.valueOf(startDato);
+//            Date slutDate;
+//
+//            LocalDate startDateAsLocalDate = startDate.toLocalDate();
+//            LocalDate slutDateAsLocalDate = startDateAsLocalDate.plusMonths(5);
+//            slutDate = Date.valueOf(slutDateAsLocalDate);
+//            session.setAttribute("slutDato", slutDate.toString());
+//            System.out.println(slutDate+"_Test");
+//
+//
+//        }else if(!checkBoxBool){
+//            Date startDate = Date.valueOf(startDato);
+//            Date slutDate;
+//
+//            LocalDate startDateAsLocalDate = startDate.toLocalDate();
+//            LocalDate slutDateAsLocalDate = startDateAsLocalDate.plusMonths(3);
+//            slutDate = Date.valueOf(slutDateAsLocalDate);
+//            session.setAttribute("slutDato", slutDate.toString());
+//            System.out.println(slutDate+"_Test");
+//        }else {
+//            session.setAttribute("slutDato",slutDato);
+//
+//        }
         session.setAttribute("slutDato",slutDato);
+
+
         session.setAttribute("detaljer",detaljer);
         return "redirect:/NyLejeAftale";
     }
+
 
     
 

@@ -152,4 +152,8 @@ public class BilRepository
         return biler;
     }
 
+    public void saetStatus(Bil bil,String status) {
+        bil.setStatus(status);
+        jdbcTemplate.update("UPDATE bil set status=? where vognNummer=?",status,bil.getVognNummer());
+    }
 }

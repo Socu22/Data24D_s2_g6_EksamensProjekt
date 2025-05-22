@@ -57,9 +57,10 @@
     <section>
         <h2>Opret Lejeaftale</h2>
         <form th:action="@{/OmdirigerNyLejeAftale}" method="get">
+
             <div>
-                <label for="kunde">Kunde ID:kundenavn</label>
-                <textarea id="kunde" name="kunde"></textarea>
+                <label for="kunde_Navn">kunde navn</label>
+                <input type="text" id="kunde_Navn" name="kunde_Navn" th:value="${kunde_Navn}" required />
             </div>
             <div>
                 <label for="vognNummer">Vognnummer:</label>
@@ -67,6 +68,12 @@
                     <option value="" disabled selected>Vælg en bil</option>
                     <option th:type="submit" th:each="Bil : ${bilList}" th:selected="${bil != null and Bil.vognNummer == bil.vognNummer}" th:value="${Bil.vognNummer}" th:text="${Bil.vognNummer+ ' (status: ' + Bil.status + ')'}"></option>
                 </select>
+            </div>
+            <div>
+                <label>
+                    Limited(5m), Unlimited(3m-36m)
+                </label>
+                <input type="checkbox" name="checkBox" value="true" checked="checked" />
             </div>
 
               <div>
@@ -76,7 +83,7 @@
 
               <div>
                   <label for="slutDato">Slutdato:</label>
-                  <input type="date" id="slutDato" name="slutDato" th:value="${slutDato}" required />
+                  <input type="date" id="slutDato" name="slutDato" th:value="${slutDato}" />
               </div>
 
               <div>
