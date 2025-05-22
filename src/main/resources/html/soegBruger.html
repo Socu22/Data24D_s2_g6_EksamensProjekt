@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" th:href="@{style.css}">
+</head>
+<body>
+<header th:insert="~{fragments :: header}"></header>
+<section>
+    <form th:action="@{/OmdirigerSoegBruger}" method="get" >
+        <input type="text" name="medarbejderNavn" placeholder="Medarbejder Navn" th:value="${medarbejderNavn}" />
+        <button type="submit">Søg</button>
+    </form>
+    <div  class="liste" th:each="medarbejder : ${medarbejdere}" th:if="${medarbejderNavn == null || medarbejder.getNavn().toLowerCase().contains(medarbejderNavn.toLowerCase())}">
+        <a  th:href="@{OmdirigerRedigerBruger(medarbejderId = ${medarbejder.getMedArbejder_Id()})}" style="color: inherit; text-decoration: none">
+            <div class="kort">
+                <label th:text="${medarbejder.getNavn()}"></label>
+            </div>
+        </a>
+    </div>
+</section>
+</body>
+</html>

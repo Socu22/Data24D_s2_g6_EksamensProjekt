@@ -1,11 +1,10 @@
 package com.g6.data24d_s2_g6_eksamensprojekt.controller;
 
 import com.g6.data24d_s2_g6_eksamensprojekt.model.Bruger;
+import com.g6.data24d_s2_g6_eksamensprojekt.model.Kunde;
 import com.g6.data24d_s2_g6_eksamensprojekt.repository.BrugerRepository;
-
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -63,26 +62,27 @@ public class BrugerController {
         HttpSession session = faaSession(request, model,  new String[]{"forretnings"});
         if(session == null) return "redirect:/Logind";
 
-        model.addAttribute("registrerBesked", session.getAttribute("registrerBesked"));
-        session.setAttribute("registrerBesked", "");
-       // model.addAttribute("stilling", session.getAttribute("stilling"));
 
-        String stilling = (String) session.getAttribute("stilling");
+        // model.addAttribute("stilling", session.getAttribute("stilling"));
+
+       /* String stilling = (String) session.getAttribute("stilling");
         if(stilling == null)
-            stilling = "Dataregistrering";
+            stilling = "Dataregistrering";*/
+
 
         model.addAttribute("navn", session.getAttribute("navn"));
         model.addAttribute("adgangskode",session.getAttribute("adgangskode"));
         model.addAttribute("adgangskode2",session.getAttribute("adgangskode2"));
-        model.addAttribute("stilling", stilling);
-        model.addAttribute("manglendeInput", session.getAttribute("manglendeInput"));
+        model.addAttribute("stilling", session.getAttribute("stilling"));
+        model.addAttribute("registrerBesked", session.getAttribute("registrerBesked"));
+        model.addAttribute("medarbejderNavn", session.getAttribute("medarbejderNavn"));
 
-
-        session.setAttribute("navn", "");
-        session.setAttribute("adgangskode", "");
-        session.setAttribute("adgangskode2", "");
-        session.setAttribute("manglendeInput", null);
-
+        session.removeAttribute("navn");
+        session.removeAttribute("adgangskode");
+        session.removeAttribute("adgangskode2");
+        session.removeAttribute("stilling");
+        session.removeAttribute("registrerBesked");
+        session.removeAttribute("medarbejderNavn");
 
         return "registrer";
     }
@@ -96,23 +96,24 @@ public class BrugerController {
         String adgangskode = request.getParameter("adgangskode");
         String adgangskode2 = request.getParameter("adgangskode2");
         String stilling = request.getParameter("stilling");
+        String medarbejderNavn =  request.getParameter("medarbejderNavn");
 
-        if(stilling.toCharArray()[stilling.length() - 1] == '_'){
-            stilling = stilling.replace("_", "");
-            if(!navn.isEmpty() && !adgangskode.isEmpty() && !adgangskode2.isEmpty() && !stilling.isEmpty()){
+        //if(stilling.toCharArray()[stilling.length() - 1] == '_'){
+        //stilling = stilling.replace("_", "");
+        if(!navn.isEmpty() && !adgangskode.isEmpty() && !adgangskode2.isEmpty() && !stilling.isEmpty()){
 
-                if(!adgangskode.equals(adgangskode2)){
-                    session.setAttribute("registrerBesked", "Verificer Adgangskode er ikke det samme som Adgangskode");
-                }
-                else if(brugerRepository.erBruger(navn)){
-                    session.setAttribute("registrerBesked", "Bruger med samme navn eksisterer allerede");
-                }
-                else{
-                    session.setAttribute("registrerBesked", "Ny bruger lavet");
-                    brugerRepository.gemBruger(navn, adgangskode, stilling);
-                }
+            if(!adgangskode.equals(adgangskode2)){
+                session.setAttribute("registrerBesked", "Verificer Adgangskode er ikke det samme som Adgangskode");
             }
-            else {
+            else if(brugerRepository.erBruger(navn)){
+                session.setAttribute("registrerBesked", "Bruger med samme navn eksisterer allerede");
+            }
+            else{
+                session.setAttribute("registrerBesked", "Ny bruger lavet");
+                brugerRepository.gemBruger(navn, adgangskode, stilling);
+            }
+        }
+           /* else {
                 if(navn.isEmpty()){
                     session.setAttribute("manglendeInput", 0);
                 }
@@ -122,18 +123,54 @@ public class BrugerController {
                 else if(adgangskode2.isEmpty()){
                     session.setAttribute("manglendeInput", 2);
                 }
-            }
-        }
+            }*/
+       /* }
         else {
 
-        }
+        }*/
+
         session.setAttribute("stilling", stilling);
         session.setAttribute("navn", navn);
         session.setAttribute("adgangskode", adgangskode);
         session.setAttribute("adgangskode2", adgangskode2);
+        session.setAttribute("medarbejderNavn", medarbejderNavn);
         return "redirect:/Registrer";
     }
+    @GetMapping("/SoegBruger")
+    public String soegBruger(HttpServletRequest request, Model model) {
+        HttpSession session = faaSession(request, model, new String[]{"forretnings"});
+        if(session == null) return "redirect:/Logind";
 
+        model.addAttribute("medarbejdere", brugerRepository.hentBrugere());
+
+        model.addAttribute("medarbejderNavn", session.getAttribute("medarbejderNavn"));
+        session.removeAttribute("medarbejderNavn");
+
+        return "soegBruger";
+    }
+    @GetMapping("/OmdirigerSoegBruger")
+    public String omdirigerSoegBruger(HttpServletRequest request, Model model) {
+        HttpSession session = faaSession(request, model, new String[]{"forretnings"});
+        if(session == null) return "redirect:/Logind";
+
+        session.setAttribute("medarbejderNavn", request.getParameter("medarbejderNavn"));
+
+        return "redirect:/SoegBruger";
+    }
+    @GetMapping("/RedigerBruger")
+    public String redigerBruger(HttpServletRequest request, Model model) {
+        HttpSession session = faaSession(request, model, new String[]{"forretnings"});
+        if(session == null) return "redirect:/Logind";
+
+        return "index";
+    }
+    @GetMapping("/OmdirigerRedigerBruger")
+    public String omdirigerRedigerBruger(HttpServletRequest request, Model model) {
+        HttpSession session = faaSession(request, model, new String[]{"forretnings"});
+        if(session == null) return "redirect:/Logind";
+
+        return "index";
+    }
     @PostMapping("/saetValuta")
     @ResponseStatus(HttpStatus.RESET_CONTENT)
     public void saetValuta(HttpServletRequest request, Model model)

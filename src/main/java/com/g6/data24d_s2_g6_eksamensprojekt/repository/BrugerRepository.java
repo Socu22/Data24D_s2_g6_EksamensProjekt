@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -32,5 +33,15 @@ private JdbcTemplate jdbcTemplate;
     public void gemBruger(String navn, String adgangskode, String stilling){
         String sql = "INSERT into medArbejdere(navn, adgangskode, stilling) VALUES ('"+ navn +"', '"+ adgangskode+"', '"+ stilling+"');";
         jdbcTemplate.update(sql);
+    }
+    public List<Bruger> hentBrugere(){
+        String sql = "SELECT * FROM medArbejdere;";
+        List<Map<String, Object>> list = jdbcTemplate.queryForList(sql);
+
+        List<Bruger> brugere = new ArrayList<>();
+        for(Map<String, Object> map : list){
+           brugere.add(new Bruger((int)map.get("medArbejder_id"),(String) map.get("navn"), (String) map.get("adgangskode"), (String)map.get("stilling")));
+        }
+        return brugere;
     }
 }
