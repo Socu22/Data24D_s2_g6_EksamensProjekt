@@ -62,7 +62,7 @@ main {
     margin-left:  var(--ekstra);
     margin-right: var(--ekstra);
     padding: 0;
-    display: -ms-flexbox;
+    justify-items: center;
 }
 
 section {
@@ -127,11 +127,14 @@ p.vognNr {
     padding: .15rem;
     margin: var(--sekundær-margin);
     cursor: pointer;
+    align-content: center;
+    align-self: center;
     text-align: center;
     font-weight: bold;
     font-size: large;
-    min-width: max-content;
+    min-width: 5.5rem;
     max-width: max-content;
+    max-height: max-content;
 }
 
 p.stelNummer {
@@ -151,7 +154,7 @@ aside div {
 
 div.liste {
     padding: 0;
-    min-width: min-content;
+    min-width: max-content;
 }
 
 div.liste:hover {
@@ -160,9 +163,8 @@ div.liste:hover {
 }
 
 div.kort {
-    justify-content: space-evenly;
+    justify-content: space-between;
     display: inline-flex;
-    align-items: center;
     width: 100%;
 }
 
@@ -170,8 +172,8 @@ div.kort div{
     display: block;
     margin-top: var(--primær-margin);
     margin-bottom: var(--primær-margin);
-    min-width: min-content;
-    width: fit-content;
+    min-width: max-content;
+    max-width: max-content;
 }
 
 div.kort div:not(:first-of-type){
