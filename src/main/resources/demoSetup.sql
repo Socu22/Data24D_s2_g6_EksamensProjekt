@@ -78,12 +78,12 @@ INSERT INTO bilType (mærke, model, udstyrsniveau, stålPris, afgift, udledning_
 
 -- Lagerlokationer
 INSERT INTO lager (navn, adresse) VALUES
-    ('Lager A', '123 Main St'   ),
-    ('Lager B', '456 Side St'   ),
-    ('Lager C', '789 Back St'   ),
-    ('Lager D', '135 North Ave' ),
-    ('Lager E', '246 South Blvd'),
-    ('Lager F', '369 East Lane' );
+    ('Roskilde', '123 Main St'   ),
+    ('Nakskov' , '456 Side St'   ),
+    ('Odense'  , '789 Back St'   ),
+    ('Aalborg' , '135 North Ave' ),
+    ('Aarhus'  , '246 South Blvd'),
+    ('Esbjerg' , '369 East Lane' );
 
 -- Biler (inkl. kørteKm for simulere vore logik for solgte biler)
 INSERT INTO bil (vognNummer, stelNummer, bilType_Id, lager_Id, status, kørteKm) VALUES
