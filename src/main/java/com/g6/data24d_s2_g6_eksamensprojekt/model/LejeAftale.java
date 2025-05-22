@@ -124,4 +124,9 @@ public class LejeAftale {
     {
         this.bil = bil;
     }
+
+    public boolean erBetalt()
+    {
+        return Math.random() < .5;
+    }
 }

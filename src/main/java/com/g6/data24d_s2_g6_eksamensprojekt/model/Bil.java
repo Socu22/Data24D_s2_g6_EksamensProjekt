@@ -81,6 +81,20 @@ public class Bil
         this.status = Status.valueOf(status);
     }
 
+    public boolean erStatus(String... status)
+    {
+        for (String s : status)
+        {
+            if (this.status.name().equalsIgnoreCase(s)) return true;
+        }
+        return false;
+    }
+
+    public boolean erTilgaengelig()
+    {
+        return erStatus("TILGAENGELIG");
+    }
+
     public int getBilType_Id(){
         return type.getBilType_Id();
     }
