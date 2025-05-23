@@ -97,8 +97,6 @@ public class BilController {
         if(lager_Id!=null){
             session.setAttribute("lager_Id",Integer.parseInt(lager_Id));
         }
-
-
         session.setAttribute("maerke",maerke);
         session.setAttribute("status",status);
 
