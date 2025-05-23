@@ -37,18 +37,18 @@
       <div>
         <div>
           <select name="lager_Id">
-            <option value="" disabled selected>Vælg lager</option>
-            <option th:each="lager : ${lagerList}" th:value="${lager.lager_Id}" th:text="${lager.navn + '(' + lager.lager_Id + ')'}"></option>
+            <option value="" disabled th:selected="${lager_Id==null||lager_Id==0}">Vælg lager</option>
+            <option  th:each="lager : ${lagerList}" th:selected="${(lager_Id!=null && lager_Id!=0) && (lager_Id == lager.lager_Id)}" th:value="${lager.lager_Id}" th:text="${lager.navn + '(' + lager.lager_Id + ')'}"></option>
           </select>
 
           <select name="maerke">
-            <option value="" disabled selected>Vælg mærke</option>
-            <option th:each="bilType : ${bilTypeList}" th:value="${bilType.maerke}" th:text="${bilType.maerke + '(' + bilType.model + ')'}"></option>
+            <option value="" disabled th:selected="${maerke == null}">Vælg mærke</option>
+            <option th:each="bilType : ${bilTypeList}" th:selected="${#strings.equals(maerke, bilType.maerke)}" th:value="${bilType.maerke}" th:text="${bilType.maerke + '(' + bilType.model + ')'}"></option>
           </select>
 
           <select name="status">
-            <option value="" disabled selected>Vælg status</option>
-            <option th:each="status : ${statusList}" th:value="${status}" th:text="${status}"></option>
+            <option value="" disabled th:selected="${status == null}">Vælg status</option>
+            <option th:each="Status : ${statusList}" th:selected="${#strings.equals(status, Status)}" th:value="${Status}" th:text="${Status}"></option>
           </select>
 
           <button type="submit">Filtrer</button>

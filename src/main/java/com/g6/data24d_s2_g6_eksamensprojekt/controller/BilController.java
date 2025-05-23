@@ -35,20 +35,35 @@ public class BilController {
     public String visBiler(HttpServletRequest request, Model model){
         HttpSession session = faaSession(request, model,  new String[]{"data", "Skade", "forretnings"});
         if(session == null) return "redirect:/Logind";
-
+        // henter ting
         List<Bil> biler = bilRepository.hentEksisteredeBiler();
         List<Lager> lagerList = lagerRepository.hentLager();
         List<BilType> bilTypeList = bilTypeRepository.hentBilTyper();
         List<String> statusList = List.of(Bil.Status.TILGAENGELIG.name(),Bil.Status.LIMITED.name(), Bil.Status.UNLIMITED.name());
 
+        //til bilkort
         if(session.getAttribute("biler")!=null){
             biler = (List<Bil>) session.getAttribute("biler");
 
         }
+        //dropdown, og list
         model.addAttribute("biler",biler);
         model.addAttribute("lagerList",lagerList);
         model.addAttribute("bilTypeList",bilTypeList);
         model.addAttribute("statusList",statusList);
+
+        //til html
+        model.addAttribute("vognNummer",session.getAttribute("vognNummer"));
+        model.addAttribute("lager_Id",session.getAttribute("lager_Id"));
+        model.addAttribute("maerke",session.getAttribute("maerke"));
+        model.addAttribute("status",session.getAttribute("status"));
+
+        //slet efter gået væk fra VisBiler
+        session.removeAttribute("vognNummer");
+        session.removeAttribute("lager_Id");
+        session.removeAttribute("maerke");
+        session.removeAttribute("status");
+
 
         return "visBiler";
     }
@@ -76,6 +91,16 @@ public class BilController {
             // hvis du vælger lager, mærke eller begge virke den her metode
             bilList = bilRepository.hentEksisteredeBilerSoegFunktion(lager_Id,maerke,status);
         }
+
+        session.setAttribute("vognNummer",vognNummer);
+
+        if(lager_Id!=null){
+            session.setAttribute("lager_Id",Integer.parseInt(lager_Id));
+        }
+
+
+        session.setAttribute("maerke",maerke);
+        session.setAttribute("status",status);
 
         session.setAttribute("biler", bilList);
         return "redirect:/VisBiler";
