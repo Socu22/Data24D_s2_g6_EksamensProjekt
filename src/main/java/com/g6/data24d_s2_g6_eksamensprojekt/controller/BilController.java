@@ -39,7 +39,8 @@ public class BilController {
         List<Bil> biler = bilRepository.hentEksisteredeBiler();
         List<Lager> lagerList = lagerRepository.hentLager();
         List<BilType> bilTypeList = bilTypeRepository.hentBilTyper();
-        List<String> statusList = List.of(Bil.Status.TILGAENGELIG.name(),Bil.Status.LIMITED.name(), Bil.Status.UNLIMITED.name());
+        List<String> statusList = Bil.Status.getNames();
+        statusList.removeIf(s -> s.equalsIgnoreCase("SOLGT"));
 
         //til bilkort
         if(session.getAttribute("biler")!=null){

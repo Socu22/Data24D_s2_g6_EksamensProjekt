@@ -1,5 +1,6 @@
 package com.g6.data24d_s2_g6_eksamensprojekt.model;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -7,10 +8,22 @@ public class Bil
 {
     public enum Status
     {
-        SOLGT,
-        LIMITED,
-        UNLIMITED,
-        TILGAENGELIG;
+        TILGAENGELIG,
+        LIMITED, UNLIMITED,
+        TILBAGELEVERET,
+        SKADET,
+        AFHENTNINGSKLAR,
+        SOLGT;
+
+        public static List<String> getNames()
+        {
+            ArrayList<String> s = new ArrayList<>();
+            for (Status status : Status.values())
+            {
+                s.add(status.name());
+            }
+            return s;
+        }
     }
 
     private final String vognNummer, stelNummer;
@@ -20,7 +33,8 @@ public class Bil
     private double kørteKm;
     private Lager lager;
     private List<Notation> notationer;
-    private List<LejeAftale> lejeAftaler;
+    private LejeAftale lejeAftale;
+    private LejeAftale koebsAftale; // todo:
 
 
     public Bil(String vognNummer, String stelNummer, BilType type, int lager_Id, String status,double kørteKm) {
@@ -107,17 +121,6 @@ public class Bil
     public void setLager(Lager lager)
     {
         this.lager = lager;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (!(o instanceof Bil bil)) return false;
-        return getLager_Id() == bil.getLager_Id() && Objects.equals(getVognNummer(), bil.getVognNummer()) && Objects.equals(getStelNummer(), bil.getStelNummer()) && Objects.equals(getType(), bil.getType()) && Objects.equals(getStatus(), bil.getStatus()) && Objects.equals(notationer, bil.notationer) && Objects.equals(lejeAftaler, bil.lejeAftaler);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getVognNummer(), getStelNummer(), getType(), getLager_Id(), getStatus(), notationer, lejeAftaler);
     }
 
     public String toString()
