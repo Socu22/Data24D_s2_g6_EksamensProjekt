@@ -18,14 +18,39 @@
             <section style="max-width: initial">
                 <p th:text="${lejeAftale.getDetaljer()}">Detaljer</p>
             </section>
-            <form th:if="${foerAftaleStart}" th:action="@{/SletLejeAftale}" th:method="get">
+            <form th:action="@{/SletLejeAftale}" th:method="get">
                 <button type="submit" class="annuller">Aflys Aftale</button>
             </form>
-            <form th:if="${foerAftaleSlut}" th:action="@{/NyNotation}" th:method="get">
+            <form th:action="@{/NyNotation}" th:method="get">
                 <button type="submit">Registrér Ny Notation</button>
             </form>
         </div>
-        <div th:insert="~{fragments :: notationListe}" style="width: 100%; max-width: max-content;"></div>
+        <div>
+            <section style="max-width: initial">
+                <p th:text="'Forlæng Aftale: '">Kørte Kilometer</p>
+                <p th:text="'Intast Kørte kilometer: '">Kørte Kilometer</p>
+            </section>
+            <div th:each="Aftale : ${lejeAftaler}" class="liste">
+                <a th:if="${
+    (kundeNavn == null || Aftale.getKunde().getNavn().toLowerCase().trim().contains(kundeNavn.toLowerCase().trim())) &&
+    (vognNummer == null || #strings.contains(Aftale.getVognNummer(), vognNummer)) &&
+    (dato == null || (dato.isAfter(Aftale.getStartLocalDate()) && dato.isBefore(Aftale.getSlutLocalDate()))) &&
+    (startDato == null || slutDato == null ||
+        (!slutDato.isBefore(Aftale.getStartLocalDate()) && !startDato.isAfter(Aftale.getSlutLocalDate()))
+    )}" th:href="@{VisLejeAftale(aftaleId = ${Aftale.getAftale_Id()})}" style="color: inherit; text-decoration: none">
+                    <div th:insert="~{fragments :: aftaleListeKort (
+                                    vognNummer=${Aftale.getBil().toString()},
+                                    kundeNavn= ${Aftale.getKunde_Navn()},
+                                    afgift=    ${Aftale.getSamletPris()},
+                                    lager=     ${Aftale.getBil().getLager().getNavn()},
+                                    startDato= ${Aftale.getStartDato()},
+                                    slutDato=  ${Aftale.getSlutDato()},
+                                    erBetalt=  ${Aftale.erBetalt()}
+                                    )}">
+                    </div>
+                </a>
+            </div>
+        </div>
     </aside>
 </main>
 </body>
