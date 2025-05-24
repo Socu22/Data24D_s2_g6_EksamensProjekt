@@ -2,16 +2,18 @@ package com.g6.data24d_s2_g6_eksamensprojekt.model;
 
 import java.sql.Date;
 import java.time.LocalDate;
+import java.time.Period;
 
 public class LejeAftale {
-   private int aftale_Id;
-   private String kunde_Navn;
-   private String vognNummer;
-   private String detaljer;
+   private int       aftale_Id;
+   private String    vognNummer;
+   private String    kunde_Navn;
+   private String    detaljer;
    private LocalDate startDato;
    private LocalDate slutDato;
-   private Kunde kunde;
-   private Bil bil;
+   private double    notationPris; // !OBS
+   private Kunde     kunde;
+   private Bil       bil;
 
     public LejeAftale(int aftale_Id, String kunde_Navn, String vognNummer, String startDato, String slutDato, String detaljer)
     {
@@ -19,12 +21,12 @@ public class LejeAftale {
     }
 
     public LejeAftale(int aftale_Id, String kunde_Navn, String vognNummer, Date startDato, Date slutDato, String detaljer) {
-        this.aftale_Id = aftale_Id;
+        this.aftale_Id  = aftale_Id;
         this.kunde_Navn = kunde_Navn;
         this.vognNummer = vognNummer;
-        this.startDato = startDato.toLocalDate();
-        this.slutDato = slutDato.toLocalDate();
-        this.detaljer = detaljer;
+        this.startDato  = startDato.toLocalDate();
+        this.slutDato   = slutDato.toLocalDate();
+        this.detaljer   = detaljer;
     }
 
     public LejeAftale(String kunde_Navn, String vognNummer, String startDato, String slutDato, String detaljer)
@@ -35,98 +37,66 @@ public class LejeAftale {
     public LejeAftale(String kunde_Navn, String vognNummer, Date startDato, Date slutDato, String detaljer) {
         this.kunde_Navn = kunde_Navn;
         this.vognNummer = vognNummer;
-        this.startDato = startDato.toLocalDate();
-        this.slutDato = slutDato.toLocalDate();
-        this.detaljer = detaljer;
+        this.startDato  = startDato.toLocalDate();
+        this.slutDato   = slutDato.toLocalDate();
+        this.detaljer   = detaljer;
     }
 
-    public LejeAftale() {
-    }
+    public LejeAftale() {}
 
-    public int getAftale_Id() {
-        return aftale_Id;
-    }
+    public int       getAftale_Id() {return aftale_Id;}
+    public void      setAftale_Id(int aftale_Id) {this.aftale_Id = aftale_Id;}
 
-    public void setAftale_Id(int aftale_Id) {
-        this.aftale_Id = aftale_Id;
-    }
+    public String    getKunde_Navn() {return kunde_Navn;}
+    public void      setKunde_Navn(String kunde_Navn) {this.kunde_Navn = kunde_Navn;}
 
-    public String getKunde_Navn() {
-        return kunde_Navn;
-    }
+    public String    getKunde_Id() {return getKunde_Navn();}// todo: den her metode skal ændres alle steder
+    public void      setKunde_Id(String kunde_Navn) {this.kunde_Navn = kunde_Navn;}
 
-    public void setKunde_Navn(String kunde_Navn) {
-        this.kunde_Navn = kunde_Navn;
-    }
+    public String    getVognNummer() {return vognNummer;}
+    public void      setVognNummer(String vognNummer) {this.vognNummer = vognNummer;}
 
-    public String getKunde_Id() {
-        return getKunde_Navn();
-    }// todo: den her metode skal ændres alle steder
+    public LocalDate getStartDato() {return startDato;}
+    public void      setStartDato(LocalDate startDato) {this.startDato = startDato;}
 
-    public void setKunde_Id(String kunde_Navn) {
-        this.kunde_Navn = kunde_Navn;
-    }
+    public LocalDate getSlutDato() {return slutDato;}
+    public void      setSlutDato(LocalDate slutDato) {this.slutDato = slutDato;}
 
-    public String getVognNummer() {
-        return vognNummer;
-    }
+    public boolean   erAfsluttet() {return slutDato != null && LocalDate.now().isAfter(slutDato);}
+    public boolean   erBegyndt()   {return LocalDate.now().isAfter(startDato);}
+    public boolean   erAktiv()     {return erBegyndt() && !erAfsluttet();     }
 
-    public void setVognNummer(String vognNummer) {
-        this.vognNummer = vognNummer;
-    }
+    public String    getDetaljer() {return detaljer;}
+    public void      setDetaljer(String detaljer) {this.detaljer = detaljer;}
 
-    public LocalDate getStartDato() {
-        return startDato;
-    }
-    public LocalDate getStartLocalDate(){
-        return startDato;
-    }
+    public Kunde     getKunde() {return kunde;}
+    public void      setKunde(Kunde kunde) {this.kunde = kunde;}
 
-    public void setStartDato(LocalDate startDato) {
-        this.startDato = startDato;
-    }
+    public Bil       getBil() {return bil;}
+    public void      setBil(Bil bil) {this.bil = bil;}
 
-    public LocalDate getSlutDato() {
-        return slutDato;
-    }
-    public LocalDate getSlutLocalDate(){
-        return slutDato;
-    }
+    public double    getNotationPris() {return notationPris;}
+    public void      setNotationPris(double notationPris) {this.notationPris = notationPris;}
 
-    public void setSlutDato(LocalDate slutDato) {
-        this.slutDato = slutDato;
-    }
-
-    public String getDetaljer() {
-        return detaljer;
-    }
-
-    public void setDetaljer(String detaljer) {
-        this.detaljer = detaljer;
-    }
-
-    public Kunde getKunde()
+    public double    getSamletPris()
     {
-        return kunde;
+        double samletPris = notationPris; // !OBS er faktisk 'skadeomkostning'
+        int maanederLejet = 0;
+
+        if (slutDato != null)
+        {
+            maanederLejet = Period.between(startDato,slutDato).getMonths();
+        }
+        else if (startDato.isBefore(LocalDate.now()))
+        {
+            maanederLejet = Period.between(startDato,LocalDate.now()).getMonths();
+        }
+
+        return samletPris + (bil.getType().getAfgift() * maanederLejet);
     }
 
-    public void setKunde(Kunde kunde)
+    public boolean   erBetalt()
     {
-        this.kunde = kunde;
-    }
-
-    public Bil getBil()
-    {
-        return bil;
-    }
-
-    public void setBil(Bil bil)
-    {
-        this.bil = bil;
-    }
-
-    public boolean erBetalt()
-    {
-        return Math.random() < .5;
+        return Math.random() < .5; // todo
     }
 }
