@@ -63,6 +63,21 @@ public class BrugerController {
         if(session == null) return "redirect:/Logind";
 
 
+        String medarbejderId = request.getParameter("medarbejderId");
+        if(medarbejderId != null){
+            model.addAttribute("medarbejderId", medarbejderId);
+            Bruger bruger = brugerRepository.hentBruger(Integer.parseInt(medarbejderId));
+
+            model.addAttribute("navn", bruger.getNavn());
+            model.addAttribute("adgangskode", bruger.getAdgangskode());
+            model.addAttribute("stilling", bruger.getStilling());
+        }
+        else {
+            model.addAttribute("navn", session.getAttribute("navn"));
+            model.addAttribute("adgangskode",session.getAttribute("adgangskode"));
+            model.addAttribute("adgangskode2",session.getAttribute("adgangskode2"));
+            model.addAttribute("stilling", session.getAttribute("stilling"));
+        }
         // model.addAttribute("stilling", session.getAttribute("stilling"));
 
        /* String stilling = (String) session.getAttribute("stilling");
@@ -70,10 +85,7 @@ public class BrugerController {
             stilling = "Dataregistrering";*/
 
 
-        model.addAttribute("navn", session.getAttribute("navn"));
-        model.addAttribute("adgangskode",session.getAttribute("adgangskode"));
-        model.addAttribute("adgangskode2",session.getAttribute("adgangskode2"));
-        model.addAttribute("stilling", session.getAttribute("stilling"));
+
         model.addAttribute("registrerBesked", session.getAttribute("registrerBesked"));
         model.addAttribute("medarbejderNavn", session.getAttribute("medarbejderNavn"));
 
@@ -91,16 +103,22 @@ public class BrugerController {
         HttpSession session = faaSession(request, model, new String[]{"forretnings"});
         if(session == null) return "redirect:/Logind";
 
+        String medarbejderId = request.getParameter("medarbejderId");
 
         String navn = request.getParameter("navn");
         String adgangskode = request.getParameter("adgangskode");
         String adgangskode2 = request.getParameter("adgangskode2");
         String stilling = request.getParameter("stilling");
         String medarbejderNavn =  request.getParameter("medarbejderNavn");
+        session.setAttribute("stilling", stilling);
+        session.setAttribute("navn", navn);
+        session.setAttribute("adgangskode", adgangskode);
+        session.setAttribute("adgangskode2", adgangskode2);
+        session.setAttribute("medarbejderNavn", medarbejderNavn);
 
         //if(stilling.toCharArray()[stilling.length() - 1] == '_'){
         //stilling = stilling.replace("_", "");
-        if(!navn.isEmpty() && !adgangskode.isEmpty() && !adgangskode2.isEmpty() && !stilling.isEmpty()){
+        if(navn!= null && adgangskode!= null && adgangskode2 != null && stilling!= null){
 
             if(!adgangskode.equals(adgangskode2)){
                 session.setAttribute("registrerBesked", "Verificer Adgangskode er ikke det samme som Adgangskode");
@@ -112,6 +130,20 @@ public class BrugerController {
                 session.setAttribute("registrerBesked", "Ny bruger lavet");
                 brugerRepository.gemBruger(navn, adgangskode, stilling);
             }
+        }
+        if(medarbejderId != null){
+            Bruger bruger = brugerRepository.hentBruger(navn);
+
+            if(bruger != null && bruger.getMedArbejder_Id() != Integer.parseInt(medarbejderId)){
+                session.setAttribute("registrerBesked", "Bruger med samme navn eksisterer allerede");
+                return "redirect:/Registrer?medarbejderId=" + medarbejderId;
+            }
+            else{
+                session.setAttribute("registrerBesked", "Bruger opdateret");
+                brugerRepository.opdaterBruger(navn, adgangskode, stilling, Integer.parseInt(medarbejderId));
+            }
+
+
         }
            /* else {
                 if(navn.isEmpty()){
@@ -129,11 +161,7 @@ public class BrugerController {
 
         }*/
 
-        session.setAttribute("stilling", stilling);
-        session.setAttribute("navn", navn);
-        session.setAttribute("adgangskode", adgangskode);
-        session.setAttribute("adgangskode2", adgangskode2);
-        session.setAttribute("medarbejderNavn", medarbejderNavn);
+
         return "redirect:/Registrer";
     }
     @GetMapping("/SoegBruger")
@@ -157,19 +185,19 @@ public class BrugerController {
 
         return "redirect:/SoegBruger";
     }
-    @GetMapping("/RedigerBruger")
+    /*@GetMapping("/RedigerBruger")
     public String redigerBruger(HttpServletRequest request, Model model) {
         HttpSession session = faaSession(request, model, new String[]{"forretnings"});
         if(session == null) return "redirect:/Logind";
 
         return "index";
-    }
+    }*/
     @GetMapping("/OmdirigerRedigerBruger")
     public String omdirigerRedigerBruger(HttpServletRequest request, Model model) {
         HttpSession session = faaSession(request, model, new String[]{"forretnings"});
         if(session == null) return "redirect:/Logind";
 
-        return "index";
+        return "redirect:/Registrer";
     }
     @PostMapping("/saetValuta")
     @ResponseStatus(HttpStatus.RESET_CONTENT)

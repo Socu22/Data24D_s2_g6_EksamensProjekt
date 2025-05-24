@@ -22,6 +22,22 @@ private JdbcTemplate jdbcTemplate;
              bruger = new Bruger((int)list.get(0).get("medArbejder_id"),(String) list.get(0).get("navn"), (String) list.get(0).get("adgangskode"), (String)list.get(0).get("stilling"));
         return bruger;
     }
+    public Bruger hentBruger(int medarbejderId){
+        Bruger bruger = null;
+        String sql = "SELECT * FROM medArbejdere WHERE medArbejder_Id = " + medarbejderId +  ";";
+        List<Map<String, Object>> list = jdbcTemplate.queryForList(sql);
+        if(!list.isEmpty())
+            bruger = new Bruger((int)list.get(0).get("medArbejder_id"),(String) list.get(0).get("navn"), (String) list.get(0).get("adgangskode"), (String)list.get(0).get("stilling"));
+        return bruger;
+    }
+    public Bruger hentBruger(String navn){
+        Bruger bruger = null;
+        String sql = "SELECT * FROM medArbejdere WHERE navn = '" + navn + "';";
+        List<Map<String, Object>> list = jdbcTemplate.queryForList(sql);
+        if(!list.isEmpty())
+            bruger = new Bruger((int)list.get(0).get("medArbejder_id"),(String) list.get(0).get("navn"), (String) list.get(0).get("adgangskode"), (String)list.get(0).get("stilling"));
+        return bruger;
+    }
     public boolean erBruger(String navn){
         String sql = "SELECT * FROM medArbejdere WHERE navn = '" + navn + "';";
         List<Map<String, Object>> list = jdbcTemplate.queryForList(sql);
@@ -32,6 +48,10 @@ private JdbcTemplate jdbcTemplate;
     }
     public void gemBruger(String navn, String adgangskode, String stilling){
         String sql = "INSERT into medArbejdere(navn, adgangskode, stilling) VALUES ('"+ navn +"', '"+ adgangskode+"', '"+ stilling+"');";
+        jdbcTemplate.update(sql);
+    }
+    public void opdaterBruger(String navn, String adgangskode, String stilling, int medarbejderId){
+        String sql = "UPDATE medArbejdere SET navn = '" + navn + "', adgangskode = '" + adgangskode + "', stilling = '" + stilling + "' WHERE medArbejder_Id = " + medarbejderId + ";";
         jdbcTemplate.update(sql);
     }
     public List<Bruger> hentBrugere(){
