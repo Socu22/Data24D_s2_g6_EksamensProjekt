@@ -105,9 +105,9 @@ INSERT INTO bil (vognNummer, stelNummer, bilType_Id, lager_Id, status, kørteKm)
 
 -- UNLIMITED aftaler (udlejet biler)
 INSERT INTO lejeAftaler (kunde_Navn, vognNummer, startDato, slutDato, detaljer) VALUES
-    ('Anders Hansen', 'BH10475', '2025-02-01', NULL, 'Unlimited aftale - minimum 3 måneder'),
-    ('Mette Jensen' , 'KU73190', '2025-01-15', NULL, 'Unlimited aftale - minimum 3 måneder'),
-    ('Peter Nielsen', 'ZA87364', '2025-03-01', NULL, 'Unlimited aftale - minimum 3 måneder');
+    ('Anders Hansen', 'BH10475', '2025-02-01', '2025-05-01', 'Unlimited aftale - minimum 3 måneder'),
+    ('Mette Jensen' , 'KU73190', '2025-01-15', '2025-04-15', 'Unlimited aftale - minimum 3 måneder'),
+    ('Peter Nielsen', 'ZA87364', '2025-03-01', '2025-06-01', 'Unlimited aftale - minimum 3 måneder');
 
 -- LIMITED aftaler (udlejet biler)
 INSERT INTO lejeAftaler (kunde_Navn, vognNummer, startDato, slutDato, detaljer) VALUES
