@@ -82,6 +82,7 @@ public class LejeAftale {
     public double    getNotationPris() {return notationPris;}
     public void      setNotationPris(double notationPris) {this.notationPris = notationPris;}
 
+    public boolean   erBetalt() {return betalingsDato != null;}
     public double    getSamletPris()
     {
         double samletPris = notationPris; // !OBS er faktisk 'skadeomkostning'
@@ -98,6 +99,4 @@ public class LejeAftale {
 
         return samletPris + (bil.getType().getAfgift() * maanederLejet);
     }
-
-    public boolean   erBetalt() {return betalingsDato != null;}
 }
