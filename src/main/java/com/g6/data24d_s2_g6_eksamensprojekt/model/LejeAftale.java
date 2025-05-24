@@ -8,11 +8,12 @@ public class LejeAftale {
    private int       aftale_Id;
    private String    vognNummer;
    private String    kunde_Navn;
-   private String    detaljer;
-   private LocalDate startDato;
-   private LocalDate slutDato;
-   private double    notationPris; // !OBS
-   private Kunde     kunde;
+   private String    detaljer;      // Notat af hvor bilen bliver udleveret til kunden fx. DS-forhandler eller Bilabonnoments lagersted
+   private LocalDate startDato;     // Datoen hvor bilen leveres til kunden fra Bilabonnoment/DS-forhandler
+   private LocalDate slutDato;      // Datoen hvor bilen leveres tilbage til Bilabonnoment/FDM
+   private LocalDate betalingsDato; // Datoen hvor denne aftale er blevet betalt til Bilabonnoment - 'null' indtil da.
+   private double    notationPris;  // !OBS er faktisk notation-/skades-omkostning alt after købs/leje aftale
+   private Kunde     kunde;         // ? overflødig ? muligvis ikke hvis vi inkluderer kontakt info
    private Bil       bil;
 
     public LejeAftale(int aftale_Id, String kunde_Navn, String vognNummer, String startDato, String slutDato, String detaljer)
@@ -62,11 +63,14 @@ public class LejeAftale {
     public LocalDate getSlutDato() {return slutDato;}
     public void      setSlutDato(LocalDate slutDato) {this.slutDato = slutDato;}
 
-    public boolean   erAfsluttet() {return slutDato != null && LocalDate.now().isAfter(slutDato);}
-    public boolean   erBegyndt()   {return LocalDate.now().isAfter(startDato);}
-    public boolean   erAktiv()     {return erBegyndt() && !erAfsluttet();     }
+    public boolean   erAfsluttet()  {return slutDato != null && LocalDate.now().isAfter(slutDato);}
+    public boolean   erBegyndt()    {return LocalDate.now().isAfter(startDato);}
+    public boolean   erAktiv()      {return erBegyndt() && !erAfsluttet();     }
 
-    public String    getDetaljer() {return detaljer;}
+    public boolean   kanAfsluttes() {return bil.erStatus("LIMITED", "UNLIMITED");}
+    public boolean   erUnlimited()  {return bil.erStatus("UNLIMITED");}
+
+    public String    getDetaljer()  {return detaljer;}
     public void      setDetaljer(String detaljer) {this.detaljer = detaljer;}
 
     public Kunde     getKunde() {return kunde;}
@@ -95,8 +99,5 @@ public class LejeAftale {
         return samletPris + (bil.getType().getAfgift() * maanederLejet);
     }
 
-    public boolean   erBetalt()
-    {
-        return Math.random() < .5; // todo
-    }
+    public boolean   erBetalt() {return betalingsDato != null;}
 }
