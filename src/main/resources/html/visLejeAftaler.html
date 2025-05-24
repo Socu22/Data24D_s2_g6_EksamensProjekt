@@ -56,9 +56,9 @@
             <a th:if="${
     (kundeNavn == null || Aftale.getKunde().getNavn().toLowerCase().trim().contains(kundeNavn.toLowerCase().trim())) &&
     (vognNummer == null || #strings.contains(Aftale.getVognNummer(), vognNummer)) &&
-    (dato == null || (dato.isAfter(Aftale.getStartLocalDate()) && dato.isBefore(Aftale.getSlutLocalDate()))) &&
+    (dato == null || (dato.isAfter(Aftale.getStartDato()) && dato.isBefore(Aftale.getSlutDato()))) &&
     (startDato == null || slutDato == null ||
-        (!slutDato.isBefore(Aftale.getStartLocalDate()) && !startDato.isAfter(Aftale.getSlutLocalDate()))
+        (!slutDato.isBefore(Aftale.getStartDato()) && !startDato.isAfter(Aftale.getSlutDato()))
     )}" th:href="@{VisLejeAftale(aftaleId = ${Aftale.getAftale_Id()})}" style="color: inherit; text-decoration: none">
                 <div th:insert="~{fragments :: aftaleListeKort (
                                     vognNummer=${Aftale.getBil().toString()},
