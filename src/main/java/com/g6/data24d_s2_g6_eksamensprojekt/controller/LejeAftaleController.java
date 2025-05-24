@@ -146,7 +146,7 @@ public class LejeAftaleController {
         //Finder ud af om en aftale ikke er startet i html vha. de her model.addAttribute
         LocalDate now = LocalDate.now();
         if (now.isBefore(aftale.getStartDato())) model.addAttribute("foerAftaleStart", true);
-        else if (now.isBefore(aftale.getSlutDato().plusDays(1))) model.addAttribute("foerAftaleSlut", true);
+        else if (aftale.getSlutDato()!=null && now.isBefore(aftale.getSlutDato().plusDays(1))) model.addAttribute("foerAftaleSlut", true);
 
         return "visLejeAftale";
     }
@@ -182,30 +182,30 @@ public class LejeAftaleController {
 
     // todo: updater unlimted slutDato
 
-//    @GetMapping("/UpdaterUnlimitedLejeAftale")
-//    public String updaterUnlimitedLejeAftale(HttpServletRequest request, Model model){
-//        HttpSession session = BrugerController.faaSession(request, model,  new String[]{"data"});
-//        if(session == null) return "redirect:/Logind";
-//
-//
-//
-//        // Få fat i lejeAftale
-//        LejeAftale lejeAftale = (LejeAftale) session.getAttribute("lejeAftale");
-//        model.addAttribute("lejeAftale",lejeAftale); // til html
-//        //nummer af måneder der forlængedes
-//        int forlaeng_Maaneder = Integer.parseInt(request.getParameter("forlaeng_Maaneder"));
-//
-//        aftaleRepository.forlaengLejeAftale(lejeAftale.getAftale_Id(),forlaeng_Maaneder);
-//
-//
-//
-//
-//
-//
-//        session.setAttribute("forlaeng_Maaneder",forlaeng_Maaneder);
-//
-//
-//    }
+    @GetMapping("/UpdaterUnlimitedLejeAftale")
+    public String updaterUnlimitedLejeAftale(HttpServletRequest request, Model model){
+        HttpSession session = BrugerController.faaSession(request, model,  new String[]{"data"});
+        if(session == null) return "redirect:/Logind";
+
+
+
+        // Få fat i lejeAftale
+        LejeAftale lejeAftale = (LejeAftale) session.getAttribute("lejeAftale");
+        model.addAttribute("lejeAftale",lejeAftale); // til html
+        //nummer af måneder der forlængedes
+        int forlaeng_Maaneder = Integer.parseInt(request.getParameter("forlaeng_Maaneder"));
+
+        aftaleRepository.forlaengLejeAftale(lejeAftale.getAftale_Id(),forlaeng_Maaneder);
+
+
+
+
+
+
+        session.setAttribute("forlaeng_Maaneder",forlaeng_Maaneder);
+
+        return "redirect:/VisLejeAftale?aftaleId="+lejeAftale.getAftale_Id();
+    }
 
 
     //logikken når man trykke på vælg bil.

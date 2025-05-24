@@ -13,11 +13,22 @@
 <header th:insert="~{fragments :: header}"></header>
 <main>
     <header class="underHeader" th:insert="~{fragments :: aftaleKort}"></header>
-    <section th:if="${ (aktivBruger.getStilling().toLowerCase().startsWith('d')&& lejeAftale.erAfsluttet()==true && lejeAftale.kanAfsluttes)|| (aktivBruger.getStilling().toLowerCase().startsWith('s')&& lejeAftale.erAfsluttet()==true && lejeAftale.kanAfsluttes)||(aktivBruger.getStilling().toLowerCase().startsWith('d')&& lejeAftale.erAfsluttet()==true && lejeAftale.kanAfsluttes)}">
+    <section th:if="${ (aktivBruger.erStilling('data','skade') && lejeAftale.erAfsluttet()==true && lejeAftale.kanAfsluttes)}">
         <label>Husk notation af skader</label>
         <form th:action="@{AfslutLejeAftale}" method="get">
             <button type="submit">Afslut LejeAftale Bil</button>
         </form>
+    </section>
+    <section th:if="${ (aktivBruger.erStilling('data')  && lejeAftale.erUnlimited()==true)}">
+        <form th:action="@{UpdaterUnlimitedLejeAftale}" method="get">
+            <div>
+                <label for="forlaeng_Maaneder">forlæng n måneder:</label>
+                <input type="number" id="forlaeng_Maaneder" name="forlaeng_Maaneder" th:value="${forlaeng_Maaneder}" placeholder="Indtast n måneder" required autofocus>
+            </div>
+            <button type="submit">Updater</button>
+        </form>
+
+
     </section>
     <section>
     <aside>

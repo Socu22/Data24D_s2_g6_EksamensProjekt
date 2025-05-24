@@ -95,8 +95,8 @@ public class AftaleRepository {
     }
 
 
-//    public void forlaengLejeAftale(int lejeAftale_Id,int forlaengMaaneder) {
-//        jdbcTemplate.update()
-//
-//    }
+    public void forlaengLejeAftale(int lejeAftale_Id,int forlaengMaaneder) {
+        jdbcTemplate.update("UPDATE lejeAftaler set slutDato=DATE_ADD(slutDato,interval ? month ) where aftale_Id = ?",forlaengMaaneder,lejeAftale_Id );
+
+    }
 }
