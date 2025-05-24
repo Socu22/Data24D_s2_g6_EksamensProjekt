@@ -12,7 +12,7 @@ public class Bil
         LIMITED, UNLIMITED,
         TILBAGELEVERET,
         SKADET,
-        AFHENTNINGSKLAR,
+        AFHENTNINGSKLAR, // Denne status indikerer at bilen er klar til transport/afhentning
         SOLGT;
 
         public static List<String> getNames()
