@@ -82,9 +82,9 @@ public class BilController {
 
         // Hvis vognNummer eller stelNummer er givet
         if (vognNummer != null && !vognNummer.isEmpty()) {
-            if (vognNummer.length() == 7) { // her tjekkes der om det er et vognNummer.
+            if (vognNummer.length() <=7) { // her tjekkes der om det er et vognNummer.
                 bilList = bilRepository.hentBilerUdFraVognNummer(vognNummer);
-            } else if (vognNummer.length() == 17) { // her tjekkes der om det er et stelNummer.
+            } else if (vognNummer.length() <= 17) { // her tjekkes der om det er et stelNummer.
                 String stelNummer = vognNummer; //Sikker på at værdien i vognNummer rent faktisk er et stelNummer
                 bilList = bilRepository.hentBilerUdFraStelNummer(stelNummer);
             }

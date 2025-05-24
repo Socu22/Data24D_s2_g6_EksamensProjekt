@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -69,17 +70,15 @@ public class BilRepository
 
 
     public List<Bil> hentBilerUdFraVognNummer(String vognNummer){
-        List<Bil> bilList = jdbcTemplate.query("select * from bil where vognNummer=? and status!='solgt'",rowMapper,vognNummer);
-
+        List<Bil> bilList = jdbcTemplate.query("select * from bil where status!='solgt'",rowMapper);
+        bilList.removeIf(bil -> !bil.getVognNummer().contains(vognNummer));
         return bygBiler(bilList);
     }
 
 
     public List<Bil> hentBilerUdFraStelNummer(String stelNummer) {
-
-        List<Bil> bilList = jdbcTemplate.query("select * from bil where stelNummer=? and status!='solgt'",rowMapper,stelNummer);
-
-
+        List<Bil> bilList = jdbcTemplate.query("select * from bil where status!='solgt'",rowMapper);
+        bilList.removeIf(bil -> !bil.getStelNummer().contains(stelNummer));
         return bygBiler(bilList);
 
 
