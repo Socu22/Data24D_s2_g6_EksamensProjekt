@@ -70,7 +70,7 @@ public class LejeAftaleController {
         model.addAttribute("samletIndkomst", samletAfgift);
 
         model.addAttribute("lejeAftaler", aftaler);
-        // todo: udregn dagens indtægt
+
 
         return "visLejeAftaler";
     }
@@ -131,14 +131,21 @@ public class LejeAftaleController {
 
         session.setAttribute("lejeAftale", aftale);
         session.setAttribute("lejeAftale_Id",id);
+
         model.addAttribute("lejeAftale", aftale);
+        session.setAttribute("lejeAftale_Id",aftale);
+
         model.addAttribute("bil", bil);
         model.addAttribute("notationer", notationRepository.hentNotationer(aftale.getAftale_Id()));
         session.setAttribute("bil",bil);
-        // todo: LocalDate i visLejeAftale skal fikses her!!!
-//        LocalDate now = LocalDate.now();
-//        if (now.isBefore(aftale.getStartDato())) model.addAttribute("foerAftaleStart", true);
-//        else if (now.isBefore(aftale.getSlutDato().plusDays(1))) model.addAttribute("foerAftaleSlut", true);
+
+        model.addAttribute("forlaeng_Maaneder", session.getAttribute("forlaeng_Maaneder"));
+
+
+        //Finder ud af om en aftale ikke er startet i html vha. de her model.addAttribute
+        LocalDate now = LocalDate.now();
+        if (now.isBefore(aftale.getStartDato())) model.addAttribute("foerAftaleStart", true);
+        else if (now.isBefore(aftale.getSlutDato().plusDays(1))) model.addAttribute("foerAftaleSlut", true);
 
         return "visLejeAftale";
     }
@@ -153,19 +160,52 @@ public class LejeAftaleController {
 
     @GetMapping("/AfslutLejeAftale")
     public String afslutLejeAftale(HttpServletRequest request, Model model){
-        HttpSession session = BrugerController.faaSession(request, model,  new String[]{"data"});
+        HttpSession session = BrugerController.faaSession(request, model,  new String[]{"data","skade"});
         if(session == null) return "redirect:/Logind";
 
 
-        // todo: skal kunne dukke op i de 2 dage efter slutDato.
-        boolean lejeAftaleErOvreBool = true;
+        // Få fat i lejeAftale
+        LejeAftale lejeAftale = (LejeAftale) session.getAttribute("lejeAftale");
+        model.addAttribute("lejeAftale",lejeAftale); // til html
+
+        boolean lejeAftaleErOvreBool = lejeAftale.erAfsluttet(); // tjekker om lejeAftale er en limited eller unlimited type
         Bil bil = (Bil) session.getAttribute("bil");
         if(lejeAftaleErOvreBool){
-            bilRepository.saetStatus(bil,Bil.Status.SOLGT.name());
+            // Notation skader bliver automasik klaret når der oprettes en ny pris på notation tilhørende til afsluttet lejeaftale
+            // Så er billen blevet tilbageLeveret til BilAbonnement. Den afventer Køber, så den kan ændres til at være solgt.
+            bilRepository.saetStatus(bil,Bil.Status.TILBAGELEVERET.name()); // ændring af bil status.
 
         }
-        return "redirect:/";
+        return "redirect:/VisLejeAftale?aftaleId="+lejeAftale.getAftale_Id();
     }
+
+    // todo: updater unlimted slutDato
+
+//    @GetMapping("/UpdaterUnlimitedLejeAftale")
+//    public String updaterUnlimitedLejeAftale(HttpServletRequest request, Model model){
+//        HttpSession session = BrugerController.faaSession(request, model,  new String[]{"data"});
+//        if(session == null) return "redirect:/Logind";
+//
+//
+//
+//        // Få fat i lejeAftale
+//        LejeAftale lejeAftale = (LejeAftale) session.getAttribute("lejeAftale");
+//        model.addAttribute("lejeAftale",lejeAftale); // til html
+//        //nummer af måneder der forlængedes
+//        int forlaeng_Maaneder = Integer.parseInt(request.getParameter("forlaeng_Maaneder"));
+//
+//        aftaleRepository.forlaengLejeAftale(lejeAftale.getAftale_Id(),forlaeng_Maaneder);
+//
+//
+//
+//
+//
+//
+//        session.setAttribute("forlaeng_Maaneder",forlaeng_Maaneder);
+//
+//
+//    }
+
 
     //logikken når man trykke på vælg bil.
     @GetMapping("/NyLejeAftale")

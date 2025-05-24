@@ -95,4 +95,8 @@ public class AftaleRepository {
     }
 
 
+//    public void forlaengLejeAftale(int lejeAftale_Id,int forlaengMaaneder) {
+//        jdbcTemplate.update()
+//
+//    }
 }

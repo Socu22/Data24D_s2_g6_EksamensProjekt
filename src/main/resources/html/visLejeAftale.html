@@ -13,6 +13,13 @@
 <header th:insert="~{fragments :: header}"></header>
 <main>
     <header class="underHeader" th:insert="~{fragments :: aftaleKort}"></header>
+    <section th:if="${ (aktivBruger.getStilling().toLowerCase().startsWith('d')&& lejeAftale.erAfsluttet()==true && lejeAftale.kanAfsluttes)|| (aktivBruger.getStilling().toLowerCase().startsWith('s')&& lejeAftale.erAfsluttet()==true && lejeAftale.kanAfsluttes)||(aktivBruger.getStilling().toLowerCase().startsWith('d')&& lejeAftale.erAfsluttet()==true && lejeAftale.kanAfsluttes)}">
+        <label>Husk notation af skader</label>
+        <form th:action="@{AfslutLejeAftale}" method="get">
+            <button type="submit">Afslut LejeAftale Bil</button>
+        </form>
+    </section>
+    <section>
     <aside>
         <div style="width: 100%;">
             <section style="max-width: initial">
@@ -52,6 +59,7 @@
             </div>
         </div>
     </aside>
+</section>
 </main>
 </body>
 </html>

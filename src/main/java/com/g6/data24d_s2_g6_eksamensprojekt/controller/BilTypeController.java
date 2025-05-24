@@ -45,6 +45,6 @@ public class BilTypeController {
         BilType bilType = new BilType(bilType_Id,mærke,modelP,udstyrsniveau,stålPris,afgift,udledning_Co2);
 
         bilTypeRepository.gemBilType(bilType);
-        return "redirect:/"; //todo: show all biltyper
+        return "redirect:/";
     }
 }
