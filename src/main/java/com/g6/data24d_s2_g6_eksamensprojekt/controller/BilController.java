@@ -139,7 +139,10 @@ public class BilController {
 
         List<BilType> bilTypeList = bilTypeRepository.hentBilTyper();
         List<Lager> lagerList =lagerRepository.hentLager();
-        List<String> statusList = List.of(Bil.Status.TILGAENGELIG.name(),Bil.Status.LIMITED.name(), Bil.Status.UNLIMITED.name());
+
+        List<String> statusList = Bil.Status.getNames();
+        statusList.removeIf(s -> !s.equalsIgnoreCase("TILGAENGELIG"));
+
         model.addAttribute("lagerList",lagerList);
         model.addAttribute("bilTypeList",bilTypeList);
         model.addAttribute("statusList",statusList);

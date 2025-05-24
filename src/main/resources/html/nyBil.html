@@ -42,8 +42,8 @@
 
         <label for="status">Status:</label>
         <select name="status" id="status">
-          <option value="" disabled selected>Vælg status</option>
-          <option th:each="status :${statusList}" th:value="${status}" th:text="status">tilgængelig</option>
+          <option value="" disabled>Vælg status</option>
+          <option th:each="status :${statusList}" th:selected="${status=='TILGAENGELIG'}" th:value="${status}" th:text="${status}">tilgængelig</option>
 
         </select>
       </div>
