@@ -286,6 +286,7 @@ public class LejeAftaleController {
             slutDato= slutDate.toString();
             session.setAttribute("slutDato", slutDate.toString());
             System.out.println(slutDate+"_Test");
+            slutDato=slutDate.toString();
 
 
 
@@ -298,6 +299,8 @@ public class LejeAftaleController {
             slutDate = Date.valueOf(slutDateAsLocalDate);
             session.setAttribute("slutDato", slutDate.toString());
             System.out.println(slutDate+"_Test");
+            slutDato=slutDate.toString();
+
         }
 
         String detaljer = request.getParameter("detaljer");
@@ -305,6 +308,8 @@ public class LejeAftaleController {
 
         if (gemLejeAftaleBool){
             System.out.println(slutDato+"INportant");
+
+
 
             LejeAftale lejeAftale = new LejeAftale(kunde_Navn,vognNummer,startDato,slutDato,detaljer);
 
