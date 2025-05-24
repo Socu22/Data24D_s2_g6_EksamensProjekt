@@ -181,7 +181,6 @@ div.kort div:not(:first-of-type){
 }
 
 form {
-    text-align-last: justify;
     margin: var(--sekundær-margin);
 }
 
