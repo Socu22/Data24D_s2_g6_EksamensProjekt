@@ -44,12 +44,16 @@ public class LejeAftaleController {
         model.addAttribute("slutDato", session.getAttribute("slutDato"));
         model.addAttribute("dato", session.getAttribute("dato"));
         model.addAttribute("kundeNavn", session.getAttribute("kundeNavn"));
+        model.addAttribute("tjekkerStartDato", session.getAttribute("tjekkerStartDato"));
+        model.addAttribute("tjekkerSlutDato", session.getAttribute("tjekkerSlutDato"));
         session.removeAttribute("vognNummer");
         session.removeAttribute("periodeNummer");
         session.removeAttribute("startDato");
         session.removeAttribute("slutDato");
         session.removeAttribute("dato");
         session.removeAttribute("kundeNavn");
+        session.removeAttribute("tjekkerStartDato");
+        session.removeAttribute("tjekkerSlutDato");
 
 
         double samletAfgift = 0;
@@ -111,6 +115,8 @@ public class LejeAftaleController {
         session.setAttribute("dato", dato_);
         session.setAttribute("kundeNavn", kundeNavn);
 
+        session.setAttribute("tjekkerStartDato", request.getParameter("tjekkerStartDato"));
+        session.setAttribute("tjekkerSlutDato", request.getParameter("tjekkerSlutDato"));
 
         return "redirect:/VisLejeAftaler";
     }

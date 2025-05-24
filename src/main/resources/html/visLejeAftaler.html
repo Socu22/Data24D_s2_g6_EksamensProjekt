@@ -36,6 +36,10 @@
             </div>
             <div th:if="${periodeNummer != null && periodeNummer == 2}">
                 <input  type="date" id="dato" name="dato" th:value="${dato}" onchange="this.form.submit()" />
+                <label>Tjekker Start Dato</label>
+                <input type="checkbox" name="tjekkerStartDato" th:checked="${tjekkerStartDato != null}"  onchange="this.form.submit()">
+                <label>Tjekker Slut Dato</label>
+                <input type="checkbox" name="tjekkerSlutDato"  th:checked="${tjekkerSlutDato != null}" onchange="this.form.submit()">
             </div>
             <div th:if="${periodeNummer != null && periodeNummer == 3}">
                 <input  type="date" id="startDato" name="startDato" th:value="${startDato}" onchange="this.form.submit()" />
@@ -48,18 +52,14 @@
         </form>
     </header>
     <div>
-        <section style="max-width: initial">
-            <p th:text="'Forlæng Aftale: '">Kørte Kilometer</p>
-            <p th:text="'Intast Kørte kilometer: '">Kørte Kilometer</p>
-        </section>
-        <div th:each="Aftale : ${lejeAftaler}" class="liste">
-            <a th:if="${
-    (kundeNavn == null || Aftale.getKunde().getNavn().toLowerCase().trim().contains(kundeNavn.toLowerCase().trim())) &&
+        <div th:each="Aftale : ${lejeAftaler}" class="liste" th:if="${
+    (kundeNavn == null || Aftale.getKunde_Navn().toLowerCase().trim().contains(kundeNavn.toLowerCase().trim())) &&
     (vognNummer == null || #strings.contains(Aftale.getVognNummer(), vognNummer)) &&
-    (dato == null || (dato.isAfter(Aftale.getStartDato()) && dato.isBefore(Aftale.getSlutDato()))) &&
+    (dato == null || (tjekkerStartDato != null && dato.isEqual(Aftale.getStartDato()) || (tjekkerSlutDato != null && dato.isEqual(Aftale.getSlutDato())))) &&
     (startDato == null || slutDato == null ||
         (!slutDato.isBefore(Aftale.getStartDato()) && !startDato.isAfter(Aftale.getSlutDato()))
-    )}" th:href="@{VisLejeAftale(aftaleId = ${Aftale.getAftale_Id()})}" style="color: inherit; text-decoration: none">
+    )}">
+            <a  th:href="@{VisLejeAftale(aftaleId = ${Aftale.getAftale_Id()})}" style="color: inherit; text-decoration: none">
                 <div th:insert="~{fragments :: aftaleListeKort (
                                     vognNummer=${Aftale.getBil().toString()},
                                     kundeNavn= ${Aftale.getKunde_Navn()},
