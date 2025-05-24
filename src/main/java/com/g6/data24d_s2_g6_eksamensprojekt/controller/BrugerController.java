@@ -1,14 +1,15 @@
 package com.g6.data24d_s2_g6_eksamensprojekt.controller;
 
 import com.g6.data24d_s2_g6_eksamensprojekt.model.Bruger;
-import com.g6.data24d_s2_g6_eksamensprojekt.model.Kunde;
 import com.g6.data24d_s2_g6_eksamensprojekt.repository.BrugerRepository;
+
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -21,7 +22,7 @@ public class BrugerController {
 
     @GetMapping("/")
     public String hjemmeSide(HttpServletRequest request, Model model) {
-        HttpSession session = faaSession(request, model,  new String[]{"data", "Skade", "forretnings"});
+        HttpSession session = faaSession(request, model, "data", "skade", "forretning");
         if(session == null) return "redirect:/Logind";
         return "index";
     }
@@ -29,7 +30,7 @@ public class BrugerController {
     public String logInd(HttpServletRequest request, Model model) {
         HttpSession session = request.getSession(false);
         if(session != null)
-            return "redirect:/VisLejeAftaler";
+            return "redirect:/VisBiler";
 
         String brugerIkkeFundet = request.getParameter("d");
         model.addAttribute("brugerIkkeFundet", brugerIkkeFundet);
@@ -45,21 +46,22 @@ public class BrugerController {
             Bruger bruger = brugerRepository.hentBruger(navn, adgangskode);
             if(bruger != null){
                 saetSession(request, bruger, model);
-                //return "redirect:/";
-                return "redirect:/VisLejeAftaler";
+                return "redirect:/VisBiler";
             }
             return "redirect:/Logind?d=true";
         }
         return "redirect:/Logind";
     }
+
     @GetMapping("/LogUd")
     public String logUd(HttpServletRequest request, Model model) {
         request.getSession().invalidate();
         return "redirect:/Logind";
     }
+
     @GetMapping("/Registrer")
     public String registrer(HttpServletRequest request, Model model) {
-        HttpSession session = faaSession(request, model,  new String[]{"forretnings"});
+        HttpSession session = faaSession(request, model, "forretning");
         if(session == null) return "redirect:/Logind";
 
 
@@ -98,9 +100,10 @@ public class BrugerController {
 
         return "registrer";
     }
+
     @GetMapping("/OmdirigerRegistrer")
     public String omdirigerRegistrer(HttpServletRequest request, Model model) {
-        HttpSession session = faaSession(request, model, new String[]{"forretnings"});
+        HttpSession session = faaSession(request, model, "forretning");
         if(session == null) return "redirect:/Logind";
 
         String medarbejderId = request.getParameter("medarbejderId");
@@ -164,9 +167,10 @@ public class BrugerController {
 
         return "redirect:/Registrer";
     }
+
     @GetMapping("/SoegBruger")
     public String soegBruger(HttpServletRequest request, Model model) {
-        HttpSession session = faaSession(request, model, new String[]{"forretnings"});
+        HttpSession session = faaSession(request, model, "forretning");
         if(session == null) return "redirect:/Logind";
 
         model.addAttribute("medarbejdere", brugerRepository.hentBrugere());
@@ -176,15 +180,17 @@ public class BrugerController {
 
         return "soegBruger";
     }
+
     @GetMapping("/OmdirigerSoegBruger")
     public String omdirigerSoegBruger(HttpServletRequest request, Model model) {
-        HttpSession session = faaSession(request, model, new String[]{"forretnings"});
+        HttpSession session = faaSession(request, model, "forretning");
         if(session == null) return "redirect:/Logind";
 
         session.setAttribute("medarbejderNavn", request.getParameter("medarbejderNavn"));
 
         return "redirect:/SoegBruger";
     }
+
     /*@GetMapping("/RedigerBruger")
     public String redigerBruger(HttpServletRequest request, Model model) {
         HttpSession session = faaSession(request, model, new String[]{"forretnings"});
@@ -192,18 +198,20 @@ public class BrugerController {
 
         return "index";
     }*/
+
     @GetMapping("/OmdirigerRedigerBruger")
     public String omdirigerRedigerBruger(HttpServletRequest request, Model model) {
-        HttpSession session = faaSession(request, model, new String[]{"forretnings"});
+        HttpSession session = faaSession(request, model, "forretning");
         if(session == null) return "redirect:/Logind";
 
         return "redirect:/Registrer";
     }
+
     @PostMapping("/saetValuta")
     @ResponseStatus(HttpStatus.RESET_CONTENT)
     public void saetValuta(HttpServletRequest request, Model model)
     {
-        HttpSession session = faaSession(request, model, new String[0]);
+        HttpSession session = faaSession(request, model);
         assert session != null;
         session.setAttribute("valuta", request.getParameter("valutaCheck"));
     }
@@ -214,20 +222,13 @@ public class BrugerController {
         session.setAttribute("aktivBruger", bruger);
         model.addAttribute("aktivBruger", bruger);
     }
-    static public HttpSession faaSession(HttpServletRequest request, Model model, String[] stillinger){
+
+    static public HttpSession faaSession(HttpServletRequest request, Model model, String... tilladteStillinger){
         HttpSession session = request.getSession(false);
         if(session != null){
             Bruger bruger = (Bruger) session.getAttribute("aktivBruger");
-            boolean hasAccess = true;
-            for (String stilling : stillinger) {
-                hasAccess = false;
-                String s = stilling.toLowerCase().toCharArray()[0] + "";
-                //System.out.println(bruger.getStilling().toLowerCase().toCharArray()[0] + ", " + stilling.toLowerCase().toCharArray()[0] + " , " +(bruger.getStilling().toLowerCase().toCharArray()[0] == stilling.toLowerCase().toCharArray()[0]) );
-                if(bruger.getStilling().equals("DEMO") || bruger.getStilling().toLowerCase().toCharArray()[0] == stilling.toLowerCase().toCharArray()[0])
-                {hasAccess = true; break;}
-            }
-            if(!hasAccess)
-                return null;
+            if(!bruger.erStilling(tilladteStillinger)) return null;
+
             model.addAttribute("aktivBruger",bruger);
             model.addAttribute("valuta", session.getAttribute("valuta"));
         }
