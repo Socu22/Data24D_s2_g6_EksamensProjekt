@@ -15,7 +15,6 @@ import static com.g6.data24d_s2_g6_eksamensprojekt.controller.BrugerController.f
 @Controller
 public class LagerController {
 
-
     @Autowired
     LagerRepository lagerRepository;
 
@@ -26,17 +25,16 @@ public class LagerController {
 
         return "nytLager";
     }
+
     @GetMapping("/GemNytLager")
     public String gemNytLager(@RequestParam("navn") String navn,
-                               @RequestParam("adresse") String adresse,
-                               HttpServletRequest request, Model model){
+                              @RequestParam("adresse") String adresse,
+                              HttpServletRequest request, Model model){
         HttpSession session = faaSession(request, model, "forretning");
         if(session == null) return "redirect:/Logind";
 
         Lager nytLager = new Lager(navn,adresse);
         lagerRepository.gemLager(nytLager);
-        return "redirect:/"; //skal ændres
+        return "redirect:/VisBiler";
     }
-
-
 }
