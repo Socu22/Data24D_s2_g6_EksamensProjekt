@@ -4,7 +4,12 @@
 <div th:fragment="header">
     <div>
         <img th:src="@{/img/BILABONNEMENT_logo.svg}" alt="Manglende Logo" style="height: 3rem"/>
-        <span th:if="${aktivBruger}" th:text="'Bruger: ' + ${aktivBruger.navn}" style="text-align: left; font-size: x-large; margin-left: 1rem"></span>
+        <div th:if="${aktivBruger}">
+            <span th:text="'Bruger: ' + ${aktivBruger.navn}" style="text-align: left; font-size: x-large; margin-left: 1rem"></span>
+            <form th:action="@{/VisBiler}" th:method="get">
+                <button type="submit">Se Biler</button>
+            </form>
+        </div>
     </div>
     <div th:if="${aktivBruger}">
         <div>
@@ -104,7 +109,7 @@
 
 
 
-<div th:fragment="bilListeKort (vognNummer, bilType, stelNummer, lager, afgift, tilGaengelig)" class="kort">
+<div th:fragment="bilListeKort (vognNummer, bilType, stelNummer, lager, afgift, tilGaengelig, status)" class="kort">
     <p class="vognNr" th:text="${vognNummer}"></p>
     <div>
         <p th:text="'Type: ' + ${bilType}">Type:</p>
@@ -114,6 +119,9 @@
         <p th:unless="${valuta}">Startafgift: <span class="valuta" th:title="${afgift}" th:text="${afgift} + 'kr'"></span></p>
         <p th:if="${valuta}">Startafgift: <span class="valuta" th:title="${afgift}" th:text="${afgift}*0.13 + '€'"></span></p>
         <p th:text="'Lager: ' + ${lager}">Lager:</p>
+    </div>
+    <div>
+        <p th:text="'Status: ' + ${status}"></p>
     </div>
     <div th:if="${tilGaengelig && aktivBruger.erStilling('data')}">
         <form th:action="@{NyLejeAftale}" method="get">
@@ -131,7 +139,8 @@
                 stelNummer=   ${Bil.getStelNummer()},
                 lager=        ${Bil.getLager().getNavn()},
                 afgift=       ${Bil.getType().afgift},
-                tilGaengelig= ${Bil.erTilgaengelig()}
+                tilGaengelig= ${Bil.erTilgaengelig()},
+                status=       ${Bil.getStatus()}
                 )}">
             </div>
         </a>
@@ -145,7 +154,8 @@
         stelNummer=   ${bil.stelNummer},
         lager=        ${bil.getLager().getNavn()},
         afgift=       ${bil.getType().afgift},
-        tilGaengelig= ${bil.erTilgaengelig()}
+        tilGaengelig= ${bil.erTilgaengelig()},
+        status=       ${bil.getStatus()}
         )}">
     </div>
 </div>
