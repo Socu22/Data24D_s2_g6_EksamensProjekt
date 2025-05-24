@@ -1,7 +1,6 @@
 package com.g6.data24d_s2_g6_eksamensprojekt.controller;
 
 import com.g6.data24d_s2_g6_eksamensprojekt.model.Bil;
-import com.g6.data24d_s2_g6_eksamensprojekt.model.Kunde;
 import com.g6.data24d_s2_g6_eksamensprojekt.model.LejeAftale;
 import com.g6.data24d_s2_g6_eksamensprojekt.repository.AftaleRepository;
 import com.g6.data24d_s2_g6_eksamensprojekt.repository.BilRepository;
@@ -17,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.sql.Date;
 import java.time.LocalDate;
-import java.util.HashMap;
 import java.util.List;
 
 import static com.g6.data24d_s2_g6_eksamensprojekt.controller.BrugerController.faaSession;
@@ -61,11 +59,14 @@ public class LejeAftaleController {
 
         for (LejeAftale aftale: aftaler)
         {
-
-//            if (aftale.getSlutDato().isAfter(now) && aftale.getStartDato().isBefore(now))
-//            {
-//                samletAfgift += aftale.getBil().getType().getAfgift(); // todo
-//            }
+            if (aftale.getStartDato().isBefore(now))
+            {
+                aftale.setNotationPris(notationRepository.hentSumfor(aftale.getVognNummer()));
+                if (aftale.getSlutDato() == null || aftale.getSlutDato().isAfter(now))
+                {
+                    samletAfgift += aftale.getNotationPris();
+                }
+            }
         }
         model.addAttribute("samletIndkomst", samletAfgift);
 

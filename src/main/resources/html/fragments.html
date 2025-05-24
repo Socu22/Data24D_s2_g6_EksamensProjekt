@@ -77,7 +77,7 @@
             <div th:insert="~{fragments :: aftaleListeKort (
                     vognNummer=${Aftale.getBil().toString()},
                     kundeNavn= ${Aftale.getKunde_Navn()},
-                    afgift=    ${Aftale.getBil().getType().afgift},
+                    afgift=    ${Aftale.getSamletPris()},
                     startDato= ${Aftale.getStartDato()},
                     slutDato=  ${Aftale.getSlutDato()},
                     erBetalt=  ${Aftale.erBetalt()}
@@ -93,7 +93,7 @@
         <div th:insert="~{fragments :: aftaleListeKort (
             vognNummer=${lejeAftale.getBil().toString()},
             kundeNavn= ${lejeAftale.getKunde_Navn()},
-            afgift=    ${lejeAftale.getBil().getType().afgift},
+            afgift=    ${lejeAftale.getSamletPris()},
             startDato= ${lejeAftale.getStartDato()},
             slutDato=  ${lejeAftale.getSlutDato()},
             erBetalt=  ${lejeAftale.erBetalt()}
