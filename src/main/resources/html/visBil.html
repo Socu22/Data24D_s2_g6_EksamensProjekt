@@ -12,19 +12,86 @@
 <body>
 <header th:insert="~{fragments :: header}"></header>
 <main>
-    <header class="underHeader" th:insert="~{fragments :: bilKort}"></header>
+    <header class="underHeader">
+        <div th:insert="~{fragments :: bilKort}"></div>
+        <form th:if="${aktivBruger.erStilling('forretning') && aftale == null}" th:action="@{SletBil}" method="get">
+            <button type="submit" class="annuller">Slet Bil</button>
+        </form>
+    </header>
     <aside>
-        <form th:if="${aktivBruger.erStilling('data')}" th:action="@{NyLejeAftale}" method="get">
-            <button type="submit" >ny LejeAftale </button>
-        </form>
-        <form th:if="${aktivBruger.erStilling('data', 'skade')}" th:action="@{/NyNotation}" th:method="get">
-            <button type="submit">Registrér Ny Notation</button>
-        </form>
-
-        <form th:if="${aktivBruger.erStilling('forretning')&& bil.getStatus().equals('TILBAGELEVERET')}" th:action="@{SaelgBil}" method="get">
-            <button type="submit" class="annuller">Marker Solgt</button>
-        </form>
-        <div th:insert="~{fragments :: notationListe}"></div>
+        <section>
+            <div th:if="${aftale != null}">
+                <div style="display: inline-flex; width: 100%; justify-content: space-between">
+                    <div>
+                        <p>Kunde:</p>
+                        <p th:text="${aftale.getKunde_Navn()}" class="stelNummer" style="font-weight: bold">--Lejers Navn--</p>
+                    </div>
+                    <div style="text-align: right;">
+                        <p th:text="'Periode: ' + ${aftale.getStartDato()}">Periode: StartDato</p>
+                        <p th:text="${aftale.getSlutDato()}">SlutDato</p>
+                    </div>
+                </div>
+                <br>
+                <p th:text="${aftale.getDetaljer()}"></p>
+                <div style="display: inline-flex; width: 100%; justify-content: space-between">
+                    <div>
+                        <p th:unless="${valuta}">Samlet Bekostning: <span class="valuta" th:title="${aftale.getSamletPris()}" th:text="${aftale.getSamletPris()} + 'kr'"></span></p>
+                        <p th:if=    "${valuta}">Samlet Bekostning: <span class="valuta" th:title="${aftale.getSamletPris()}" th:text="${aftale.getSamletPris()}*0.13 + '€'"></span></p>
+                        <p th:unless="${aftale.erBetalt()}" style="font-weight: bold; color: red  ">Mangler Afbetaling</p>
+                        <p th:if    ="${aftale.erBetalt()}" th:text="'Afbetalt ' + ${aftale.getBetalingsDato()}" style="font-weight: bold; color: green">Afbetalt</p>
+                    </div>
+                    <div>
+                        <form th:if="${aktivBruger.erStilling('data') && !aftale.erBetalt()}" th:action="@{OpdaterBil}" method="get">
+                            <button type="submit" name="status" value="BETALT">Markér Betalt</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <form th:if="${aktivBruger.erStilling('data') && aftale == null}" th:action="@{NyLejeAftale}" method="get">
+                <button type="submit">Opret Leje Aftale</button>
+            </form>
+            <div th:if="${aftale != null}" style="display: inline-flex">
+                <form th:if="${aktivBruger.erStilling('data') && !aftale.erBegyndt()}" th:action="@{SletLejeAftale}" method="get">
+                    <button type="submit" class="annuller">Annullér Aftale</button>
+                </form>
+                <form th:if="${aktivBruger.erStilling('data') && bil.erStatus('UNLIMITED')}" th:action="@{UpdaterUnlimitedLejeAftale}" method="get">
+                    <button type="submit">Forlæng Lejeperiode</button>
+                </form>
+                <form th:if="${aktivBruger.erStilling('data', 'skade') && bil.erStatus('LIMITED', 'UNLIMITED') && aftale.erBegyndt()}" th:action="@{OpdaterBil}" method="get">
+                    <button type="submit" name="status" value="TILBAGELEVERET">Markér Tilbageleveret</button>
+                </form>
+                <form th:if="${aktivBruger.erStilling('data', 'skade') && bil.erStatus('TILBAGELEVERET')}" th:action="@{SaelgBil}" method="get">
+                    <button type="submit">Markér Skade</button>
+                </form>
+            </div>
+        </section>
+        <section>
+            <div style="display: inline-flex">
+                <form th:if="${aktivBruger.erStilling('data')}" th:action="@{/SaelgBil}" th:method="get">
+                    <button type="submit" name="vognNummer" th:value="${bil.getVognNummer()}" style="background-color: white; border-style: dot-dash">Opret Købs Aftale</button>
+                </form>
+                <form th:if="${aktivBruger.erStilling('data', 'skade') && bil.erStatus('TILBAGELEVERET', 'SKADET')}" th:action="@{OpdaterBil}" method="get">
+                    <button type="submit" name="status" value="AFHENTNINGSKLAR">Markér Afhentningsklar</button>
+                </form>
+                <form th:if="${aktivBruger.erStilling('forretning') && bil.erStatus('AFHENTNINGSKLAR')}" th:action="@{OpdaterBil}" method="get">
+                    <button type="submit" name="status" value="SOLGT" class="annuller">Markér Solgt</button>
+                </form>
+            </div>
+            <p th:unless="${valuta}">Forventet Salgspris:<br>
+                <span class="valuta" th:title="${bil.getType().getStaalPris()}" th:text="${bil.getType().getStaalPris()} + 'kr'"></span> -
+                <span class="valuta" th:title="${notationsPris}" th:text="${notationsPris} + 'kr'"></span> =
+                <span class="valuta" th:title="${bil.getType().getStaalPris() - notationsPris}" th:text="${bil.getType().getStaalPris() - notationsPris} + 'kr'"></span>
+            </p>
+            <p th:if=    "${valuta}">Forventet Salgspris:<br>
+                <span class="valuta" th:title="${bil.getType().getStaalPris()}" th:text="${bil.getType().getStaalPris()}*0.13 + '€'"></span> -
+                <span class="valuta" th:title="${notationsPris}" th:text="${notationsPris}*0.13 + '€'"></span> =
+                <span class="valuta" th:title="${bil.getType().getStaalPris() - notationsPris}" th:text="${bil.getType().getStaalPris() - notationsPris}*0.13 + '€'"></span>
+            </p>
+            <form th:if="${aktivBruger.erStilling('data', 'skade') && !bil.erStatus('SOLGT')}" th:action="@{/NyNotation}" th:method="get">
+                <button type="submit" name="vognNummer" th:value="${bil.getVognNummer()}">Registrér Fejl & Mangler</button>
+            </form>
+            <div th:insert="~{fragments :: notationListe}" style="width: 100%; max-width: max-content;"></div>
+        </section>
     </aside>
 </main>
 </body>

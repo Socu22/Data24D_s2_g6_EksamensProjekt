@@ -1,29 +1,27 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
-<div th:fragment="header">
+<div th:fragment="header" style="align-items: center">
     <div>
         <img th:src="@{/img/BILABONNEMENT_logo.svg}" alt="Manglende Logo" style="height: 3rem"/>
-        <div th:if="${aktivBruger}">
+        <div th:if="${aktivBruger}" style="align-items: center">
             <span th:text="'Bruger: ' + ${aktivBruger.navn}" style="text-align: left; font-size: x-large; margin-left: 1rem"></span>
         </div>
     </div>
-    <div th:if="${aktivBruger}">
-        <div>
-            <form th:action="@{/VisBiler}" th:method="get">
-                <button type="submit">Se Biler</button>
-            </form>
-            <form th:action="@{/VisLejeAftaler}" th:method="get">
-                <button type="submit">Se Lejeaftaler</button>
-            </form>
-            <form th:if="${aktivBruger.erStilling('forretning')}" th:action="@{/Registrer}" th:method="get" style="margin-right: 1rem">
-                <button type="submit">Registrér Ny Burger</button>
-            </form>
-            <form th:action="@{/saetValuta}" th:method="post" style="margin-right: 1rem">
-                <input type="checkbox" name="valutaCheck" id="valutaCheck" th:value="${valuta}" th:checked="${valuta}" onchange="omregn(); this.form.submit();">
-                <label for="valutaCheck">dkk/eur</label>
-            </form>
-        </div>
+    <div th:if="${aktivBruger}" style="align-items: center">
+        <form th:if="${aktivBruger.erStilling('forretning')}" th:action="@{/Registrer}" th:method="get" style="margin-right: 1rem">
+            <button type="submit">Registrér Ny Burger</button>
+        </form>
+        <form th:action="@{/VisBiler}" th:method="get">
+            <button type="submit">Se Biler</button>
+        </form>
+        <form th:action="@{/VisLejeAftaler}" th:method="get">
+            <button type="submit">Se Lejeaftaler</button>
+        </form>
+        <form th:action="@{/saetValuta}" th:method="post" style="margin-right: 1rem">
+            <input type="checkbox" name="valutaCheck" id="valutaCheck" th:value="${valuta}" th:checked="${valuta}" onchange="omregn(); this.form.submit();">
+            <label for="valutaCheck">dkk/eur</label>
+        </form>
         <form th:action="@{/LogUd}" th:method="get">
             <button type="submit" class="logud">Log Ud</button>
         </form>
@@ -112,24 +110,19 @@
 
 
 
-<div th:fragment="bilListeKort (vognNummer, bilType, stelNummer, lager, afgift, tilGaengelig, status)" class="kort">
+<div th:fragment="bilListeKort (vognNummer, bilType, stelNummer, lager, afgift, status)" class="kort">
     <p class="vognNr" th:text="${vognNummer}"></p>
     <div>
         <p th:text="'Type: ' + ${bilType}">Type:</p>
         <p th:text="${stelNummer}" class="stelNummer">--StelNummer--</p>
     </div>
     <div>
-        <p th:unless="${valuta}">Startafgift: <span class="valuta" th:title="${afgift}" th:text="${afgift} + 'kr'"></span></p>
-        <p th:if="${valuta}">Startafgift: <span class="valuta" th:title="${afgift}" th:text="${afgift}*0.13 + '€'"></span></p>
+        <p th:unless="${valuta}">Reg. Afgift: <span class="valuta" th:title="${afgift}" th:text="${afgift} + 'kr'"></span></p>
+        <p th:if="${valuta}">Reg. Afgift: <span class="valuta" th:title="${afgift}" th:text="${afgift}*0.13 + '€'"></span></p>
         <p th:text="'Lager: ' + ${lager}">Lager:</p>
     </div>
     <div>
         <p th:text="'Status: ' + ${status}"></p>
-    </div>
-    <div th:if="${tilGaengelig && aktivBruger.erStilling('data')}">
-        <form th:action="@{NyLejeAftale}" method="get">
-            <button type="submit" name="vogn" th:value="${vognNummer}" >Opret LejeAftale</button>
-        </form>
     </div>
 </div>
 
@@ -142,7 +135,6 @@
                 stelNummer=   ${Bil.getStelNummer()},
                 lager=        ${Bil.getLager().getNavn()},
                 afgift=       ${Bil.getType().afgift},
-                tilGaengelig= ${Bil.erTilgaengelig()},
                 status=       ${Bil.getStatus()}
                 )}">
             </div>
@@ -157,7 +149,6 @@
         stelNummer=   ${bil.stelNummer},
         lager=        ${bil.getLager().getNavn()},
         afgift=       ${bil.getType().afgift},
-        tilGaengelig= ${bil.erTilgaengelig()},
         status=       ${bil.getStatus()}
         )}">
     </div>
