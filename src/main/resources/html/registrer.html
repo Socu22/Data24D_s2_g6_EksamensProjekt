@@ -5,6 +5,7 @@
     <title>Bilabonnement</title>
     <link rel="stylesheet" th:href="@{style.css}">
 </head>
+<!-- noget ekstra css der bliver brugt på registrerbeskederne som gør at de bliver usynlige efter 4 sekunder -->
 <style>
     .fade-out {
         animation: fadeOut 4s ease-in-out forwards;
@@ -18,32 +19,37 @@
     }
 </style>
 <body>
+<!-- en header sat ind fra fragments -->
 <header th:insert="~{fragments :: header}"></header>
 
 <section >
     <form th:action="@{/OmdirigerRegistrer}" method="get" id="OmReg" >
+        <!-- tjekker om registrerbeskeden er en fejlbesked, hvis den er skal den være rød -->
         <div class="fade-out" th:if="${registrerBesked != 'Ny bruger lavet' && registrerBesked != 'Bruger opdateret'}">
             <label style="color: darkred" th:text="${registrerBesked}"></label>
         </div>
+        <!-- tjekker om registrerbeskeden er en bruger lavet eller opdateret besked, hvis den er skal den være grøn -->
         <div class="fade-out" th:if="${registrerBesked == 'Ny bruger lavet'|| registrerBesked == 'Bruger opdateret'}">
             <label style="color: green" th:text="${registrerBesked}"></label>
         </div>
         <label >Navn:</label>
         <input type="text" name="navn" placeholder="navn" th:value="${navn}"  autofocus="autofocus"  required /><br/>
-        <!-- <label th:if="${manglendeInput == 0}" class="fade-out">Mangler Navn</label><br/>-->
+        <!-- hvis der er et medarbejderId skal den opdatere brugeren,
+        den skal derfor ikke bruge verificer adgangskode, og adgangskode skal være type text istedet for password så man kan se hvad det er -->
         <div th:if="${medarbejderId != null}">
             <label >Adgangskode:</label>
             <input type="text" name="adgangskode" placeholder="adgangskode" th:value="${adgangskode}" required  /><br/>
         </div>
+        <!-- hvis der ikke er et medarbejderId skal den registrere en ny bruger,
+         den skal derfor ogsa have verificer adgangskode med-->
         <div th:if="${medarbejderId == null}">
             <label >Adgangskode:</label>
             <input type="password" name="adgangskode" placeholder="adgangskode" th:value="${adgangskode}" required  /><br/>
-            <!-- <label th:if="${manglendeInput == 1}" class="fade-out">Mangler Adgangskode</label><br/>-->
             <label >Verificer Adgangskode:</label>
             <input type="password" name="adgangskode2" placeholder=" verificer adgangskode" th:value="${adgangskode2}" required   /><br/>
         </div>
+        <!-- hvis der er et medarbejderId skal vi gerne sende den tilbage igen til java'en så vi laver en hidden input -->
         <input th:if="${medarbejderId != null}" type="hidden" name="medarbejderId"  th:value="${medarbejderId}"  />
-        <!-- <label th:if="${manglendeInput == 2}" class="fade-out">Mangler Verificer Adgangskode</label><br/>-->
         <label >Stilling:</label><br/>
 
         <select id="stilling" name="stilling"  required>
@@ -52,28 +58,14 @@
             <option  th:selected="${medarbejderId != null && stilling.toLowerCase().substring(0,1) == 'f'}" name="stilling" value="FORRETNING"  >Forretningsudvikler</option>
         </select>
 
-        <!--  <details >
-             <summary th:text="${stilling}"></summary>
-                 <button type="submit"  name="stilling" value="Dataregistrering" >Dataregistrering</button>
-
-                 <button type="submit"  name="stilling" value="Skade og Udbedring" >Skade og Udbedring</button>
-
-                 <button type="submit"  name="stilling" value="Forretningsudvikler" >Forretningsudvikler</button>
-
-         </details>
-         -->
-
         <button th:if="${medarbejderId == null}" type="submit" >Registrer</button>
         <button th:if="${medarbejderId != null}" type="submit" >Opdater</button>
 
     </form>
 </section>
+<!-- en knap der omdirigere til soegBruger, skal kun være der hvis man ikke allerede har valgt en bruger -->
 <form  th:if="${medarbejderId == null}"  th:action="@{/OmdirigerSoegBruger}" method="get">
     <button type="submit">Rediger Eksisterende Bruger</button>
 </form>
-
-
-
-
 </body>
 </html>

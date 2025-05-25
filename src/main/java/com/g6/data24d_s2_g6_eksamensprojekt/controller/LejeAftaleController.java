@@ -32,6 +32,8 @@ public class LejeAftaleController {
     @Autowired
     NotationRepository notationRepository;
 
+    // man bliver sendt her til fra knappen i headeren, som hedder Se Lejeaftaler.
+    // den henter en liste med alle lejeaftaler og giver det til modelen og omdirigere hen til vislejeaftaler html siden.
     @GetMapping("/VisLejeAftaler")
     public String visLejeAftaler(HttpServletRequest request, Model model)
     {
@@ -78,7 +80,9 @@ public class LejeAftaleController {
 
         return "visLejeAftaler";
     }
-
+    // man bliver sendt her til fra visLejeAftaler html siden.
+    // den tager imod parametre og tilføjer dem til sessionen som skal bruges "/VisLejeAftaler" getmappingen
+    // det gøres sådan så det ikke står i url'en i "/VisLejeAftaler"
     @GetMapping("/OmdirigerVisLejeAftaler")
     public String omdirigerVisLejeAftaler(HttpServletRequest request, Model model){
         HttpSession session = BrugerController.faaSession(request, model);
@@ -95,18 +99,12 @@ public class LejeAftaleController {
         LocalDate slutDato_ = null;
         LocalDate dato_ = null;
 
-        if(startDato != null && !startDato.isEmpty()) {
+        if(startDato != null && !startDato.isEmpty())
             startDato_ = LocalDate.parse(startDato);
-            System.out.println("startdato: " + startDato_.toString());
-        }
-        if(slutDato != null && !slutDato.isEmpty()) {
+        if(slutDato != null && !slutDato.isEmpty())
             slutDato_ = LocalDate.parse(slutDato);
-            System.out.println("slutdato: " + slutDato_.toString());
-        }
-        if(dato != null && !dato.isEmpty()) {
+        if(dato != null && !dato.isEmpty())
             dato_ = LocalDate.parse(dato);
-            System.out.println("dato: " + dato_.toString());
-        }
 
         session.setAttribute("vognNummer", vognNummer);
         session.setAttribute("periodeNummer", periodeNummer);
