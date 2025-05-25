@@ -66,6 +66,7 @@ public class LejeAftaleController {
         session.removeAttribute("aftale_id");
         session.removeAttribute("bil");
         session.removeAttribute("vognNummer");
+
         // den samlede afgift logik som samler notationPris i et lejeAftaleKort, som sker i visLejeAftaler.html
         double samletAfgift = 0;
         LocalDate now = LocalDate.now();
@@ -255,11 +256,7 @@ public class LejeAftaleController {
         session.removeAttribute("startDato");
         session.removeAttribute("slutDato");
         session.removeAttribute("detaljer");
-        session.removeAttribute("lejeAftale");
-        session.removeAttribute("lejeAftale_id");
-        session.removeAttribute("aftale_id");
-        session.removeAttribute("bil");
-        session.removeAttribute("vognNummer");
+
 
         return "nyLejeAftale";
     }

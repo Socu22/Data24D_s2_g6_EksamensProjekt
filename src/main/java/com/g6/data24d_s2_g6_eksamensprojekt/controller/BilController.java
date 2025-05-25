@@ -173,7 +173,7 @@ public class BilController {
         Bil bil = new Bil(vognNummer,stelNummer,new BilType(bilType_Id),lager_Id,status);
         // Gemmer tidligere objekt vha. en metode i den her Repository
         bilRepository.gemBil(bil);
-        return "redirect:/";
+        return "redirect:/VisBil?vognNummer="+vognNummer;
     }
     @GetMapping("/SaelgBil") //Todo: ændre navnet her så det passer med metoden
     public String saelgBil(HttpServletRequest request, Model model){
@@ -190,7 +190,7 @@ public class BilController {
        if (!bool){
            System.out.println("Fangede ikke en bil(sælgBil)");
        }
-        return "redirect:/";
+        return "redirect:/VisBil?vognNummer="+vognNummer;
     }
 
 }
