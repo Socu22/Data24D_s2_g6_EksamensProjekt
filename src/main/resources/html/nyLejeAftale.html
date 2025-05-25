@@ -39,16 +39,14 @@
     </section> -->
 
     <!-- Kundevisning -->
-    <section th:if="${tempKunde != null}">
+    <section th:if="${kunde_Navn != null && kunde_Navn.isEmpty()==false}">
         <h2>Kunde</h2>
         <table>
             <tr>
-                <th>Kunde ID</th>
-                <th>Navn</th>
+                <th>Kunde Navn</th>
             </tr>
             <tr>
-                <td th:text="${tempKunde.getKunde_Id()}"></td>
-                <td th:text="${tempKunde.navn}"></td>
+                <td th:text="${kunde_Navn}"></td>
             </tr>
         </table>
     </section>
@@ -60,7 +58,7 @@
 
             <div>
                 <label for="kunde_Navn">kunde navn</label>
-                <input type="text" id="kunde_Navn" name="kunde_Navn" th:value="${kunde_Navn}" required />
+                <input type="text" id="kunde_Navn" name="kunde_Navn" onchange="this.form.submit()" th:value="${kunde_Navn}" required />
             </div>
             <div>
                 <label for="vognNummer">Vognnummer:</label>
