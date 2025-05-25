@@ -8,6 +8,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 
@@ -35,6 +37,7 @@ public class AftaleRepository {
             lejeAftale.setSlutDato(null);
 
         }
+        if (rs.getDate("betaltDato") != null) lejeAftale.setBetalingsDato(rs.getDate("betaltDato").toLocalDate());
         lejeAftale.setDetaljer(rs.getString("detaljer"));
         return lejeAftale;
     };
@@ -82,6 +85,14 @@ public class AftaleRepository {
         return null;
     }
 
+    public LejeAftale hentLejeAftale(String vognNummer)
+    {
+        List<LejeAftale> lejeAftaleList= jdbcTemplate.query("select * from lejeAftaler where vognNummer=?",rowMapper,vognNummer);
+
+        if (lejeAftaleList.isEmpty()) return null;
+        return lejeAftaleList.getFirst();
+    }
+
     //todo: slet Outdated sletLejAftale metode
     public boolean sletLejeAftale(int aftale_Id){
         List <LejeAftale> count= jdbcTemplate.query("select * from lejeAftaler where aftale_Id=?",rowMapper,aftale_Id);
@@ -98,9 +109,16 @@ public class AftaleRepository {
         }
     }
 
-
     public void forlaengLejeAftale(int lejeAftale_Id,int forlaengMaaneder) {
         jdbcTemplate.update("UPDATE lejeAftaler set slutDato=DATE_ADD(slutDato,interval ? month ) where aftale_Id = ?",forlaengMaaneder,lejeAftale_Id );
 
+    }
+
+    public void saetBetalt(int lejeAftale_Id, LocalDate dato) {
+        jdbcTemplate.update("UPDATE lejeAftaler set betaltDato=? where aftale_Id=?", Date.valueOf(dato), lejeAftale_Id);
+    }
+
+    public void saetBetalt(int lejeAftale_Id) {
+        saetBetalt(lejeAftale_Id, LocalDate.now());
     }
 }

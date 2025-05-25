@@ -45,6 +45,7 @@ CREATE TABLE lejeAftaler(
     vognNummer VARCHAR(7)   NOT NULL,
     startDato  DATE         NOT NULL,
     slutDato   DATE,
+    betaltDato DATE,
     detaljer   VARCHAR(255) NOT NULL,
     FOREIGN KEY (vognNummer) REFERENCES bil(vognNummer)
 );
@@ -78,11 +79,11 @@ INSERT INTO bilType (mærke, model, udstyrsniveau, stålPris, afgift, udledning_
 
 -- Lagerlokationer
 INSERT INTO lager (navn, adresse) VALUES
+    ('DS-Forhandler', ' '),
     ('Roskilde', '123 Main St'   ),
     ('Nakskov' , '456 Side St'   ),
     ('Odense'  , '789 Back St'   ),
     ('Aalborg' , '135 North Ave' ),
-    ('Aarhus'  , '246 South Blvd'),
     ('Esbjerg' , '369 East Lane' );
 
 -- Biler (inkl. kørteKm for simulere vore logik for solgte biler)
