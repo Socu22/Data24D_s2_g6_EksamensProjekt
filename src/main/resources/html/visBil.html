@@ -51,8 +51,8 @@
                 <button type="submit">Opret Leje Aftale</button>
             </form>
             <div th:if="${aftale != null}" style="display: inline-flex">
-                <form th:if="${aktivBruger.erStilling('data') && !aftale.erBegyndt()}" th:action="@{SletLejeAftale}" method="get">
-                    <button type="submit" class="annuller">Annullér Aftale</button>
+                <form th:if="${aktivBruger.erStilling('data') && aftale.erIkkeBegyndt()}" th:action="@{AflysLejeAftale}" method="get">
+                    <button type="submit" class="annuller">Aflys Aftale</button>
                 </form>
                 <form th:if="${aktivBruger.erStilling('data') && bil.erStatus('UNLIMITED')}" th:action="@{UpdaterUnlimitedLejeAftale}" method="get">
                     <button type="submit">Forlæng Lejeperiode</button>
