@@ -60,17 +60,11 @@ public class BilController {
         model.addAttribute("maerke",session.getAttribute("maerke"));
         model.addAttribute("status",session.getAttribute("status"));
 
-        //slet efter at have gået væk fra VisBiler
+        //slet efter gået væk fra VisBiler
         session.removeAttribute("vognNummer");
         session.removeAttribute("lager_Id");
         session.removeAttribute("maerke");
         session.removeAttribute("status");
-        session.removeAttribute("lejeAftale");
-        session.removeAttribute("lejeAftale_id");
-        session.removeAttribute("aftale_id");
-        session.removeAttribute("bil");
-        session.removeAttribute("vognNummer");
-
 
 
         return "visBiler";
@@ -157,7 +151,6 @@ public class BilController {
         model.addAttribute("statusList",statusList);
 
 
-
         return "nyBil";
     }
     @GetMapping("/GemNyBil")
@@ -175,7 +168,7 @@ public class BilController {
         Bil bil = new Bil(vognNummer,stelNummer,new BilType(bilType_Id),lager_Id,status);
         // Gemmer tidligere objekt vha. en metode i den her Repository
         bilRepository.gemBil(bil);
-        return "redirect:/VisBil?vognNummer="+vognNummer;
+        return "redirect:/";
     }
     @GetMapping("/SaelgBil") //Todo: ændre navnet her så det passer med metoden
     public String saelgBil(HttpServletRequest request, Model model){
@@ -186,16 +179,13 @@ public class BilController {
         // bruger tidligere lavet session attribute fra VisBil
         String vognNummer= (String) session.getAttribute("vognNummer");
 
-        // sletter ekstra Attributter så session ikke bliver fyldt op med disse attributter
-        session.removeAttribute("vognNummer");
-
 
         //Tjekker om bil rent faktisk bliver slettet
         boolean bool = bilRepository.solgtBil(vognNummer);
        if (!bool){
            System.out.println("Fangede ikke en bil(sælgBil)");
        }
-        return "redirect:/VisBil?vognNummer="+vognNummer;
+        return "redirect:/";
     }
 
 }

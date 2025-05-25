@@ -8,6 +8,9 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
+import java.sql.Date;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -150,8 +153,14 @@ public class BilRepository
         return biler;
     }
 
+    public void saetStatus(String vognNummer,String status) {
+        jdbcTemplate.update("UPDATE bil set status=? where vognNummer=?", status, vognNummer);
+    }
+
     public void saetStatus(Bil bil,String status) {
         bil.setStatus(status);
-        jdbcTemplate.update("UPDATE bil set status=? where vognNummer=?",status,bil.getVognNummer());
+        saetStatus(bil.getVognNummer(), status);
     }
+
+    public boolean sletBil(String vognNummer) {return false;}
 }

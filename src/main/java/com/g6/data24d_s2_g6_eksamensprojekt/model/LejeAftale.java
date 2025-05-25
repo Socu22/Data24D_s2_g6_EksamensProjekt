@@ -63,6 +63,9 @@ public class LejeAftale {
     public LocalDate getSlutDato() {return slutDato;}
     public void      setSlutDato(LocalDate slutDato) {this.slutDato = slutDato;}
 
+    public LocalDate getBetalingsDato() {return betalingsDato;}
+    public void      setBetalingsDato(LocalDate betalingsDato) {this.betalingsDato = betalingsDato;}
+
     public boolean   erAfsluttet()  {return slutDato != null && LocalDate.now().isAfter(slutDato);}
     public boolean   erBegyndt()    {return LocalDate.now().isAfter(startDato);}
     public boolean   erAktiv()      {return erBegyndt() && !erAfsluttet();     }
