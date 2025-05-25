@@ -172,7 +172,8 @@ public class BilController {
 
         //lister til dropdown menuer
         List<BilType> bilTypeList = bilTypeRepository.hentBilTyper();
-        List<Lager> lagerList =lagerRepository.hentLager();
+        List<Lager> lagerList     = lagerRepository.hentLager();
+
         List<String> statusList = Bil.Status.getNames();
         statusList.removeIf(s -> !s.equalsIgnoreCase("TILGAENGELIG")); // sletter alt anden end TILGAENGELIG fra status.
         // sender til attributter fra html elementer med (name,value)
