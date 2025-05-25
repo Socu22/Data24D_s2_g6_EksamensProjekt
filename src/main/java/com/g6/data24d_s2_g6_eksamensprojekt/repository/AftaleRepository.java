@@ -86,6 +86,10 @@ public class AftaleRepository {
     public boolean sletLejeAftale(int aftale_Id){
         List <LejeAftale> count= jdbcTemplate.query("select * from lejeAftaler where aftale_Id=?",rowMapper,aftale_Id);
         if (count.size()==1){
+            jdbcTemplate.update(
+                    "UPDATE bil SET status = 'TILGAENGELIG' WHERE bil.vognNummer IN (SELECT lejeAftaler.vognNummer FROM lejeAftaler WHERE aftale_Id = ?)",
+                    aftale_Id
+            );
             jdbcTemplate.update("delete from lejeAftaler where aftale_Id=?",aftale_Id);
             return true;
         }

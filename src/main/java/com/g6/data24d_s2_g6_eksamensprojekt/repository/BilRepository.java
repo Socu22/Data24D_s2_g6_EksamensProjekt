@@ -8,7 +8,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -60,10 +59,10 @@ public class BilRepository
         if (bilList.isEmpty()) return null;
         return bygBiler(bilList).getFirst();
     }
-    public boolean sletBil(String vognNummer){// todo: den her metode er outDateded.
+    public boolean solgtBil(String vognNummer){ // todo: SOlgt Bil mangler mere logik
         List<Bil> bilList= jdbcTemplate.query("select * from bil where vognNummer=?",rowMapper,vognNummer);
         if (bilList.isEmpty()) return false; else {
-            jdbcTemplate.update("update bil set status='Slettet' where vognNummer=?",vognNummer);
+            jdbcTemplate.update("update bil set status='SOLGT' where vognNummer=?",vognNummer);
             return true;
         }
     }

@@ -14,14 +14,13 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static com.g6.data24d_s2_g6_eksamensprojekt.controller.BrugerController.faaSession;
 
 @Controller
 public class BilController {
-
+    //Alle Repositories autowired igennem springFramework
     @Autowired
     BilRepository bilRepository;
     @Autowired
@@ -33,27 +32,29 @@ public class BilController {
 
     @GetMapping("/VisBiler")
     public String visBiler(HttpServletRequest request, Model model){
-        HttpSession session = faaSession(request, model);
+        HttpSession session = faaSession(request, model,"data","skade,forretning");// Hvem der har Rettighed til at bruge metoden.
         if(session == null) return "redirect:/Logind";
-        // henter ting
-        List<Bil> biler = bilRepository.hentEksisteredeBiler();
-        List<Lager> lagerList = lagerRepository.hentLager();
-        List<BilType> bilTypeList = bilTypeRepository.hentBilTyper();
-        List<String> statusList = Bil.Status.getNames();
-        statusList.removeIf(s -> s.equalsIgnoreCase("SOLGT"));
+        // Bruges til søgeFunktion i VisBiler til at lave dropdown menuer
+        List<Bil> biler = bilRepository.hentEksisteredeBiler(); //selve bilerne der bliver hvist
+        List<Lager> lagerList = lagerRepository.hentLager(); // dropdown
+        List<BilType> bilTypeList = bilTypeRepository.hentBilTyper();// dropdown
+        List<String> statusList = Bil.Status.getNames();// dropdown
+        statusList.removeIf(s -> s.equalsIgnoreCase("SOLGT")); // sletter SOLGT da solgte biler ikke kan komme i lejeAftale igen. men stadig skal kunne ses i VisLejeAftaler
 
         //til bilkort
         if(session.getAttribute("biler")!=null){
             biler = (List<Bil>) session.getAttribute("biler");
 
         }
+        // sender til attributter fra html elementer med (name,value)
         //dropdown, og list
         model.addAttribute("biler",biler);
         model.addAttribute("lagerList",lagerList);
         model.addAttribute("bilTypeList",bilTypeList);
         model.addAttribute("statusList",statusList);
 
-        //til html
+
+        // omdirigeret attributter fra html form->input (name,value)
         model.addAttribute("vognNummer",session.getAttribute("vognNummer"));
         model.addAttribute("lager_Id",session.getAttribute("lager_Id"));
         model.addAttribute("maerke",session.getAttribute("maerke"));
@@ -70,9 +71,10 @@ public class BilController {
     }
     @GetMapping("OmdirigerVisBiler")
     public String Omdirigerbil(HttpServletRequest request, Model model) {
-        HttpSession session = faaSession(request, model);
+        HttpSession session = faaSession(request, model, "data","skade,forretning");// Hvem der har Rettighed til at bruge metoden.);
         if (session == null) return "redirect:/Logind";
 
+        // Requester efter en parameter fra tidligere html form-> input ('name')
         String vognNummer = request.getParameter("vognNummer");
         String lager_Id = request.getParameter("lager_Id");
         String maerke = request.getParameter("maerke");
@@ -92,9 +94,8 @@ public class BilController {
             // hvis du vælger lager, mærke eller begge virke den her metode
             bilList = bilRepository.hentEksisteredeBilerSoegFunktion(lager_Id,maerke,status);
         }
-
+        // sætter session attributter, som muligvis bruges til omdirigering
         session.setAttribute("vognNummer",vognNummer);
-
         if(lager_Id!=null){
             session.setAttribute("lager_Id",Integer.parseInt(lager_Id));
         }
@@ -106,9 +107,9 @@ public class BilController {
     }
     @GetMapping("VisBilerReset")
     public String omdirigerVisBilerReset(HttpServletRequest request, Model model){
-        HttpSession session = faaSession(request, model);
+        HttpSession session = faaSession(request, model,"data","skade,forretning");// Hvem der har Rettighed til at bruge metoden.
         if (session == null) return "redirect:/Logind";
-
+        // sletter ekstra Attributter så alle biler kan ses
         session.removeAttribute("biler");
 
         return "redirect:/VisBiler";
@@ -117,32 +118,34 @@ public class BilController {
 
     @GetMapping("/VisBil")
     public String visBil(HttpServletRequest request, Model model){
-        HttpSession session = faaSession(request, model);
+        HttpSession session = faaSession(request, model,"data","skade,forretning");// Hvem der har Rettighed til at bruge metoden.
         if(session == null) return "redirect:/Logind";
 
+        // Requester efter en parameter fra tidligere html form-> input ('name')
         String vognNummer = request.getParameter("vognNummer");
-        session.setAttribute("vognNummer",vognNummer);
 
-
-        Bil bil = bilRepository.hentBil(vognNummer);
-        session.setAttribute("bil",bil);
+        Bil bil = bilRepository.hentBil(vognNummer); // henter bil
+        // sender til attributter fra html elementer med (name,value)
         model.addAttribute("bil", bil);
+        // sætter session attributter, som muligvis bruges til omdirigering
+        session.setAttribute("vognNummer",vognNummer);
+        session.setAttribute("bil",bil);
+
 
         return "visBil";
     }
 
     @GetMapping("/NyBil")
     public String nyBil(HttpServletRequest request, Model model){
-        HttpSession session = faaSession(request, model, "forretning");
+        HttpSession session = faaSession(request, model, "forretning");// Hvem der har Rettighed til at bruge metoden.
         if(session == null) return "redirect:/Logind";
 
-
+        //lister til dropdown menuer
         List<BilType> bilTypeList = bilTypeRepository.hentBilTyper();
         List<Lager> lagerList =lagerRepository.hentLager();
-
         List<String> statusList = Bil.Status.getNames();
-        statusList.removeIf(s -> !s.equalsIgnoreCase("TILGAENGELIG"));
-
+        statusList.removeIf(s -> !s.equalsIgnoreCase("TILGAENGELIG")); // sletter alt anden end TILGAENGELIG fra status.
+        // sender til attributter fra html elementer med (name,value)
         model.addAttribute("lagerList",lagerList);
         model.addAttribute("bilTypeList",bilTypeList);
         model.addAttribute("statusList",statusList);
@@ -152,33 +155,35 @@ public class BilController {
     }
     @GetMapping("/GemNyBil")
     public String gemNyBil(HttpServletRequest request, Model model){
-        HttpSession session = faaSession(request, model, "forretning");
+        HttpSession session = faaSession(request, model, "forretning");// Hvem der har Rettighed til at bruge metoden.
         if(session == null) return "redirect:/Logind";
-
+        // Requester efter en parameter fra tidligere html form-> input ('name')
         String vognNummer= (String) request.getParameter("vognNummer");
         String stelNummer= (String) request.getParameter("stelNummer");
         int bilType_Id= Integer.parseInt(request.getParameter("bilType_Id"));
         int lager_Id= Integer.parseInt(request.getParameter("lager_Id"));
         String status= (String) request.getParameter("status");
 
+        // Samler alle tidligere parameter ind i en ny constructor ud fra relevant DataType
         Bil bil = new Bil(vognNummer,stelNummer,new BilType(bilType_Id),lager_Id,status);
-
+        // Gemmer tidligere objekt vha. en metode i den her Repository
         bilRepository.gemBil(bil);
         return "redirect:/";
     }
-    @GetMapping("/SletBil")
-    public String sletBil(HttpServletRequest request, Model model){
-        HttpSession session = faaSession(request, model, "forretning");
+    @GetMapping("/SaelgBil") //Todo: ændre navnet her så det passer med metoden
+    public String saelgBil(HttpServletRequest request, Model model){
+        HttpSession session = faaSession(request, model, "forretning");// Hvem der har Rettighed til at bruge metoden.
         if(session == null) return "redirect:/Logind";
 
+
+        // bruger tidligere lavet session attribute fra VisBil
         String vognNummer= (String) session.getAttribute("vognNummer");
-        System.out.println(vognNummer+"_2");
 
 
-
-        boolean bool = bilRepository.sletBil(vognNummer);
+        //Tjekker om bil rent faktisk bliver slettet
+        boolean bool = bilRepository.solgtBil(vognNummer);
        if (!bool){
-           System.out.println("Fangede ikke en bil(sletBil)");
+           System.out.println("Fangede ikke en bil(sælgBil)");
        }
         return "redirect:/";
     }

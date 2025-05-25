@@ -20,10 +20,8 @@
         <form th:if="${aktivBruger.erStilling('data', 'skade')}" th:action="@{/NyNotation}" th:method="get">
             <button type="submit">Registrér Ny Notation</button>
         </form>
-        <form th:if="${aktivBruger.erStilling('forretning')}" th:action="@{SletBil}" method="get">
-            <button type="submit" class="annuller">slet Bil</button>
-        </form>
-        <form th:if="${aktivBruger.erStilling('forretning')}" th:action="@{SaelgBil}" method="get">
+
+        <form th:if="${aktivBruger.erStilling('forretning')&& bil.getStatus().equals('TILBAGELEVERET')}" th:action="@{SaelgBil}" method="get">
             <button type="submit" class="annuller">Marker Solgt</button>
         </form>
         <div th:insert="~{fragments :: notationListe}"></div>
