@@ -15,12 +15,13 @@ import static com.g6.data24d_s2_g6_eksamensprojekt.controller.BrugerController.f
 
 @Controller
 public class BilTypeController {
+
     @Autowired
     BilTypeRepository bilTypeRepository;
 
     @GetMapping("/NyBilType")
     public String getNyBilType(HttpServletRequest request, Model model){
-        HttpSession session = faaSession(request, model,  new String[]{"forretnings"});
+        HttpSession session = faaSession(request, model, "forretning");
         if(session == null) return "redirect:/Logind";
 
         List<String> maerkeList= bilTypeRepository.hentAlleMaerkerDK();
@@ -29,9 +30,10 @@ public class BilTypeController {
 
         return "nyBilType";
     }
+
     @GetMapping("/GemNyBilType")
     public String gemNyBilType(HttpServletRequest request, Model model){
-        HttpSession session = faaSession(request, model,  new String[]{"forretnings"});
+        HttpSession session = faaSession(request, model, "forretning");
         if(session == null) return "redirect:/Logind";
 
         int bilType_Id = bilTypeRepository.getNextId();

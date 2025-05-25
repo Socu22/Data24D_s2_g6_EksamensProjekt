@@ -35,7 +35,7 @@ public class LejeAftaleController {
     @GetMapping("/VisLejeAftaler")
     public String visLejeAftaler(HttpServletRequest request, Model model)
     {
-        HttpSession session = BrugerController.faaSession(request, model,  new String[]{"data", "Skade", "forretnings"});
+        HttpSession session = BrugerController.faaSession(request, model);
         if(session == null) return "redirect:/Logind";
 
         model.addAttribute("vognNummer", session.getAttribute("vognNummer"));
@@ -54,7 +54,6 @@ public class LejeAftaleController {
         session.removeAttribute("kundeNavn");
         session.removeAttribute("tjekkerStartDato");
         session.removeAttribute("tjekkerSlutDato");
-
 
         double samletAfgift = 0;
         LocalDate now = LocalDate.now();
@@ -79,9 +78,10 @@ public class LejeAftaleController {
 
         return "visLejeAftaler";
     }
+
     @GetMapping("/OmdirigerVisLejeAftaler")
     public String omdirigerVisLejeAftaler(HttpServletRequest request, Model model){
-        HttpSession session = BrugerController.faaSession(request, model,  new String[]{"data", "Skade", "forretnings"});
+        HttpSession session = BrugerController.faaSession(request, model);
         if(session == null) return "redirect:/Logind";
 
         String vognNummer = request.getParameter("vognNummer");
@@ -125,7 +125,7 @@ public class LejeAftaleController {
     @GetMapping("/VisLejeAftale")
     public String visLejeAftale(@RequestParam("aftaleId") int id, HttpServletRequest request, Model model)
     {
-        HttpSession session = BrugerController.faaSession(request, model,  new String[]{"data", "Skade", "forretnings"});
+        HttpSession session = BrugerController.faaSession(request, model);
         if(session == null) return "redirect:/Logind";
 
         LejeAftale aftale = aftaleRepository.hentLejeAftale(id);
@@ -156,9 +156,10 @@ public class LejeAftaleController {
 
         return "visLejeAftale";
     }
+
     @GetMapping("SletLejeAftale")
     public String sletLejeAftale(HttpServletRequest request, Model model){
-        HttpSession session = BrugerController.faaSession(request, model,  new String[]{"data"});
+        HttpSession session = BrugerController.faaSession(request, model, "data");
         if(session == null) return "redirect:/Logind";
 
         aftaleRepository.sletLejeAftale((int)session.getAttribute("lejeAftale_Id"));
@@ -167,7 +168,7 @@ public class LejeAftaleController {
 
     @GetMapping("/AfslutLejeAftale")
     public String afslutLejeAftale(HttpServletRequest request, Model model){
-        HttpSession session = BrugerController.faaSession(request, model,  new String[]{"data","skade"});
+        HttpSession session = BrugerController.faaSession(request, model, "data","skade");
         if(session == null) return "redirect:/Logind";
 
 
@@ -190,7 +191,7 @@ public class LejeAftaleController {
 
     @GetMapping("/UpdaterUnlimitedLejeAftale")
     public String updaterUnlimitedLejeAftale(HttpServletRequest request, Model model){
-        HttpSession session = BrugerController.faaSession(request, model,  new String[]{"data"});
+        HttpSession session = BrugerController.faaSession(request, model,  "data");
         if(session == null) return "redirect:/Logind";
 
 
@@ -217,7 +218,7 @@ public class LejeAftaleController {
     //logikken når man trykke på vælg bil.
     @GetMapping("/NyLejeAftale")
     public String nyLejeAftale(Model model, HttpServletRequest request){
-        HttpSession session = faaSession(request, model,  new String[]{"data"});
+        HttpSession session = faaSession(request, model, "data");
         if(session == null) return "redirect:/Logind";
 
         List<Bil> bilList = bilRepository.hentEksisteredeBiler();
@@ -261,7 +262,7 @@ public class LejeAftaleController {
 
     @GetMapping("/OmdirigerNyLejeAftale")
     public String omdirigerNyLejeAftale(Model model, HttpServletRequest request){
-        HttpSession session = faaSession(request, model,  new String[]{"data"});
+        HttpSession session = faaSession(request, model,  "data");
         if(session == null) return "redirect:/Logind";
 
         int aftale_Id=0;
@@ -343,9 +344,4 @@ public class LejeAftaleController {
         session.setAttribute("detaljer",detaljer);
         return "redirect:/NyLejeAftale";
     }
-
-
-    
-
-
 }

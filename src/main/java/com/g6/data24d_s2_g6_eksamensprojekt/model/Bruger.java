@@ -39,7 +39,7 @@ public class Bruger extends Person
 
     public boolean erStilling(String... tilladteStillinger)
     {
-        if (this.stilling == Stilling.DEMO) return true;
+        if (this.stilling == Stilling.DEMO || tilladteStillinger.length == 0) return true;
         for (String stilling : tilladteStillinger)
         {
             if (this.stilling.name().equalsIgnoreCase(stilling)) return true;

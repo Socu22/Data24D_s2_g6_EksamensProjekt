@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" th:href="@{style.css}">
-    <title>Title</title>
+    <title>Bilabonnement</title>
 </head>
 
 <!-- Venlist ikke lav lokal styling for ting som kunne gå igen i andre html -->
@@ -13,42 +13,21 @@
 <header th:insert="~{fragments :: header}"></header>
 <main>
     <header class="underHeader" th:insert="~{fragments :: bilKort}"></header>
-    <!-- <section>
-        <h2>Bil</h2>
-        <table>
-            <thead>
-            <tr>
-                <th>VognNummer</th>
-                <th>StelNummer</th>
-                <th>BilType Id</th>
-                <th>Lager Id</th>
-                <th>Status</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-                <td th:text="${bil.vognNummer}"></td>
-                <td th:text="${bil.stelNummer}"></td>
-                <td th:text="${bil.getBilType_Id}"></td>
-                <td th:text="${bil.lager_Id}"></td>
-                <td th:text="${bil.status}"></td>
-            </tr>
-            </tbody>
-        </table>
-    </section> -->
     <aside>
-        <form th:if="${aktivBruger.getStilling().toLowerCase().startsWith('d')}" th:action="@{NyLejeAftale}" method="get">
+        <form th:if="${aktivBruger.erStilling('data')}" th:action="@{NyLejeAftale}" method="get">
             <button type="submit" >ny LejeAftale </button>
         </form>
-        <form th:if="${aktivBruger.getStilling().toLowerCase().startsWith('d') || aktivBruger.getStilling().toLowerCase().startsWith('s')}" th:action="@{/NyNotation}" th:method="get">
+        <form th:if="${aktivBruger.erStilling('data', 'skade')}" th:action="@{/NyNotation}" th:method="get">
             <button type="submit">Registrér Ny Notation</button>
         </form>
-        <form th:if="${aktivBruger.getStilling().toLowerCase().startsWith('f')}" th:action="@{SletBil}" method="get">
-            <button type="submit" class="annuller">slet Bil </button>
+        <form th:if="${aktivBruger.erStilling('forretning')}" th:action="@{SletBil}" method="get">
+            <button type="submit" class="annuller">slet Bil</button>
+        </form>
+        <form th:if="${aktivBruger.erStilling('forretning')}" th:action="@{SaelgBil}" method="get">
+            <button type="submit" class="annuller">Marker Solgt</button>
         </form>
         <div th:insert="~{fragments :: notationListe}"></div>
     </aside>
-
 </main>
 </body>
 </html>

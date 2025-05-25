@@ -184,6 +184,10 @@ form {
     margin: var(--sekundær-margin);
 }
 
+form input {
+    text-align-last: initial;
+}
+
 ul {
     list-style-type: none;
 }

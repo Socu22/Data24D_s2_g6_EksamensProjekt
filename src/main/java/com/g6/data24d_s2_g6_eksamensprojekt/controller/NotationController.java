@@ -29,7 +29,7 @@ public class NotationController
     @GetMapping("/NyNotation")
     public String nyNotation(HttpServletRequest request, Model model)
     {
-        HttpSession session = BrugerController.faaSession(request, model,  new String[]{"data", "Skade"});
+        HttpSession session = BrugerController.faaSession(request, model, "data", "skade");
         if(session == null) return "redirect:/Logind";
 
         LejeAftale aftale = (LejeAftale) session.getAttribute("lejeAftale");
@@ -62,7 +62,7 @@ public class NotationController
     @GetMapping("/AnnullerNotation")
     public String annullerNotation(HttpServletRequest request, Model model)
     {
-        HttpSession session = BrugerController.faaSession(request, model,  new String[]{"data", "Skade"});
+        HttpSession session = BrugerController.faaSession(request, model, "data", "skade");
 
         LejeAftale aftale = (LejeAftale) session.getAttribute("lejeAftale");
         Bil bil           = (Bil)        session.getAttribute("bil");
@@ -74,7 +74,7 @@ public class NotationController
     @GetMapping("/GemNotation")
     public String gemNotation(HttpServletRequest request, Model model)
     {
-        HttpSession session = BrugerController.faaSession(request, model,  new String[]{"data", "Skade"});
+        HttpSession session = BrugerController.faaSession(request, model, "data", "skade");
 
         LejeAftale aftale = (LejeAftale) session.getAttribute("lejeAftale");
         Bil bil           = (Bil)        session.getAttribute("bil");
