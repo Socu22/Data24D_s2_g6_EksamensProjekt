@@ -1,7 +1,6 @@
 package com.g6.data24d_s2_g6_eksamensprojekt.repository;
 
 import com.g6.data24d_s2_g6_eksamensprojekt.model.Bil;
-import com.g6.data24d_s2_g6_eksamensprojekt.model.Kunde;
 import com.g6.data24d_s2_g6_eksamensprojekt.model.LejeAftale;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -82,8 +81,8 @@ public class AftaleRepository {
         return null;
     }
 
-    //todo: slet Outdated sletLejAftale metode
-    public boolean sletLejeAftale(int aftale_Id){
+
+    public boolean aflysLejeAftale(int aftale_Id){
         List <LejeAftale> count= jdbcTemplate.query("select * from lejeAftaler where aftale_Id=?",rowMapper,aftale_Id);
         if (count.size()==1){
             jdbcTemplate.update(

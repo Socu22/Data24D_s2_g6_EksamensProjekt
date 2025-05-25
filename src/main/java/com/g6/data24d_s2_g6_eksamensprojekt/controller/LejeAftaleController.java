@@ -60,6 +60,12 @@ public class LejeAftaleController {
         session.removeAttribute("kundeNavn");
         session.removeAttribute("tjekkerStartDato");
         session.removeAttribute("tjekkerSlutDato");
+        // De her sletter ekstra attributter så de ikke forstyre andre metoder
+        session.removeAttribute("lejeAftale");
+        session.removeAttribute("lejeAftale_id");
+        session.removeAttribute("aftale_id");
+        session.removeAttribute("bil");
+        session.removeAttribute("vognNummer");
         // den samlede afgift logik som samler notationPris i et lejeAftaleKort, som sker i visLejeAftaler.html
         double samletAfgift = 0;
         LocalDate now = LocalDate.now();
@@ -158,13 +164,13 @@ public class LejeAftaleController {
         return "visLejeAftale";
     }
 
-    @GetMapping("SletLejeAftale")
-    public String sletLejeAftale(HttpServletRequest request, Model model){
+    @GetMapping("AflysLejeAftale")
+    public String aflysLejeAftale(HttpServletRequest request, Model model){
         HttpSession session = BrugerController.faaSession(request, model, "data");// Hvem der har Rettighed til at bruge metoden.
         if(session == null) return "redirect:/Logind";
 
-        //Sletter lejeAftale hvis den ikke er begyndt. (Logik i html til at få knappen frem)
-        aftaleRepository.sletLejeAftale(((LejeAftale) session.getAttribute("lejeAftale")).getAftale_Id());
+        //Aflyser/Sletter lejeAftale hvis den ikke er begyndt. (Logik i html til at få knappen frem)
+        aftaleRepository.aflysLejeAftale(((LejeAftale) session.getAttribute("lejeAftale")).getAftale_Id());
         return "redirect:VisLejeAftaler";
     }
 

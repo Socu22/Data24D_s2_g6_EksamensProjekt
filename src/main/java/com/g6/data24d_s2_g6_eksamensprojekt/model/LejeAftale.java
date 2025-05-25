@@ -69,6 +69,7 @@ public class LejeAftale {
 
     public boolean   kanAfsluttes() {return bil.erStatus("LIMITED", "UNLIMITED");}
     public boolean   erUnlimited()  {return bil.erStatus("UNLIMITED");}
+    public Boolean erIkkeBegyndt(){return startDato != null && LocalDate.now().isBefore(startDato);}
 
     public String    getDetaljer()  {return detaljer;}
     public void      setDetaljer(String detaljer) {this.detaljer = detaljer;}
