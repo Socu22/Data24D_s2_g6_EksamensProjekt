@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class NotationController
 {
+    //Alle Repositories autowired igennem springFramework
     @Autowired
     NotationRepository notationRepository;
 
@@ -29,9 +30,10 @@ public class NotationController
     @GetMapping("/NyNotation")
     public String nyNotation(HttpServletRequest request, Model model)
     {
-        HttpSession session = BrugerController.faaSession(request, model, "data", "skade");
+        HttpSession session = BrugerController.faaSession(request, model, "data", "skade");// Hvem der har Rettighed til at bruge metoden.
         if(session == null) return "redirect:/Logind";
 
+        // bruger tidligere lavet session attribute
         LejeAftale aftale = (LejeAftale) session.getAttribute("lejeAftale");
         Bil bil           = (Bil) session.getAttribute("bil");
 
@@ -42,13 +44,15 @@ public class NotationController
             bil = bilRepository.tagFatIBil(aftale.getVognNummer()); // ! udelukkende for testing !
         }
          */
-
+        // logik til så notation ved om man kommer fra en bil eller lejeAftale
         if (aftale != null)
         {
             bil = bilRepository.hentBil(aftale.getVognNummer());
 
+            // sender til attributter fra html elementer med (name,value)
             model.addAttribute("lejeAftale", aftale);
             model.addAttribute("bil", bil);
+            // sætter session attributter, som muligvis bruges til omdirigering
             session.setAttribute("bil", bil);
         }
         else // hvis ikke der er en lejeaftale, må man være kommet her fra en bil.
@@ -62,8 +66,9 @@ public class NotationController
     @GetMapping("/AnnullerNotation")
     public String annullerNotation(HttpServletRequest request, Model model)
     {
-        HttpSession session = BrugerController.faaSession(request, model, "data", "skade");
+        HttpSession session = BrugerController.faaSession(request, model, "data", "skade");// Hvem der har Rettighed til at bruge metoden.
 
+        // bruger tidligere lavet session attribute
         LejeAftale aftale = (LejeAftale) session.getAttribute("lejeAftale");
         Bil bil           = (Bil)        session.getAttribute("bil");
 
@@ -74,14 +79,17 @@ public class NotationController
     @GetMapping("/GemNotation")
     public String gemNotation(HttpServletRequest request, Model model)
     {
-        HttpSession session = BrugerController.faaSession(request, model, "data", "skade");
+        HttpSession session = BrugerController.faaSession(request, model, "data", "skade");// Hvem der har Rettighed til at bruge metoden.
 
+        // bruger tidligere lavet session attribute
         LejeAftale aftale = (LejeAftale) session.getAttribute("lejeAftale");
         Bil bil           = (Bil)        session.getAttribute("bil");
 
+        // Requester efter en parameter fra tidligere html form-> input ('name')
         String notation   = request.getParameter("beskrivelse");
         double pris       = Double.parseDouble(request.getParameter("pris"));
 
+        // logik til så notation ved om man kommer fra en bil eller lejeAftale, og derfor kommer tilbage til enten lejeaftalen eller bilen.
         if (aftale != null)
         {
             notationRepository.gemNotation(aftale.getVognNummer(), aftale.getAftale_Id(), notation, pris);

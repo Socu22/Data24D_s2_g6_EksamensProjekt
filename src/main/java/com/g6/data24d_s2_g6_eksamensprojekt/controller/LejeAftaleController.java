@@ -23,6 +23,8 @@ import static com.g6.data24d_s2_g6_eksamensprojekt.controller.BrugerController.f
 @Controller
 public class LejeAftaleController {
 
+
+    //Alle Repositories autowired igennem springFramework
     @Autowired
     AftaleRepository aftaleRepository;
     @Autowired
@@ -37,9 +39,10 @@ public class LejeAftaleController {
     @GetMapping("/VisLejeAftaler")
     public String visLejeAftaler(HttpServletRequest request, Model model)
     {
-        HttpSession session = BrugerController.faaSession(request, model);
+        HttpSession session = BrugerController.faaSession(request, model,"data","skade,forretning");// Hvem der har Rettighed til at bruge metoden.
         if(session == null) return "redirect:/Logind";
 
+        // omdirigeret attributter fra html form->input (name,value)
         model.addAttribute("vognNummer", session.getAttribute("vognNummer"));
         model.addAttribute("periodeNummer", session.getAttribute("periodeNummer"));
         model.addAttribute("startDato", session.getAttribute("startDato"));
@@ -48,6 +51,7 @@ public class LejeAftaleController {
         model.addAttribute("kundeNavn", session.getAttribute("kundeNavn"));
         model.addAttribute("tjekkerStartDato", session.getAttribute("tjekkerStartDato"));
         model.addAttribute("tjekkerSlutDato", session.getAttribute("tjekkerSlutDato"));
+        // sletter ekstra Attributter så session ikke bliver fyldt op med disse attributter
         session.removeAttribute("vognNummer");
         session.removeAttribute("periodeNummer");
         session.removeAttribute("startDato");
@@ -56,7 +60,7 @@ public class LejeAftaleController {
         session.removeAttribute("kundeNavn");
         session.removeAttribute("tjekkerStartDato");
         session.removeAttribute("tjekkerSlutDato");
-
+        // den samlede afgift logik som samler notationPris i et lejeAftaleKort, som sker i visLejeAftaler.html
         double samletAfgift = 0;
         LocalDate now = LocalDate.now();
 
@@ -73,8 +77,8 @@ public class LejeAftaleController {
                 }
             }
         }
-        model.addAttribute("samletIndkomst", samletAfgift);
-
+        // sender til attributter fra html elementer med (name,value)
+        model.addAttribute("samletIndkomst", samletAfgift); //
         model.addAttribute("lejeAftaler", aftaler);
 
 
@@ -85,9 +89,10 @@ public class LejeAftaleController {
     // det gøres sådan så det ikke står i url'en i "/VisLejeAftaler"
     @GetMapping("/OmdirigerVisLejeAftaler")
     public String omdirigerVisLejeAftaler(HttpServletRequest request, Model model){
-        HttpSession session = BrugerController.faaSession(request, model);
+        HttpSession session = BrugerController.faaSession(request, model,"data","skade,forretning");// Hvem der har Rettighed til at bruge metoden.
         if(session == null) return "redirect:/Logind";
 
+        // Requester efter en parameter fra tidligere html form-> input ('name')
         String vognNummer = request.getParameter("vognNummer");
         Integer periodeNummer = Integer.parseInt(request.getParameter("periodeNummer"));
         String startDato =  request.getParameter("startDato");
@@ -95,6 +100,7 @@ public class LejeAftaleController {
         String dato = request.getParameter("dato");
         String kundeNavn = request.getParameter("kundeNavn");
 
+        //Søg LejeAftale baseret på dato
         LocalDate startDato_ = null;
         LocalDate slutDato_ = null;
         LocalDate dato_ = null;
@@ -106,13 +112,13 @@ public class LejeAftaleController {
         if(dato != null && !dato.isEmpty())
             dato_ = LocalDate.parse(dato);
 
+        // sætter session attributter, som muligvis bruges til omdirigering
         session.setAttribute("vognNummer", vognNummer);
         session.setAttribute("periodeNummer", periodeNummer);
         session.setAttribute("startDato", startDato_);
         session.setAttribute("slutDato", slutDato_);
         session.setAttribute("dato", dato_);
         session.setAttribute("kundeNavn", kundeNavn);
-
         session.setAttribute("tjekkerStartDato", request.getParameter("tjekkerStartDato"));
         session.setAttribute("tjekkerSlutDato", request.getParameter("tjekkerSlutDato"));
 
@@ -121,29 +127,26 @@ public class LejeAftaleController {
 
 
     @GetMapping("/VisLejeAftale")
-    public String visLejeAftale(@RequestParam("aftaleId") int id, HttpServletRequest request, Model model)
+    public String visLejeAftale(@RequestParam("aftaleId") int id, HttpServletRequest request, Model model) //@RequestParam("aftaleId") = Integer.parse(request.getParameter("aftaleId")),
     {
-        HttpSession session = BrugerController.faaSession(request, model);
+        HttpSession session = BrugerController.faaSession(request, model,"data","skade,forretning");// Hvem der har Rettighed til at bruge metoden.
         if(session == null) return "redirect:/Logind";
 
+        // at få fat på en lejeAftale basseret på aftaleId
         LejeAftale aftale = aftaleRepository.hentLejeAftale(id);
         Bil bil =bilRepository.hentBil(aftale.getVognNummer());
-
-        //aftale.setKunde(kundeRepository.hentKunde(aftale.getKunde_Id()));
         aftale.setBil(bil);
 
-        aftale.setBil(bil);
-
+        // sætter session attributter, som muligvis bruges til omdirigering
         session.setAttribute("lejeAftale", aftale);
         session.setAttribute("lejeAftale_Id",id);
-
-        model.addAttribute("lejeAftale", aftale);
         session.setAttribute("lejeAftale_Id",aftale);
-
-        model.addAttribute("bil", bil);
-        model.addAttribute("notationer", notationRepository.hentNotationer(aftale.getAftale_Id()));
         session.setAttribute("bil",bil);
 
+        // sender til attributter fra html elementer med (name,value)
+        model.addAttribute("lejeAftale", aftale);
+        model.addAttribute("bil", bil);
+        model.addAttribute("notationer", notationRepository.hentNotationer(aftale.getAftale_Id()));
         model.addAttribute("forlaeng_Maaneder", session.getAttribute("forlaeng_Maaneder"));
 
 
@@ -157,22 +160,24 @@ public class LejeAftaleController {
 
     @GetMapping("SletLejeAftale")
     public String sletLejeAftale(HttpServletRequest request, Model model){
-        HttpSession session = BrugerController.faaSession(request, model, "data");
+        HttpSession session = BrugerController.faaSession(request, model, "data");// Hvem der har Rettighed til at bruge metoden.
         if(session == null) return "redirect:/Logind";
 
-        aftaleRepository.sletLejeAftale((int)session.getAttribute("lejeAftale_Id"));
+        //Sletter lejeAftale hvis den ikke er begyndt. (Logik i html til at få knappen frem)
+        aftaleRepository.sletLejeAftale(((LejeAftale) session.getAttribute("lejeAftale")).getAftale_Id());
         return "redirect:VisLejeAftaler";
     }
 
     @GetMapping("/AfslutLejeAftale")
     public String afslutLejeAftale(HttpServletRequest request, Model model){
-        HttpSession session = BrugerController.faaSession(request, model, "data","skade");
+        HttpSession session = BrugerController.faaSession(request, model, "data","skade");// Hvem der har Rettighed til at bruge metoden.
         if(session == null) return "redirect:/Logind";
 
 
         // Få fat i lejeAftale
         LejeAftale lejeAftale = (LejeAftale) session.getAttribute("lejeAftale");
-        model.addAttribute("lejeAftale",lejeAftale); // til html
+        // sender til attributter fra html elementer med (name,value)
+        model.addAttribute("lejeAftale",lejeAftale);
 
         boolean lejeAftaleErOvreBool = lejeAftale.erAfsluttet(); // tjekker om lejeAftale er en limited eller unlimited type
         Bil bil = (Bil) session.getAttribute("bil");
@@ -185,70 +190,59 @@ public class LejeAftaleController {
         return "redirect:/VisLejeAftale?aftaleId="+lejeAftale.getAftale_Id();
     }
 
-    // todo: updater unlimted slutDato
 
     @GetMapping("/UpdaterUnlimitedLejeAftale")
     public String updaterUnlimitedLejeAftale(HttpServletRequest request, Model model){
-        HttpSession session = BrugerController.faaSession(request, model,  "data");
+        HttpSession session = BrugerController.faaSession(request, model,  "data");// Hvem der har Rettighed til at bruge metoden.
         if(session == null) return "redirect:/Logind";
 
 
 
         // Få fat i lejeAftale
         LejeAftale lejeAftale = (LejeAftale) session.getAttribute("lejeAftale");
-        model.addAttribute("lejeAftale",lejeAftale); // til html
+        // sender til attributter fra html elementer med (name,value)
+        model.addAttribute("lejeAftale",lejeAftale);
         //nummer af måneder der forlængedes
         int forlaeng_Maaneder = Integer.parseInt(request.getParameter("forlaeng_Maaneder"));
-
         aftaleRepository.forlaengLejeAftale(lejeAftale.getAftale_Id(),forlaeng_Maaneder);
-
-
-
-
-
-
+        // sætter session attributter, som bruges til omdirigering
         session.setAttribute("forlaeng_Maaneder",forlaeng_Maaneder);
 
         return "redirect:/VisLejeAftale?aftaleId="+lejeAftale.getAftale_Id();
     }
 
 
-    //logikken når man trykke på vælg bil.
+
     @GetMapping("/NyLejeAftale")
     public String nyLejeAftale(Model model, HttpServletRequest request){
-        HttpSession session = faaSession(request, model, "data");
+        HttpSession session = faaSession(request, model, "data");// Hvem der har Rettighed til at bruge metoden.
         if(session == null) return "redirect:/Logind";
 
+
+        // bilkort dukker frem efter valg af bil.
         List<Bil> bilList = bilRepository.hentEksisteredeBiler();
-        //Bil bil = bilList.getFirst();
         Bil bil = null;
         if(session.getAttribute("vognNummer") != null){
             bil = bilRepository.hentBil((String) session.getAttribute("vognNummer"));
         }
 
-//        List<Kunde> kundeList = kundeRepository.hentKunder();
-//        //Kunde kunde =kundeList.getFirst();
-//        Kunde tempKunde = null;
-//        if(session.getAttribute("kunde_Id")!=null){
-//            tempKunde = kundeRepository.hentKunde((Integer) session.getAttribute("kunde_Id"));
-//        }
+        // bilkort dukker frem efter valg af bil.
         String kunde_Navn = null;
         if ((String) session.getAttribute("kunde_Navn")!=null){
             kunde_Navn=(String) session.getAttribute("kunde_Navn");
         }
+        // omdirigeret attributter fra html form->input (name,value)
         model.addAttribute("kunde_Navn",kunde_Navn);
         model.addAttribute("startDato", session.getAttribute("startDato"));
         model.addAttribute("slutDato", session.getAttribute("slutDato"));
         model.addAttribute("detaljer", session.getAttribute("detaljer"));
-
-        model.addAttribute("bilList",bilList);
+        model.addAttribute("bilList",bilList); // undtagen den her.
         model.addAttribute("bil", bil);
+
+        // sætter session attributter, som muligvis bruges til omdirigering
         session.setAttribute("bil",bil);
 
-
-       // model.addAttribute("kundeList",kundeList);
-       // model.addAttribute("tempKunde", tempKunde);
-       // session.removeAttribute("kunde_Id");
+        // sletter ekstra Attributter så session ikke bliver fyldt op med disse attributter
         session.removeAttribute("kunde_Navn");
         session.removeAttribute("vognNummer");
         session.removeAttribute("startDato");
@@ -260,9 +254,10 @@ public class LejeAftaleController {
 
     @GetMapping("/OmdirigerNyLejeAftale")
     public String omdirigerNyLejeAftale(Model model, HttpServletRequest request){
-        HttpSession session = faaSession(request, model,  "data");
+        HttpSession session = faaSession(request, model,  "data"); // sender til attributter fra html elementer med (name,value)
         if(session == null) return "redirect:/Logind";
 
+        // Requester efter en parameter fra tidligere html form-> input ('name')
         int aftale_Id=0;
         String kunde_Navn;
         try {
@@ -272,73 +267,81 @@ public class LejeAftaleController {
         }
         boolean checkBoxBool = Boolean.parseBoolean(request.getParameter("checkBox"));
         System.out.println(checkBoxBool+"_test");
-
-        Bil bil = (Bil) session.getAttribute("bil");
-        System.out.println(bil.getStatus()+"_test");
-        //----
         kunde_Navn =request.getParameter("kunde_Navn");
         String vognNummer = request.getParameter("vognNummer"); //Tag fat i et navngivet input element fra tidligere html side
         String startDato = request.getParameter("startDato");
-
         String slutDato = request.getParameter("slutDato");
-        if(checkBoxBool){
-            Date startDate = Date.valueOf(startDato);
-            Date slutDate;
+        Bil bil = (Bil) session.getAttribute("bil");
 
-            LocalDate startDateAsLocalDate = startDate.toLocalDate();
+        // checkbox som har at gøre om hvordan slutDato bliver sat basseret om lejeAftalen er limited(5 måneder) Unlimited(3-36 måneder)
+        if(checkBoxBool){//limited
+            //omdiriger beskyttet
+            Date _startDate_ = null;
+            Date _slutDate_;
+            try{
+                _startDate_=Date.valueOf(startDato); // hvis der ingen startDato er.
+
+            }catch (IllegalArgumentException e){
+                _startDate_= Date.valueOf(LocalDate.of(1,1,1).toString()); // Bliver det til det her.
+            }
+            //LocalDate Regner frem i tiden baseret på type af lejeAftale
+            LocalDate startDateAsLocalDate = _startDate_.toLocalDate();
             LocalDate slutDateAsLocalDate = startDateAsLocalDate.plusMonths(5);
-            slutDate = Date.valueOf(slutDateAsLocalDate);
-            slutDato= slutDate.toString();
-            session.setAttribute("slutDato", slutDate.toString());
-            System.out.println(slutDate+"_Test");
-            slutDato=slutDate.toString();
+            _slutDate_ = Date.valueOf(slutDateAsLocalDate);
+            slutDato= _slutDate_.toString();
+            // sætter session attributter, som muligvis bruges til omdirigering
+            session.setAttribute("slutDato", _slutDate_.toString());
+        }else { //Unlimited
+            //omdiriger beskyttet
 
-
-
-        }else {
-            Date startDate = Date.valueOf(startDato);
+            Date startDate = null;
             Date slutDate;
+            try{
+                startDate=Date.valueOf(startDato);// hvis der ingen startDato er.
 
+            }catch (IllegalArgumentException e){
+                startDate= Date.valueOf(LocalDate.of(1,1,1).toString()); // Bliver det til det her.
+            }
+            //LocalDate Regner frem i tiden baseret på type af lejeAftale
             LocalDate startDateAsLocalDate = startDate.toLocalDate();
             LocalDate slutDateAsLocalDate = startDateAsLocalDate.plusMonths(3);
             slutDate = Date.valueOf(slutDateAsLocalDate);
-            session.setAttribute("slutDato", slutDate.toString());
-            System.out.println(slutDate+"_Test");
             slutDato=slutDate.toString();
+            // sætter session attributter, som muligvis bruges til omdirigering
+            session.setAttribute("slutDato", slutDate.toString());
 
         }
-
+        // sender til attributter fra html elementer med (name,value)
         String detaljer = request.getParameter("detaljer");
         boolean gemLejeAftaleBool = Boolean.parseBoolean(request.getParameter("submitKnap"));
 
-        if (gemLejeAftaleBool){
-            System.out.println(slutDato+"INportant");
-
-
-
+        if (gemLejeAftaleBool){ // hvis bekræft lejeAftale er trykket
+            // Samler alle tidligere parameter ind i en ny constructor ud fra relevant DataType
             LejeAftale lejeAftale = new LejeAftale(kunde_Navn,vognNummer,startDato,slutDato,detaljer);
 
+
+            // Gemmer tidligere objekt vha. en metode i den her Repository
             aftaleRepository.gemLejeAftale(lejeAftale);
 
+            // sætter bilernes status baseret på tidligere checkBoxBool
             if(checkBoxBool){
 
                 bilRepository.saetStatus(bil,Bil.Status.LIMITED.name());
             }else {
                 bilRepository.saetStatus(bil,Bil.Status.UNLIMITED.name());
             }
+            // sletter ekstra Attributter så session ikke bliver fyldt op med disse attributter
             session.removeAttribute("bil");
 
             return "redirect:/";
         }
+
+        // omdirigeret attributter fra html form->input (name,value)
         session.setAttribute("aftale_Id",aftale_Id);
         session.setAttribute("kunde_Navn",kunde_Navn);
         session.setAttribute("vognNummer",vognNummer);
         session.setAttribute("startDato",startDato);
-        //todo: set slutDato til at blive 5 eller 3 måneder frem i tiden
-
         session.setAttribute("slutDato",slutDato);
-
-
         session.setAttribute("detaljer",detaljer);
         return "redirect:/NyLejeAftale";
     }
