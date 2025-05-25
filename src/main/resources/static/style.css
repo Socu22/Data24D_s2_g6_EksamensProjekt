@@ -37,7 +37,7 @@ main, header, footer, section, button, p.vognNr {
 header div, footer div {
     justify-content: space-between;
     display: flex;
-    align-items: center;
+    align-content: center;
 }
 
 header {
@@ -125,7 +125,6 @@ p.vognNr {
     border-color: red;
     border-width: medium;
     padding: .15rem;
-    margin: var(--sekundær-margin);
     cursor: pointer;
     align-content: center;
     align-self: center;
@@ -163,7 +162,7 @@ div.liste:hover {
 }
 
 div.kort {
-    justify-content: space-between;
+    justify-content: left;
     display: inline-flex;
     width: 100%;
 }
@@ -172,8 +171,8 @@ div.kort div{
     display: block;
     margin-top: var(--primær-margin);
     margin-bottom: var(--primær-margin);
-    min-width: max-content;
-    max-width: max-content;
+    min-width: 12rem;
+    max-width: 16rem;
 }
 
 div.kort div:not(:first-of-type){
@@ -184,7 +183,7 @@ form {
     margin: var(--sekundær-margin);
 }
 
-form input {
+form input, form textarea {
     text-align-last: initial;
 }
 
