@@ -9,9 +9,8 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public class LagerRepository {
-
-
+public class LagerRepository
+{
     @Autowired
     JdbcTemplate jdbcTemplate;
 
@@ -32,7 +31,6 @@ public class LagerRepository {
     //Samler alle lager objekter sammen i en liste. ?brugbart?
    public List<Lager> hentLager(){
         List<Lager> lagerList = jdbcTemplate.query("select * from lager",rowMapper);
-        System.out.println(lagerList);
         return lagerList;
    }
 
@@ -57,8 +55,4 @@ public class LagerRepository {
             return false;
         }
     }
-
-
-
-
 }

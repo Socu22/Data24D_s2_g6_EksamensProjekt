@@ -24,9 +24,6 @@ public class NotationController
     @Autowired
     BilRepository bilRepository;
 
-    @Autowired
-    AftaleRepository aftaleRepository; // ! kun for testing !
-
     @GetMapping("/NyNotation")
     public String nyNotation(HttpServletRequest request, Model model)
     {
@@ -37,28 +34,18 @@ public class NotationController
         LejeAftale aftale = (LejeAftale) session.getAttribute("lejeAftale");
         Bil bil           = (Bil) session.getAttribute("bil");
 
-        /*
-        if (bil == null || aftale == null) // ! udelukkende for testing !
-        {
-            aftale = aftaleRepository.tagFatILejeAftale(1); // ! udelukkende for testing !
-            bil = bilRepository.tagFatIBil(aftale.getVognNummer()); // ! udelukkende for testing !
-        }
-         */
         // logik til så notation ved om man kommer fra en bil eller lejeAftale
         if (aftale != null)
         {
             bil = bilRepository.hentBil(aftale.getVognNummer());
+            // sætter session attributter, som muligvis bruges til omdirigering
+            session.setAttribute("bil", bil);
 
             // sender til attributter fra html elementer med (name,value)
             model.addAttribute("lejeAftale", aftale);
-            model.addAttribute("bil", bil);
-            // sætter session attributter, som muligvis bruges til omdirigering
-            session.setAttribute("bil", bil);
         }
-        else // hvis ikke der er en lejeaftale, må man være kommet her fra en bil.
-        {
-            model.addAttribute("bil", bil);
-        }
+        // hvis ikke der er en lejeaftale, må man være kommet her fra en bil.
+        model.addAttribute("bil", bil);
 
         return "notation";
     }
@@ -95,8 +82,10 @@ public class NotationController
             notationRepository.gemNotation(aftale.getVognNummer(), aftale.getAftale_Id(), notation, pris);
             return "redirect:/VisLejeAftale?aftaleId=" + aftale.getAftale_Id();
         }
-
-        notationRepository.gemNotation(bil.getVognNummer(), null, notation, pris);
-        return "redirect:/VisBil?vognNummer=" + bil.getVognNummer();
+        else
+        {
+            notationRepository.gemNotation(bil.getVognNummer(), null, notation, pris);
+            return "redirect:/VisBil?vognNummer=" + bil.getVognNummer();
+        }
     }
 }

@@ -221,6 +221,7 @@ public class LejeAftaleController {
 
         // bilkort dukker frem efter valg af bil.
         List<Bil> bilList = bilRepository.hentEksisteredeBiler();
+
         Bil bil = null;
         if(session.getAttribute("vognNummer") != null){
             bil = bilRepository.hentBil((String) session.getAttribute("vognNummer"));
