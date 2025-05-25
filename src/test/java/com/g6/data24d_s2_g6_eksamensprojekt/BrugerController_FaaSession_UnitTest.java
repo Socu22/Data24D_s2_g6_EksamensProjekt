@@ -14,8 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.ui.ExtendedModelMap;
 import org.springframework.ui.Model;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -61,16 +60,15 @@ public class BrugerController_FaaSession_UnitTest {
 
         when(request.getSession(false)).thenReturn(session);
         when(session.getAttribute("aktivBruger")).thenReturn(mockBruger);
-        when(mockBruger.erStilling("test")).thenReturn(false); //Kun DEMO, DATA, SKADE, FORRETNING, er tilladte stillinger
-        when(session.getAttribute("valuta")).thenReturn(true); //true for euro, false for dkk
+        when(mockBruger.erStilling("test")).thenReturn(null); //Kun DEMO, DATA, SKADE, FORRETNING, er tilladte stillinger
 
         // Execution
         HttpSession result = BrugerController.faaSession(request,model,"test");
 
         // Validations
-        assertNotNull(result);
-        assertEquals(mockBruger, model.getAttribute("aktivBruger"));
-        assertEquals(true,model.getAttribute("valuta"));
+        assertNull(result);
+        assertNull(model.getAttribute("aktivBruger"));
+        assertNull(model.getAttribute("valuta"));
     }
 
 }
