@@ -3,6 +3,8 @@ package com.g6.data24d_s2_g6_eksamensprojekt.controller;
 import com.g6.data24d_s2_g6_eksamensprojekt.model.Bil;
 import com.g6.data24d_s2_g6_eksamensprojekt.model.BilType;
 import com.g6.data24d_s2_g6_eksamensprojekt.model.Lager;
+import com.g6.data24d_s2_g6_eksamensprojekt.model.LejeAftale;
+import com.g6.data24d_s2_g6_eksamensprojekt.repository.AftaleRepository;
 import com.g6.data24d_s2_g6_eksamensprojekt.repository.BilRepository;
 import com.g6.data24d_s2_g6_eksamensprojekt.repository.BilTypeRepository;
 import com.g6.data24d_s2_g6_eksamensprojekt.repository.LagerRepository;
@@ -14,7 +16,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.g6.data24d_s2_g6_eksamensprojekt.controller.BrugerController.faaSession;
 
@@ -28,6 +32,9 @@ public class BilController {
 
     @Autowired
     LagerRepository lagerRepository;
+
+    @Autowired
+    AftaleRepository aftaleRepository;
 
 
     @GetMapping("/VisBiler")
@@ -129,7 +136,13 @@ public class BilController {
         // Requester efter en parameter fra tidligere html form-> input ('name')
         String vognNummer = request.getParameter("vognNummer");
 
-        Bil bil = bilRepository.hentBil(vognNummer); // henter bil
+        Bil bil = bilRepository.hentBil(vognNummer); // henter bil klikket på
+        // hvis en lejeAftale er koblet til en bil bliver den sat ind på LejeAftalens plads i bil, vi bruger den til at tjekke om en lejeAftale existere hos bilen.
+        List<LejeAftale> lejeAftaleList = aftaleRepository.hentLejeAftaler();
+        Map<String,LejeAftale> lejeAftaleMap = new HashMap<>();
+        for(LejeAftale lejeAftale : lejeAftaleList){lejeAftaleMap.put(lejeAftale.getVognNummer(),lejeAftale);}
+        if(lejeAftaleMap.containsKey(bil.getVognNummer())){bil.setLejeAftale(lejeAftaleMap.get(bil.getVognNummer()));};
+        System.out.println(lejeAftaleMap.get(bil.getVognNummer()));
         // sender til attributter fra html elementer med (name,value)
         model.addAttribute("bil", bil);
         // sætter session attributter, som muligvis bruges til omdirigering

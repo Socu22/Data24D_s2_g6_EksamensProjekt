@@ -47,7 +47,7 @@
                     </div>
                 </div>
             </div>
-            <form th:if="${aktivBruger.erStilling('data') && aftale == null}" th:action="@{NyLejeAftale}" method="get">
+            <form th:if="${aktivBruger.erStilling('data') && bil.getLejeAftale == null}" th:action="@{NyLejeAftale}" method="get">
                 <button type="submit">Opret Leje Aftale</button>
             </form>
             <div th:if="${aftale != null}" style="display: inline-flex">

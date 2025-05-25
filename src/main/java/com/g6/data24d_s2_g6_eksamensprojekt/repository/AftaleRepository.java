@@ -101,4 +101,9 @@ public class AftaleRepository {
         jdbcTemplate.update("UPDATE lejeAftaler set slutDato=DATE_ADD(slutDato,interval ? month ) where aftale_Id = ?",forlaengMaaneder,lejeAftale_Id );
 
     }
+    public int getNextId() {
+        String sql = "SELECT MAX(aftale_Id) FROM lejeAftaler";
+        Integer maxWishId = jdbcTemplate.queryForObject(sql, (rs, rowNum) -> rs.getInt(1));
+        return (maxWishId != null ? maxWishId + 1 : 1);
+    }
 }

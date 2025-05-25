@@ -342,7 +342,7 @@ public class LejeAftaleController {
             // sletter ekstra Attributter så session ikke bliver fyldt op med disse attributter
             session.removeAttribute("bil");
 
-            return "redirect:/";
+            return "redirect:/VisLejeAftale?aftaleId="+(aftaleRepository.getNextId()-1);
         }
 
         // omdirigeret attributter fra html form->input (name,value)

@@ -123,6 +123,14 @@ public class Bil
         this.lager = lager;
     }
 
+    public void setLejeAftale(LejeAftale lejeAftale) {
+        this.lejeAftale = lejeAftale;
+    }
+
+    public LejeAftale getLejeAftale() {
+        return lejeAftale;
+    }
+
     public String toString()
     {
         StringBuilder s = new StringBuilder(vognNummer);
