@@ -255,6 +255,11 @@ public class LejeAftaleController {
         session.removeAttribute("startDato");
         session.removeAttribute("slutDato");
         session.removeAttribute("detaljer");
+        session.removeAttribute("lejeAftale");
+        session.removeAttribute("lejeAftale_id");
+        session.removeAttribute("aftale_id");
+        session.removeAttribute("bil");
+        session.removeAttribute("vognNummer");
 
         return "nyLejeAftale";
     }

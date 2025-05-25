@@ -65,6 +65,11 @@ public class BilController {
         session.removeAttribute("lager_Id");
         session.removeAttribute("maerke");
         session.removeAttribute("status");
+        session.removeAttribute("lejeAftale");
+        session.removeAttribute("lejeAftale_id");
+        session.removeAttribute("aftale_id");
+        session.removeAttribute("bil");
+        session.removeAttribute("vognNummer");
 
 
         return "visBiler";
