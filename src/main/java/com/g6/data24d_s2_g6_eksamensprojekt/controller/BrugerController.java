@@ -24,7 +24,7 @@ public class BrugerController {
     // ellers så til visbiler siden som bruges som forside på vores hjemmeside
     @GetMapping("/")
     public String hjemmeSide(HttpServletRequest request, Model model) {
-        HttpSession session = faaSession(request, model, "data", "skade", "forretning");// Hvem der har Rettighed til at bruge metoden.
+        HttpSession session = faaSession(request, model);// Hvem der har Rettighed til at bruge metoden.
         if(session == null) return "redirect:/Logind";
         return "redirect:/VisBiler";
     }
@@ -75,7 +75,7 @@ public class BrugerController {
     // den sætter dem ind i modelen og fjerner dem fra session igen og sender en hen til registrer html siden.
     @GetMapping("/Registrer")
     public String registrer(HttpServletRequest request, Model model) {
-        HttpSession session = faaSession(request, model, "forretning");// Hvem der har Rettighed til at bruge metoden.
+        HttpSession session = faaSession(request, model, Bruger.Stilling.FORRETNING);// Hvem der har Rettighed til at bruge metoden.
         if(session == null) return "redirect:/Logind";
 
         // Requester efter en parameter fra tidligere html form-> input ('name')
@@ -118,7 +118,7 @@ public class BrugerController {
     // hvis den får et medarbejderId så skal den ikke registrere en ny medarbejder, men istedet opdater den medarbejder hvis medarbejderId det er.
     @GetMapping("/OmdirigerRegistrer")
     public String omdirigerRegistrer(HttpServletRequest request, Model model) {
-        HttpSession session = faaSession(request, model, "forretning");// Hvem der har Rettighed til at bruge metoden.
+        HttpSession session = faaSession(request, model, Bruger.Stilling.FORRETNING);// Hvem der har Rettighed til at bruge metoden.
         if(session == null) return "redirect:/Logind";
 
         // Requester efter en parameter fra tidligere html form-> input ('name')
@@ -170,7 +170,7 @@ public class BrugerController {
     // den giver en liste med alle medarbejdere og sender en hen til soegBruger html siden.
     @GetMapping("/SoegBruger")
     public String soegBruger(HttpServletRequest request, Model model) {
-        HttpSession session = faaSession(request, model, "forretning");// Hvem der har Rettighed til at bruge metoden.
+        HttpSession session = faaSession(request, model, Bruger.Stilling.FORRETNING);// Hvem der har Rettighed til at bruge metoden.
         if(session == null) return "redirect:/Logind";
 
         // sender til attributter fra html elementer med (name,value)
@@ -185,7 +185,7 @@ public class BrugerController {
     // den får parameteret medarbejderNavn som er den der skal bruges til at søges efter og omdirigere til "/SoegBruger"
     @GetMapping("/OmdirigerSoegBruger")
     public String omdirigerSoegBruger(HttpServletRequest request, Model model) {
-        HttpSession session = faaSession(request, model, "forretning");// Hvem der har Rettighed til at bruge metoden.
+        HttpSession session = faaSession(request, model, Bruger.Stilling.FORRETNING);// Hvem der har Rettighed til at bruge metoden.
         if(session == null) return "redirect:/Logind";
         // sætter session attributter, som muligvis bruges til omdirigering
         session.setAttribute("medarbejderNavn", request.getParameter("medarbejderNavn"));
