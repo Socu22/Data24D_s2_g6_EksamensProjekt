@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>Bilabonnement</title>
+    <link rel="stylesheet" th:href="@{style.css}">
+</head>
+<body>
+<!-- en header sat ind fra fragments -->
+<header th:insert="~{fragments :: header}"></header>
+<section>
+    <!-- har et textfield hvor man kan søge efter en bruger og en knap der sender en hen til "/OmdirigerSoegBruger" -->
+    <form th:action="@{/OmdirigerSoegBruger}" method="get" >
+        <input type="text" name="medarbejderNavn" placeholder="Medarbejder Navn" th:value="${medarbejderNavn}" />
+        <button type="submit">Søg</button>
+    </form>
+    <!-- den har allerede en liste fra modelen med alle medarbejdere, for hver medarbejder tjekker den om dens navn indeholder det man skrev i søgefeltet ovenover i sig.
+      hvis den gør så viser den et kort med medarbejderens navn som har et link tilbage til "/Reigstrer" men med et medarbejderId, som indikere at den skal opdatere -->
+    <div  class="liste" th:each="medarbejder : ${medarbejdere}" th:if="${medarbejderNavn == null || medarbejder.getNavn().toLowerCase().contains(medarbejderNavn.toLowerCase())}">
+        <a  th:href="@{Registrer(medarbejderId = ${medarbejder.getMedArbejder_Id()})}" style="color: inherit; text-decoration: none">
+            <div class="kort">
+                <label th:text="${medarbejder.getNavn()}"></label>
+            </div>
+        </a>
+    </div>
+</section>
+</body>
+</html>

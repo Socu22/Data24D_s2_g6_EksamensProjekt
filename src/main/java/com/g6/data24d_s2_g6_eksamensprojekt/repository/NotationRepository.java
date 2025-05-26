@@ -36,33 +36,45 @@ public class NotationRepository
     public List<Notation> hentNotationer(int aftaleId)
     {
         return hentNotationer("aftale_Id", aftaleId);
-
-        /*
-        String sql = "SELECT * FROM notationer WHERE aftale_Id = ?;";
-        List<Map<String, Object>> list = jdbcTemplate.queryForList(sql, aftale.getAftale_Id());
-
-        return buildNotationer(list);
-         */
     }
 
     public List<Notation> hentNotationer(String vognNummer)
     {
         return hentNotationer("vognNummer", vognNummer);
-
-        /*
-        String sql = "SELECT * FROM notationer WHERE vognNummer = ?;";
-        List<Map<String, Object>> list = jdbcTemplate.queryForList(sql, bil.getVognNummer());
-
-        return buildNotationer(list);
-         */
     }
 
-    private List<Notation> hentNotationer(String column, Object identifier)
+    public List<Notation> hentSkader(int aftaleId)
     {
-        String sql = "SELECT * FROM notationer WHERE "+column+" = ?;";
+        String sql = "SELECT * FROM notationer WHERE aftale_Id = ?;";
+        List<Map<String, Object>> list = jdbcTemplate.queryForList(sql, aftaleId);
+
+        return bygNotationer(list);
+    }
+
+    public Double hentSumfor(int aftaleId)
+    {
+        List<Double> liste = hent("pris", double.class, "aftale_Id", aftaleId);
+        return sum(liste.toArray(new Double[0]));
+    }
+
+    public Double hentSumfor(String vognNummer)
+    {
+        List<Double> liste = hent("pris", double.class, "vognNummer", vognNummer);
+        return sum(liste.toArray(new Double[0]));
+    }
+
+    private List<Notation> hentNotationer(String keyType, Object identifier)
+    {
+        String sql = "SELECT * FROM notationer WHERE "+keyType+" = ? AND aftale_Id IS NULL;";
         List<Map<String, Object>> list = jdbcTemplate.queryForList(sql, identifier);
 
         return bygNotationer(list);
+    }
+
+    private <T> List<T> hent(String column, Class<T> type, String keyType, Object identifier)
+    {
+        String sql = "SELECT "+column+" FROM notationer WHERE "+keyType+" = ?;";
+        return jdbcTemplate.queryForList(sql, type, identifier);
     }
 
     private List<Notation> bygNotationer(List<Map<String, Object>> dataList)
@@ -79,5 +91,12 @@ public class NotationRepository
         }
 
         return list;
+    }
+
+    private Double sum(Double... doubles)
+    {
+        Double sum = .0;
+        for (Double d : doubles) {sum += d;}
+        return sum;
     }
 }

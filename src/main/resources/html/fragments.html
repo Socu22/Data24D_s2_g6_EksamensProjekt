@@ -1,25 +1,50 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
-<div th:fragment="header">
+<div th:fragment="header" style="align-items: center">
     <div>
         <img th:src="@{/img/BILABONNEMENT_logo.svg}" alt="Manglende Logo" style="height: 3rem"/>
-        <span th:if="${aktivBruger}" th:text="'Bruger: ' + ${aktivBruger.navn}" style="text-align: left; font-size: x-large; margin-left: 1rem"></span>
-    </div>
-    <div th:if="${aktivBruger}">
-        <div>
-            <form th:action="@{/Registrer}" th:method="get" style="margin-right: 1rem">
-                <button type="submit">Registrér Ny Burger</button>
-            </form>
-            <form th:action="@{/LogUd}" th:method="get" style="margin-right: 1rem">
-                <input type="checkbox" id="valuta">
-                <label for="valuta">dkk/eur</label>
-            </form>
+        <div th:if="${aktivBruger}" style="align-items: center">
+            <span th:text="'Bruger: ' + ${aktivBruger.navn}" style="text-align: left; font-size: x-large; margin-left: 1rem"></span>
         </div>
+    </div>
+    <div th:if="${aktivBruger}" style="align-items: center">
+        <form th:if="${aktivBruger.erStilling('forretning')}" th:action="@{/Registrer}" th:method="get" style="margin-right: 1rem">
+            <button type="submit">Registrér Ny Burger</button>
+        </form>
+        <form th:action="@{/VisBiler}" th:method="get">
+            <button type="submit">Se Biler</button>
+        </form>
+        <form th:action="@{/VisLejeAftaler}" th:method="get">
+            <button type="submit">Se Lejeaftaler</button>
+        </form>
+        <form th:action="@{/saetValuta}" th:method="post" style="margin-right: 1rem">
+            <input type="checkbox" name="valutaCheck" id="valutaCheck" th:value="${valuta}" th:checked="${valuta}" onchange="omregn(); this.form.submit();">
+            <label for="valutaCheck">dkk/eur</label>
+        </form>
         <form th:action="@{/LogUd}" th:method="get">
             <button type="submit" class="logud">Log Ud</button>
         </form>
     </div>
+    <script th:inline="javascript">
+        var euro = [[${valuta}]];
+        function omregn()
+        {
+            var v = "kr";
+            var f = 1;
+            if (!euro)
+            {
+                v = "€";
+                f = 0.13;
+            }
+            for (var i = 0; i < document.getElementsByClassName("valuta").length; i++)
+            {
+                document.getElementsByClassName("valuta").item(i).innerHTML = (document.getElementsByClassName("valuta").item(i).title * f) + v;
+            }
+            euro = !euro;
+            document.getElementById("valutaCheck").value = euro;
+        }
+    </script>
 </div>
 
 <div th:fragment="footer">
@@ -27,70 +52,77 @@
         <button type="submit">Bil Liste</button>
     </form>
     <div>
-        <p>Samlet Indkomst: TODO</p>
+        <p>Samlet Indkomst: <span class="valuta" th:title="${samletIndkomst}" th:text="${samletIndkomst} + 'kr'"></span></p>
     </div>
 </div>
 
-<div th:fragment="bilKort">
-    <div th:insert="~{fragments :: bilListeKort(
-                                        vognNummer=${bil.toString()},
-                                        bilType=   ${bil.getType.getMaerke()},
-                                        stelNummer=${bil.stelNummer},
-                                        lager=     ${bil.getLager_Id()},
-                                        afgift=    ${bil.getType().afgift}
-                                        )}">
-    </div>
-</div>
 
-<div th:fragment="aftaleKort">
-    <a th:href="@{VisBil(vognNummer = ${bil.getVognNummer()})}" style="color: inherit; text-decoration: none">
-        <div th:insert="~{fragments :: aftaleListeKort (
-                                            vognNummer=${bil.toString()},
-                                            kundeNavn= ${lejeAftale.getKunde().getNavn()},
-                                            afgift=    ${bil.getType().afgift},
-                                            lager=     ${bil.getLager_Id()},
-                                            startDato= ${lejeAftale.getStartDato()},
-                                            slutDato=  ${lejeAftale.getSlutDato()}
-                                            )}">
-        </div>
-    </a>
-</div>
 
-<div th:fragment="aftaleListeKort (vognNummer, kundeNavn, afgift, lager, startDato, slutDato)" class="kort">
+<div th:fragment="aftaleListeKort (vognNummer, kundeNavn, afgift, startDato, slutDato, erBetalt)" class="kort">
     <p class="vognNr" th:text="${vognNummer}"></p>
     <div>
-        <p>Lejer:</p>
+        <p>Kunde:</p>
         <p th:text="${kundeNavn}" class="stelNummer" style="font-weight: bold">--Lejers Navn--</p>
-    </div>
-    <div>
-        <p th:text="'Mnd. Afgift: ' + ${afgift} + 'kr'">Mnd. Afgift:</p>
-        <p th:text="'Lager: ' + ${lager}">Lager:</p>
     </div>
     <div style="text-align: right;">
         <p th:text="'Periode: ' + ${startDato}">Periode: StartDato</p>
         <p th:text="${slutDato}">SlutDato</p>
     </div>
+    <div style="min-width: 30%">
+        <p th:unless="${valuta}">Bekostning: <span class="valuta" th:title="${afgift}" th:text="${afgift} + 'kr'"></span></p>
+        <p th:if="${valuta}">Bekostning: <span class="valuta" th:title="${afgift}" th:text="${afgift}*0.13 + '€'"></span></p>
+        <p th:unless="${erBetalt}" style="font-weight: bold; color: red  ">Mangler Afbetaling</p>
+        <p th:if    ="${erBetalt}" style="font-weight: bold; color: green">Afbetalt</p>
+    </div>
 </div>
 
-<div th:fragment="bilListeKort (vognNummer, bilType, stelNummer, lager, afgift)" class="kort">
+<div th:fragment="aftaleListe">
+    <div style="max-width: max-content;">
+    <div th:each="Aftale : ${lejeAftaler}" class="liste">
+        <a th:href="@{VisLejeAftale(aftaleId = ${Aftale.getAftale_Id()})}" style="color: inherit; text-decoration: none">
+            <div th:insert="~{fragments :: aftaleListeKort (
+                    vognNummer=${Aftale.getBil().toString()},
+                    kundeNavn= ${Aftale.getKunde_Navn()},
+                    afgift=    ${Aftale.getSamletPris()},
+                    startDato= ${Aftale.getStartDato()},
+                    slutDato=  ${Aftale.getSlutDato()},
+                    erBetalt=  ${Aftale.erBetalt()}
+                    )}">
+            </div>
+        </a>
+    </div>
+    </div>
+</div>
+
+<div th:fragment="aftaleKort">
+    <a th:href="@{VisBil(vognNummer = ${lejeAftale.getBil().getVognNummer()})}" style="color: inherit; text-decoration: none">
+        <div th:insert="~{fragments :: aftaleListeKort (
+            vognNummer=${lejeAftale.getBil().toString()},
+            kundeNavn= ${lejeAftale.getKunde_Navn()},
+            afgift=    ${lejeAftale.getSamletPris()},
+            startDato= ${lejeAftale.getStartDato()},
+            slutDato=  ${lejeAftale.getSlutDato()},
+            erBetalt=  ${lejeAftale.erBetalt()}
+            )}">
+        </div>
+    </a>
+</div>
+
+
+
+<div th:fragment="bilListeKort (vognNummer, bilType, stelNummer, lager, afgift, status)" class="kort">
     <p class="vognNr" th:text="${vognNummer}"></p>
     <div>
         <p th:text="'Type: ' + ${bilType}">Type:</p>
         <p th:text="${stelNummer}" class="stelNummer">--StelNummer--</p>
     </div>
     <div>
+        <p th:unless="${valuta}">Reg. Afgift: <span class="valuta" th:title="${afgift}" th:text="${afgift} + 'kr'"></span></p>
+        <p th:if="${valuta}">Reg. Afgift: <span class="valuta" th:title="${afgift}" th:text="${afgift}*0.13 + '€'"></span></p>
         <p th:text="'Lager: ' + ${lager}">Lager:</p>
-        <p th:text="'Mnd. Afgift: ' + ${afgift} + 'kr'">Mnd. Afgift:</p>
-    </div>
-</div>
-
-<div th:fragment="notationListeKort (beskrivelse, omkostning)" class="kort">
-    <div>
-        <p th:text="${beskrivelse}">--Beskrivelse--</p>
     </div>
     <div>
-        <p th:text="'Omkostning: '">Omkostning:</p>
-        <p th:text="${omkostning} + 'kr'">--kr</p>
+        <p th:text="'Status: ' + ${status}"></p>
     </div>
 </div>
 
@@ -98,31 +130,41 @@
     <div th:each="Bil : ${biler}" class="liste">
         <a th:href="@{VisBil(vognNummer = ${Bil.getVognNummer()})}" style="color: inherit; text-decoration: none">
             <div th:insert="~{fragments :: bilListeKort(
-                                        vognNummer=${Bil.toString()},
-                                        bilType=   ${Bil.getType.getMaerke()},
-                                        stelNummer=${Bil.getStelNummer()},
-                                        lager=     ${Bil.getLager_Id()},
-                                        afgift=    ${Bil.getType().afgift}
-                                        )}">
+                vognNummer=   ${Bil.toString()},
+                bilType=      ${Bil.getType.getMaerke()},
+                stelNummer=   ${Bil.getStelNummer()},
+                lager=        ${Bil.getLager().getNavn()},
+                afgift=       ${Bil.getType().afgift},
+                status=       ${Bil.getStatus()}
+                )}">
             </div>
         </a>
     </div>
 </div>
 
-<div th:fragment="aftaleListe">
-        <div th:each="Aftale : ${lejeAftaler}" class="liste">
-            <a th:href="@{VisLejeAftale(aftaleId = ${Aftale.getAftale_Id()})}" style="color: inherit; text-decoration: none">
-                <div th:insert="~{fragments :: aftaleListeKort (
-                                    vognNummer=${Aftale.getVognNummer()},
-                                    kundeNavn= ${Aftale.getKunde().getNavn()},
-                                    afgift=    'placeholder',
-                                    lager=     'placeholder',
-                                    startDato= ${Aftale.getStartDato()},
-                                    slutDato=  ${Aftale.getSlutDato()}
-                                    )}">
-                </div>
-            </a>
-        </div>
+<div th:fragment="bilKort">
+    <div th:insert="~{fragments :: bilListeKort(
+        vognNummer=   ${bil.toString()},
+        bilType=      ${bil.getType.getMaerke()},
+        stelNummer=   ${bil.stelNummer},
+        lager=        ${bil.getLager().getNavn()},
+        afgift=       ${bil.getType().afgift},
+        status=       ${bil.getStatus()}
+        )}">
+    </div>
+</div>
+
+
+
+<div th:fragment="notationListeKort (beskrivelse, omkostning)" class="kort">
+    <div>
+        <p th:text="${beskrivelse}">--Beskrivelse--</p>
+    </div>
+    <div>
+        <p th:text="'Omkostning: '">Omkostning:</p>
+        <p th:unless="${valuta}"><span class="valuta" th:title="${omkostning}" th:text="${omkostning} + 'kr'"></span></p>
+        <p th:if="${valuta}"><span class="valuta" th:title="${omkostning}" th:text="${omkostning}*0.13 + '€'"></span></p>
+    </div>
 </div>
 
 <div th:fragment="notationListe">
@@ -135,45 +177,6 @@
             </div>
         </a>
     </div>
-</div>
-
-
-
-
-
-
-
-<div th:fragment="loremIpsum">
-    <p>Sed neque ex, commodo molestie arcu quis, accumsan aliquet tortor. Nam et enim erat. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Praesent sit amet arcu mauris. Cras elementum enim ac felis tincidunt, quis cursus neque posuere. Praesent tristique turpis sapien, tempus pellentesque magna iaculis ac. Quisque feugiat lectus dui, in semper arcu pellentesque quis. Suspendisse est ante, congue in ipsum nec, suscipit consequat ligula. Praesent sagittis libero sit amet maximus lacinia. Sed vel nulla ut erat semper placerat non quis ligula. Etiam faucibus orci vel est malesuada tempor. In hac habitasse platea dictumst. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. In efficitur in lorem id venenatis. Integer turpis orci, consequat nec felis id, posuere sagittis ex.</p>
-</div>
-
-<div th:fragment="loremIpsumShort">
-    <p>Phasellus vestibulum tempor lectus, id eleifend odio ornare non. Proin interdum semper malesuada. Ut sollicitudin elit sit amet scelerisque condimentum. Mauris pulvinar aliquet lacus, ac lobortis ante lacinia at. Integer aliquet viverra ultrices. Fusce vitae enim felis. Vivamus vestibulum placerat ornare. Aenean ullamcorper molestie malesuada. Fusce hendrerit scelerisque enim, sit amet molestie magna semper eu. Aenean vestibulum congue lorem in finibus.</p>
-    <p>Nullam vulputate tincidunt leo, ut consequat lorem maximus eu. Morbi eget mollis magna. Fusce non massa vulputate ex iaculis tempor id euismod lacus. Vivamus ut lectus iaculis, varius enim eget, lobortis leo. Nullam id sem nulla. Nunc eget metus elit. Vestibulum vel pellentesque erat.</p>
-    <p>Aliquam fringilla tempor risus sed gravida. Pellentesque tincidunt tortor cursus, finibus magna ac, elementum nisi. Maecenas a ultricies mi, non suscipit lectus. Maecenas iaculis sem et sapien pellentesque, ac fringilla lorem interdum. Donec pretium, diam non aliquam feugiat, massa nisl tincidunt ex, vitae sagittis justo enim a sem. Sed porta ornare neque id gravida. Donec vel cursus felis, at tempor lectus. Phasellus sodales convallis lorem, eget lobortis nisi venenatis scelerisque. Morbi et dolor sed felis varius egestas in at lectus.</p>
-</div>
-
-<div th:fragment="loremIpsumMed">
-    <p>Nullam ut porttitor libero, vel posuere orci. Vestibulum congue ligula ut rutrum vestibulum. Maecenas at felis nec nisi tempor placerat suscipit vel urna. Suspendisse quis accumsan quam. Sed sagittis enim sit amet ultricies semper. Fusce mauris augue, venenatis pharetra mattis quis, suscipit nec libero. Nulla eget ullamcorper nisl. Morbi posuere posuere finibus.</p>
-    <p>Suspendisse finibus urna velit, vel pulvinar lectus porttitor sit amet. In eleifend ut libero id accumsan. Etiam sed nisi hendrerit, congue erat eu, efficitur dui. Sed a eros porttitor, imperdiet ligula non, tristique erat. Maecenas lobortis ante aliquet pretium semper. Sed malesuada pharetra urna, eget posuere magna ultrices eu. Etiam non dictum mi. Aenean suscipit ipsum vulputate, tincidunt velit sed, bibendum mauris. Etiam erat mi, hendrerit at dolor ac, vulputate vestibulum sapien.</p>
-    <p>Aliquam commodo lorem dui, nec fringilla nisl tincidunt in. In sit amet euismod justo, sit amet eleifend nunc. Integer cursus nunc quis dictum interdum. Duis eu bibendum magna. Pellentesque cursus, mauris eget consequat eleifend, ligula mi maximus ex, et suscipit lectus metus at massa. Pellentesque et ligula finibus, egestas dolor ac, mattis felis. Aliquam tortor libero, faucibus at augue bibendum, malesuada scelerisque mi. Curabitur sodales ex vitae eros scelerisque tempor.</p>
-    <p>Phasellus sit amet pellentesque nisl, ut pulvinar nisl. Nulla semper dui eros, in luctus augue suscipit quis. Phasellus id ornare tellus. Nulla egestas urna at ipsum tempor, vel aliquam ex accumsan. Aenean tristique tincidunt nulla id ullamcorper. Nam blandit id purus et faucibus. Nam nec arcu eu arcu consequat vehicula. Morbi in nisl in odio ullamcorper vulputate. Curabitur aliquam scelerisque libero a fringilla. Cras aliquet tortor eu justo elementum fringilla. Integer facilisis varius massa, vel pharetra nibh.</p>
-    <p>Morbi porta maximus massa. Quisque ultricies quis risus ut gravida. Sed metus leo, fermentum et porttitor vitae, ornare in dolor. Duis vitae leo sed orci rutrum vulputate vitae et urna. Nulla dictum vulputate rutrum. Fusce enim dolor, interdum quis fringilla vel, interdum in leo. Morbi ut ultrices enim. Nam lacinia consectetur diam, eu porta mauris aliquet non. Nulla facilisi. Maecenas consequat nisl in sapien interdum, et venenatis nunc efficitur.</p>
-</div>
-
-<div th:fragment="loremIpsumLong">
-    <p>In efficitur justo mauris, venenatis convallis risus lacinia non. Nam massa ipsum, suscipit a quam in, aliquam lacinia nulla. Aenean ullamcorper id mi sit amet commodo. Aliquam mattis, ligula vitae condimentum molestie, metus urna condimentum elit, vel consectetur purus lectus eu nibh. Nulla porttitor sapien nec ante hendrerit, non ultrices enim tempus. Cras eget tincidunt erat, sit amet ullamcorper justo. Aliquam erat volutpat. Morbi nisl dolor, tempor ut ipsum eu, hendrerit facilisis lacus. Aliquam bibendum bibendum consectetur. Duis posuere, dolor nec consequat consectetur, sem dolor malesuada nisi, vel congue nulla augue varius nunc. Vestibulum vulputate dictum orci sodales auctor. Sed in lobortis enim. Vestibulum faucibus sem porttitor egestas consequat. Nullam sed risus sit amet nulla faucibus gravida eget in ex. Cras nec consequat felis.</p>
-    <p>Nam non feugiat dolor. Vestibulum molestie nulla vitae augue gravida tempor. Sed placerat rhoncus quam sit amet mattis. Mauris efficitur augue id sapien tincidunt tristique. Donec non enim mollis, eleifend orci ac, tristique nisl. Maecenas scelerisque sed nulla ac sagittis. Cras malesuada nibh tincidunt, sollicitudin sem a, condimentum lectus. Duis sed tristique ligula. Morbi a nibh dignissim, pulvinar risus ut, vestibulum neque. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Aliquam a nulla nunc. Proin laoreet mattis enim, eu scelerisque enim porttitor volutpat.</p>
-    <p>Donec viverra interdum purus, ut maximus mi pulvinar at. Vestibulum eget sollicitudin eros. Aenean lacus mauris, gravida non neque a, pulvinar commodo neque. Phasellus sit amet semper nisl. Nulla facilisi. In porta vel leo non scelerisque. Donec hendrerit, elit id malesuada facilisis, magna tellus varius eros, in blandit tellus enim vel libero. Nulla eget nisi id lectus porta dictum et ut diam. Nullam viverra neque vel dolor ultricies, sed ultrices tellus ultrices. Nullam nulla augue, luctus id feugiat quis, sagittis eu tortor.</p>
-    <p>Mauris in quam quam. Duis finibus eros at metus pharetra vestibulum. Vivamus massa neque, placerat vitae risus a, congue elementum enim. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Nulla sed lacus erat. Morbi interdum nisl ac libero euismod, vitae accumsan tortor vulputate. Aenean gravida nulla diam, eu mattis diam sagittis eu. Maecenas efficitur auctor fringilla. Cras felis diam, auctor in volutpat vitae, ultricies a orci. Etiam vel aliquam lectus. Maecenas accumsan neque vel turpis pretium, rhoncus posuere tortor viverra. Pellentesque ultrices enim vitae arcu elementum rhoncus. Suspendisse congue ultrices sapien, quis semper ex iaculis sed. Cras efficitur nunc a tincidunt sodales.</p>
-    <p>Suspendisse et ullamcorper tellus. Integer efficitur maximus metus, quis egestas ligula pretium ac. Etiam non porta odio. Quisque vel convallis leo, ac maximus tortor. Mauris rhoncus sed nunc ac vehicula. Ut ornare augue eget augue faucibus facilisis. Phasellus lectus justo, porta non enim eu, cursus tincidunt enim. Morbi semper neque magna, ac ultricies purus sollicitudin non. Etiam vitae neque est. In nec sagittis enim, quis pulvinar dui. Aenean vitae lorem tempus, varius erat at, congue mi. Vestibulum aliquam dui odio. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque faucibus in ligula a bibendum. Ut ligula ex, tincidunt ut dolor vitae, aliquam suscipit magna.</p>
-    <p>Sed eu auctor neque. Etiam aliquet, mauris in condimentum rhoncus, enim eros pulvinar nulla, in pharetra eros orci ac elit. Curabitur pretium vulputate pellentesque. Proin cursus blandit arcu sed efficitur. Aliquam luctus libero hendrerit velit varius sollicitudin. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam erat volutpat. Aliquam a lorem at mauris dictum fermentum. Donec mollis tristique magna id fermentum. Aenean ut orci odio. Donec facilisis orci et facilisis efficitur. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Pellentesque lacus risus, tempus vel gravida sit amet, aliquam at urna. Cras at massa volutpat, convallis dui eget, aliquam metus. Interdum et malesuada fames ac ante ipsum primis in faucibus.</p>
-    <p>Morbi vitae vestibulum augue, mollis porta odio. Sed non leo in lectus vulputate faucibus. Donec pretium leo ut dui viverra, eget porttitor nulla accumsan. Maecenas id consectetur turpis. Curabitur vestibulum, eros id maximus porttitor, ex ante ultrices nibh, nec pretium metus metus sit amet erat. Sed vulputate dictum mauris, at blandit ligula tristique quis. Integer et imperdiet arcu. Vestibulum sed semper risus, et commodo turpis. Maecenas non dui feugiat, posuere massa in, suscipit lorem. Curabitur non suscipit leo.</p>
-    <p>Aenean vel ultricies erat, at porttitor velit. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Praesent molestie ac ligula at eleifend. Nulla finibus, augue ac hendrerit efficitur, sapien dolor mattis justo, vel lobortis augue ante sit amet orci. Etiam ullamcorper vitae nunc vitae molestie. Mauris vitae volutpat eros, mollis vestibulum mi. Nullam at neque dictum felis tristique pretium. Suspendisse ultricies finibus lectus quis varius. Nunc hendrerit vulputate lorem, a semper est dapibus quis. Morbi eu quam vitae ligula laoreet eleifend ut non massa. Sed fringilla tempor leo scelerisque porta. Suspendisse potenti. Aliquam erat volutpat.</p>
-    <p>Duis sollicitudin eu odio vel vestibulum. Fusce vitae suscipit sapien, nec semper enim. Mauris vel erat ac libero hendrerit varius at id magna. Maecenas enim risus, accumsan ornare maximus et, blandit id diam. Vivamus quam purus, pretium vitae hendrerit efficitur, mollis vitae dolor. Etiam porta turpis a mi pretium tincidunt in sed eros. Duis accumsan pulvinar magna in porta. In a volutpat lorem, in bibendum nisi. Suspendisse vitae elit magna. Quisque varius euismod libero, a volutpat nulla venenatis in. Aliquam non elit ante. Donec odio ipsum, mattis faucibus lacus eu, malesuada tempus justo. Quisque hendrerit non nulla nec hendrerit. Maecenas molestie placerat sollicitudin.</p>
-    <p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Donec condimentum orci nec condimentum cursus. Phasellus finibus enim a leo malesuada, ac venenatis risus molestie. Pellentesque ut dui molestie, pretium nibh et, mollis dolor. Mauris a imperdiet libero. Ut a quam quis urna hendrerit vulputate. In molestie eleifend sem, id iaculis dui placerat sit amet. Nam sollicitudin quam nec libero iaculis, et posuere dolor tincidunt. Vivamus pulvinar ligula eu ligula finibus, vel aliquet libero lobortis. Mauris quis nisl nisi. Donec fringilla quis ante at ullamcorper. Phasellus consectetur finibus laoreet. Etiam justo nunc, commodo sagittis odio vitae, blandit tincidunt lectus. Mauris commodo dictum semper. Sed eget velit lobortis, fermentum augue auctor, porta justo. Nullam ullamcorper eros risus, at maximus odio venenatis id.</p>
-    <p>Quisque vehicula leo metus, non semper ante vehicula eget. Donec nisl ligula, efficitur non facilisis a, tempus et leo. Maecenas sollicitudin dui vitae lectus facilisis luctus. Aenean facilisis mauris sit amet augue hendrerit, non pulvinar risus mollis. Sed sed felis in arcu scelerisque vestibulum. Vestibulum cursus nibh ex, ornare mollis lacus tincidunt sed. Sed tempor risus quis consectetur laoreet. Cras ultricies odio tortor, non pretium libero tempor sit amet. Morbi gravida eu lacus sed imperdiet. Nunc diam nunc, dictum hendrerit odio porta, facilisis auctor sem.</p>
-    <p>Vivamus iaculis feugiat nisl, dictum pretium arcu venenatis posuere. Proin sit amet vestibulum mi, id suscipit magna. Sed rutrum lacus hendrerit sem malesuada, nec consequat ante molestie. Mauris egestas ac arcu ut tempor. Quisque sed ultrices nulla. Curabitur scelerisque gravida odio ultrices efficitur. Aliquam mollis gravida fermentum. Cras sed lobortis massa. Duis vitae consectetur ex, at gravida lacus.</p>
 </div>
 
 </html>

@@ -39,30 +39,20 @@
     </section> -->
 
     <!-- Kundevisning -->
-    <section th:if="${tempKunde != null}">
-        <h2>Kunde</h2>
-        <table>
-            <tr>
-                <th>Kunde ID</th>
-                <th>Navn</th>
-            </tr>
-            <tr>
-                <td th:text="${tempKunde.getKunde_Id()}"></td>
-                <td th:text="${tempKunde.navn}"></td>
-            </tr>
-        </table>
+    <section th:if="${kunde_Navn != null && kunde_Navn.isEmpty()==false}">
+        <div class="kort">
+            <label th:text="${'Kunde Navn: '+kunde_Navn}"></label>
+        </div>
     </section>
 
     <!-- Lejeaftaleformular -->
     <section>
         <h2>Opret Lejeaftale</h2>
         <form th:action="@{/OmdirigerNyLejeAftale}" method="get">
+
             <div>
-                <label for="kunde_Id">Kunde ID:</label>
-                <select id="kunde_Id" name="kunde_Id" onchange="this.form.submit()" required >
-                    <option value="" disabled selected>Vælg en kunde</option>
-                    <option  th:each="kunde : ${kundeList}" th:selected="${tempKunde != null and kunde.kunde_Id == tempKunde?.kunde_Id}" th:value="${kunde.getKunde_Id()}" th:text="${kunde.navn + ' (ID: ' + kunde.getKunde_Id() + ')'}"></option>
-                </select>
+                <label for="kunde_Navn">kunde navn</label>
+                <input type="text" id="kunde_Navn" name="kunde_Navn" onchange="this.form.submit()" th:value="${kunde_Navn}" required />
             </div>
             <div>
                 <label for="vognNummer">Vognnummer:</label>
@@ -71,35 +61,37 @@
                     <option th:type="submit" th:each="Bil : ${bilList}" th:selected="${bil != null and Bil.vognNummer == bil.vognNummer}" th:value="${Bil.vognNummer}" th:text="${Bil.vognNummer+ ' (status: ' + Bil.status + ')'}"></option>
                 </select>
             </div>
-
             <div>
-                <label for="startDato">Startdato:</label>
-                <input type="date" id="startDato" name="startDato" th:value="${startDato}" required />
+                <label>
+                    Limited(5m), Unlimited(3m-36m)
+                </label>
+                <input type="checkbox" name="checkBox" value="true" checked="checked" />
             </div>
 
-            <div>
-                <label for="slutDato">Slutdato:</label>
-                <input type="date" id="slutDato" name="slutDato" th:value="${slutDato}" required />
-            </div>
+              <div>
+                  <label for="startDato">Startdato:</label>
+                  <input type="date" id="startDato" name="startDato" th:value="${startDato}" required />
+              </div>
 
-            <div>
-                <label for="detaljer">Detaljer:</label>
-                <textarea id="detaljer" name="detaljer" th:text="${detaljer}" placeholder="Beskriv afhentningen" maxlength="255" rows="4" required></textarea>
-            </div>
 
-            <div>
-                <button type="submit" name="submitKnap" value="True">Bekræft lejeaftale</button>
-            </div>
-        </form>
+              <div>
+                  <label for="detaljer">Detaljer:</label>
+                  <textarea id="detaljer" name="detaljer" th:text="${detaljer}" placeholder="Beskriv afhentningen" maxlength="255" rows="4" required></textarea>
+              </div>
 
-        <form th:action="@{/VisLejeAftaler}" method="get">
-            <button type="submit" class="annuller">Tilbage til forsiden</button>
-        </form>
-    </section>
-</main>
+              <div>
+                  <button type="submit" name="submitKnap" value="True">Bekræft lejeaftale</button>
+              </div>
+          </form>
 
-<footer>
-    <!-- skriv side-specific footer her -->
+          <form th:action="@{/VisLejeAftaler}" method="get">
+              <button type="submit" class="annuller">Tilbage til forsiden</button>
+          </form>
+      </section>
+  </main>
+
+  <footer>
+      <!-- skriv side-specific footer her -->
 </footer>
 </body>
 </html>

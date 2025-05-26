@@ -1,6 +1,7 @@
 package com.g6.data24d_s2_g6_eksamensprojekt.repository;
 
 import com.g6.data24d_s2_g6_eksamensprojekt.model.Kunde;
+import com.g6.data24d_s2_g6_eksamensprojekt.model.Lager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -17,7 +18,11 @@ public class KundeRepository {
         Kunde kunde = new Kunde(rs.getInt("kunde_Id"), rs.getString("navn"));
         return kunde;
     };
-
+    //todo: husk at brug getmapping
+    public int gemNyKunde(String nyKunde){
+        String sql = "INSERT into kunde (navn) values (?)";
+        return jdbcTemplate.update(sql, nyKunde);
+    }
     //tager fat i LejeAftale ud fra et id
     public Kunde hentKunde(int kunde_Id){
         List<Kunde> lejeAftaleList= jdbcTemplate.query("select * from kunde where kunde_Id=?",rowMapper,kunde_Id);

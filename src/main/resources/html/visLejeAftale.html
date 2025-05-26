@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" th:href="@{style.css}">
-    <title>Title</title>
+    <title>Bilabonnement</title>
 </head>
 
 <!-- Venlist ikke lav lokal styling for ting som kunne gå igen i andre html -->
@@ -13,20 +13,39 @@
 <header th:insert="~{fragments :: header}"></header>
 <main>
     <header class="underHeader" th:insert="~{fragments :: aftaleKort}"></header>
+    <section th:if="${ (aktivBruger.erStilling('data','skade') && lejeAftale.erAfsluttet()==true && lejeAftale.kanAfsluttes)}">
+        <label>Husk notation af skader</label>
+        <form th:action="@{AfslutLejeAftale}" method="get">
+            <button type="submit">Afslut LejeAftale Bil</button>
+        </form>
+    </section>
+    <section th:if="${ (aktivBruger.erStilling('data')  && lejeAftale.erUnlimited()==true)}">
+        <form th:action="@{UpdaterUnlimitedLejeAftale}" method="get">
+            <div>
+                <label for="forlaeng_Maaneder">forlæng n måneder:</label>
+                <input type="number" id="forlaeng_Maaneder" name="forlaeng_Maaneder" th:value="${forlaeng_Maaneder}" placeholder="Indtast n måneder" required autofocus>
+            </div>
+            <button type="submit">Updater</button>
+        </form>
+
+
+    </section>
+    <section>
     <aside>
         <div style="width: 100%;">
             <section style="max-width: initial">
                 <p th:text="${lejeAftale.getDetaljer()}">Detaljer</p>
             </section>
-            <form th:if="${foerAftaleStart}" th:action="@{/SletAftale}" th:method="get">
+            <form th:if="${!lejeAftale.erBegyndt()}" th:action="@{/AflysLejeAftale}" th:method="get">
                 <button type="submit" class="annuller">Aflys Aftale</button>
             </form>
-            <form th:if="${foerAftaleSlut}" th:action="@{/NyNotation}" th:method="get">
+            <form th:action="@{/NyNotation}" th:method="get">
                 <button type="submit">Registrér Ny Notation</button>
             </form>
         </div>
         <div th:insert="~{fragments :: notationListe}" style="width: 100%; max-width: max-content;"></div>
     </aside>
+</section>
 </main>
 </body>
 </html>

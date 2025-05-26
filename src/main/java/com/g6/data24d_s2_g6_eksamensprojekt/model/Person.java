@@ -2,12 +2,12 @@ package com.g6.data24d_s2_g6_eksamensprojekt.model;
 
 import org.springframework.lang.NonNull;
 
-abstract class Entitet
+abstract class Person
 {
     protected final int id;
-    protected String navn;
+    protected String navn, email, telefon;
 
-    public Entitet(int id, @NonNull String navn)
+    public Person(int id, @NonNull String navn)
     {
         this.id = id;
         this.navn = navn;
