@@ -30,12 +30,6 @@ public class BilController {
     @Autowired
     NotationRepository notationRepository;
 
-    @Autowired
-    AftaleRepository aftaleRepository;
-
-    @Autowired
-    NotationRepository notationRepository;
-
     @GetMapping("/VisBiler")
     public String visBiler(HttpServletRequest request, Model model){
         HttpSession session = faaSession(request, model);// Hvem der har Rettighed til at bruge metoden.
@@ -164,7 +158,7 @@ public class BilController {
     @GetMapping("/OpdaterBil")
     public String opdaterBil(HttpServletRequest request, Model model)
     {
-        HttpSession session = faaSession(request, model, "forretning");
+        HttpSession session = faaSession(request, model, Bruger.Stilling.FORRETNING);
         if(session == null) return "redirect:/Logind";
 
         String status     = request.getParameter("status");
