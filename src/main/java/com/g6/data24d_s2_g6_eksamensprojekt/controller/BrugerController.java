@@ -214,7 +214,7 @@ public class BrugerController {
     }
     // metoden kaldes i starten af alle getmappings,
     // den tager imod sessionen og tilføjer valuta og bruger til modelen
-    static public HttpSession faaSession(HttpServletRequest request, Model model, String... tilladteStillinger){
+    static public HttpSession faaSession(HttpServletRequest request, Model model, Bruger.Stilling... tilladteStillinger){
         HttpSession session = request.getSession(false);
         if(session != null){
             Bruger bruger = (Bruger) session.getAttribute("aktivBruger");

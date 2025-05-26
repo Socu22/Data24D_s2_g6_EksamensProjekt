@@ -1,6 +1,7 @@
 package com.g6.data24d_s2_g6_eksamensprojekt.controller;
 
 import com.g6.data24d_s2_g6_eksamensprojekt.model.Bil;
+import com.g6.data24d_s2_g6_eksamensprojekt.model.Bruger;
 import com.g6.data24d_s2_g6_eksamensprojekt.model.LejeAftale;
 import com.g6.data24d_s2_g6_eksamensprojekt.repository.AftaleRepository;
 import com.g6.data24d_s2_g6_eksamensprojekt.repository.BilRepository;
@@ -27,7 +28,7 @@ public class NotationController
     @GetMapping("/NyNotation")
     public String nyNotation(HttpServletRequest request, Model model)
     {
-        HttpSession session = BrugerController.faaSession(request, model, "data", "skade");// Hvem der har Rettighed til at bruge metoden.
+        HttpSession session = BrugerController.faaSession(request, model, Bruger.Stilling.DATA, Bruger.Stilling.SKADE);// Hvem der har Rettighed til at bruge metoden.
         if(session == null) return "redirect:/Logind";
 
         // bruger tidligere lavet session attribute
@@ -53,7 +54,7 @@ public class NotationController
     @GetMapping("/AnnullerNotation")
     public String annullerNotation(HttpServletRequest request, Model model)
     {
-        HttpSession session = BrugerController.faaSession(request, model, "data", "skade");// Hvem der har Rettighed til at bruge metoden.
+        HttpSession session = BrugerController.faaSession(request, model, Bruger.Stilling.DATA, Bruger.Stilling.SKADE);// Hvem der har Rettighed til at bruge metoden.
 
         // bruger tidligere lavet session attribute
         LejeAftale aftale = (LejeAftale) session.getAttribute("lejeAftale");
@@ -66,7 +67,7 @@ public class NotationController
     @GetMapping("/GemNotation")
     public String gemNotation(HttpServletRequest request, Model model)
     {
-        HttpSession session = BrugerController.faaSession(request, model, "data", "skade");// Hvem der har Rettighed til at bruge metoden.
+        HttpSession session = BrugerController.faaSession(request, model, Bruger.Stilling.DATA, Bruger.Stilling.SKADE);// Hvem der har Rettighed til at bruge metoden.
 
         // bruger tidligere lavet session attribute
         LejeAftale aftale = (LejeAftale) session.getAttribute("lejeAftale");

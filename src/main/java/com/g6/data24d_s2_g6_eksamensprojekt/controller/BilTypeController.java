@@ -1,6 +1,7 @@
 package com.g6.data24d_s2_g6_eksamensprojekt.controller;
 
 import com.g6.data24d_s2_g6_eksamensprojekt.model.BilType;
+import com.g6.data24d_s2_g6_eksamensprojekt.model.Bruger;
 import com.g6.data24d_s2_g6_eksamensprojekt.repository.BilTypeRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -22,7 +23,7 @@ public class BilTypeController {
 
     @GetMapping("/NyBilType")
     public String getNyBilType(HttpServletRequest request, Model model){
-        HttpSession session = faaSession(request, model, "forretning");// Hvem der har Rettighed til at bruge metoden.
+        HttpSession session = faaSession(request, model, Bruger.Stilling.FORRETNING);// Hvem der har Rettighed til at bruge metoden.
         if(session == null) return "redirect:/Logind";
 
         List<String> maerkeList= bilTypeRepository.hentAlleMaerkerDK(); //Alle Mærker af biler der bliver Solgt i Danmark
@@ -34,7 +35,7 @@ public class BilTypeController {
 
     @GetMapping("/GemNyBilType")
     public String gemNyBilType(HttpServletRequest request, Model model){
-        HttpSession session = faaSession(request, model, "forretning");// Hvem der har Rettighed til at bruge metoden.
+        HttpSession session = faaSession(request, model, Bruger.Stilling.FORRETNING);// Hvem der har Rettighed til at bruge metoden.
         if(session == null) return "redirect:/Logind";
 
         int bilType_Id = bilTypeRepository.getNextId(); // finder næste id.

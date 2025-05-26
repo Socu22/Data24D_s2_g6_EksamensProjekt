@@ -1,6 +1,7 @@
 package com.g6.data24d_s2_g6_eksamensprojekt.controller;
 
 import com.g6.data24d_s2_g6_eksamensprojekt.model.Bil;
+import com.g6.data24d_s2_g6_eksamensprojekt.model.Bruger;
 import com.g6.data24d_s2_g6_eksamensprojekt.model.LejeAftale;
 import com.g6.data24d_s2_g6_eksamensprojekt.repository.AftaleRepository;
 import com.g6.data24d_s2_g6_eksamensprojekt.repository.BilRepository;
@@ -39,7 +40,7 @@ public class LejeAftaleController {
     @GetMapping("/VisLejeAftaler")
     public String visLejeAftaler(HttpServletRequest request, Model model)
     {
-        HttpSession session = BrugerController.faaSession(request, model,"data","skade,forretning");// Hvem der har Rettighed til at bruge metoden.
+        HttpSession session = BrugerController.faaSession(request, model);// Hvem der har Rettighed til at bruge metoden.
         if(session == null) return "redirect:/Logind";
 
         // omdirigeret attributter fra html form->input (name,value)
@@ -96,7 +97,7 @@ public class LejeAftaleController {
     // det gøres sådan så det ikke står i url'en i "/VisLejeAftaler"
     @GetMapping("/OmdirigerVisLejeAftaler")
     public String omdirigerVisLejeAftaler(HttpServletRequest request, Model model){
-        HttpSession session = BrugerController.faaSession(request, model,"data","skade,forretning");// Hvem der har Rettighed til at bruge metoden.
+        HttpSession session = BrugerController.faaSession(request, model);// Hvem der har Rettighed til at bruge metoden.
         if(session == null) return "redirect:/Logind";
 
         // Requester efter en parameter fra tidligere html form-> input ('name')
@@ -136,7 +137,7 @@ public class LejeAftaleController {
     @GetMapping("/VisLejeAftale")
     public String visLejeAftale(@RequestParam("aftaleId") int id, HttpServletRequest request, Model model) //@RequestParam("aftaleId") = Integer.parse(request.getParameter("aftaleId")),
     {
-        HttpSession session = BrugerController.faaSession(request, model,"data","skade,forretning");// Hvem der har Rettighed til at bruge metoden.
+        HttpSession session = BrugerController.faaSession(request, model);// Hvem der har Rettighed til at bruge metoden.
         if(session == null) return "redirect:/Logind";
 
         // at få fat på en lejeAftale basseret på aftaleId
@@ -167,7 +168,7 @@ public class LejeAftaleController {
 
     @GetMapping("AflysLejeAftale")
     public String aflysLejeAftale(HttpServletRequest request, Model model){
-        HttpSession session = BrugerController.faaSession(request, model, "data");// Hvem der har Rettighed til at bruge metoden.
+        HttpSession session = BrugerController.faaSession(request, model, Bruger.Stilling.DATA);// Hvem der har Rettighed til at bruge metoden.
         if(session == null) return "redirect:/Logind";
 
         //Aflyser/Sletter lejeAftale hvis den ikke er begyndt. (Logik i html til at få knappen frem)
@@ -177,7 +178,7 @@ public class LejeAftaleController {
 
     @GetMapping("/AfslutLejeAftale")
     public String afslutLejeAftale(HttpServletRequest request, Model model){
-        HttpSession session = BrugerController.faaSession(request, model, "data","skade");// Hvem der har Rettighed til at bruge metoden.
+        HttpSession session = BrugerController.faaSession(request, model, Bruger.Stilling.DATA, Bruger.Stilling.SKADE);// Hvem der har Rettighed til at bruge metoden.
         if(session == null) return "redirect:/Logind";
 
 
@@ -200,7 +201,7 @@ public class LejeAftaleController {
 
     @GetMapping("/UpdaterUnlimitedLejeAftale")
     public String updaterUnlimitedLejeAftale(HttpServletRequest request, Model model){
-        HttpSession session = BrugerController.faaSession(request, model,  "data");// Hvem der har Rettighed til at bruge metoden.
+        HttpSession session = BrugerController.faaSession(request, model, Bruger.Stilling.DATA);// Hvem der har Rettighed til at bruge metoden.
         if(session == null) return "redirect:/Logind";
 
 
@@ -222,7 +223,7 @@ public class LejeAftaleController {
 
     @GetMapping("/NyLejeAftale")
     public String nyLejeAftale(Model model, HttpServletRequest request){
-        HttpSession session = faaSession(request, model, "data");// Hvem der har Rettighed til at bruge metoden.
+        HttpSession session = faaSession(request, model, Bruger.Stilling.DATA);// Hvem der har Rettighed til at bruge metoden.
         if(session == null) return "redirect:/Logind";
 
 
@@ -263,7 +264,7 @@ public class LejeAftaleController {
 
     @GetMapping("/OmdirigerNyLejeAftale")
     public String omdirigerNyLejeAftale(Model model, HttpServletRequest request){
-        HttpSession session = faaSession(request, model,  "data"); // sender til attributter fra html elementer med (name,value)
+        HttpSession session = faaSession(request, model, Bruger.Stilling.DATA); // sender til attributter fra html elementer med (name,value)
         if(session == null) return "redirect:/Logind";
 
         // Requester efter en parameter fra tidligere html form-> input ('name')

@@ -37,6 +37,16 @@ public class Bruger extends Person
         this.stilling =  Stilling.valueOf(stilling.toUpperCase());
     }
 
+    public boolean erStilling(Stilling... tilladteStillinger)
+    {
+        if (this.stilling == Stilling.DEMO || tilladteStillinger.length == 0) return true;
+        for (Stilling stilling : tilladteStillinger)
+        {
+            if (this.stilling == stilling) return true;
+        }
+        return false;
+    }
+
     public boolean erStilling(String... tilladteStillinger)
     {
         if (this.stilling == Stilling.DEMO || tilladteStillinger.length == 0) return true;

@@ -1,9 +1,6 @@
 package com.g6.data24d_s2_g6_eksamensprojekt.controller;
 
-import com.g6.data24d_s2_g6_eksamensprojekt.model.Bil;
-import com.g6.data24d_s2_g6_eksamensprojekt.model.BilType;
-import com.g6.data24d_s2_g6_eksamensprojekt.model.Lager;
-import com.g6.data24d_s2_g6_eksamensprojekt.model.LejeAftale;
+import com.g6.data24d_s2_g6_eksamensprojekt.model.*;
 import com.g6.data24d_s2_g6_eksamensprojekt.repository.AftaleRepository;
 import com.g6.data24d_s2_g6_eksamensprojekt.repository.BilRepository;
 import com.g6.data24d_s2_g6_eksamensprojekt.repository.BilTypeRepository;
@@ -39,7 +36,7 @@ public class BilController {
 
     @GetMapping("/VisBiler")
     public String visBiler(HttpServletRequest request, Model model){
-        HttpSession session = faaSession(request, model,"data","skade,forretning");// Hvem der har Rettighed til at bruge metoden.
+        HttpSession session = faaSession(request, model);// Hvem der har Rettighed til at bruge metoden.
         if(session == null) return "redirect:/Logind";
         // Bruges til søgeFunktion i VisBiler til at lave dropdown menuer
         List<Bil> biler = bilRepository.hentEksisteredeBiler(); //selve bilerne der bliver hvist
@@ -83,7 +80,7 @@ public class BilController {
     }
     @GetMapping("OmdirigerVisBiler")
     public String Omdirigerbil(HttpServletRequest request, Model model) {
-        HttpSession session = faaSession(request, model, "data","skade,forretning");// Hvem der har Rettighed til at bruge metoden.);
+        HttpSession session = faaSession(request, model);// Hvem der har Rettighed til at bruge metoden.);
         if (session == null) return "redirect:/Logind";
 
         // Requester efter en parameter fra tidligere html form-> input ('name')
@@ -119,7 +116,7 @@ public class BilController {
     }
     @GetMapping("VisBilerReset")
     public String omdirigerVisBilerReset(HttpServletRequest request, Model model){
-        HttpSession session = faaSession(request, model,"data","skade,forretning");// Hvem der har Rettighed til at bruge metoden.
+        HttpSession session = faaSession(request, model);// Hvem der har Rettighed til at bruge metoden.
         if (session == null) return "redirect:/Logind";
         // sletter ekstra Attributter så alle biler kan ses
         session.removeAttribute("biler");
@@ -130,7 +127,7 @@ public class BilController {
 
     @GetMapping("/VisBil")
     public String visBil(HttpServletRequest request, Model model){
-        HttpSession session = faaSession(request, model,"data","skade,forretning");// Hvem der har Rettighed til at bruge metoden.
+        HttpSession session = faaSession(request, model);// Hvem der har Rettighed til at bruge metoden.
         if(session == null) return "redirect:/Logind";
 
         // Requester efter en parameter fra tidligere html form-> input ('name')
@@ -155,7 +152,7 @@ public class BilController {
 
     @GetMapping("/NyBil")
     public String nyBil(HttpServletRequest request, Model model){
-        HttpSession session = faaSession(request, model, "forretning");// Hvem der har Rettighed til at bruge metoden.
+        HttpSession session = faaSession(request, model, Bruger.Stilling.FORRETNING);// Hvem der har Rettighed til at bruge metoden.
         if(session == null) return "redirect:/Logind";
 
         //lister til dropdown menuer
@@ -173,7 +170,7 @@ public class BilController {
     }
     @GetMapping("/GemNyBil")
     public String gemNyBil(HttpServletRequest request, Model model){
-        HttpSession session = faaSession(request, model, "forretning");// Hvem der har Rettighed til at bruge metoden.
+        HttpSession session = faaSession(request, model, Bruger.Stilling.FORRETNING);// Hvem der har Rettighed til at bruge metoden.
         if(session == null) return "redirect:/Logind";
         // Requester efter en parameter fra tidligere html form-> input ('name')
         String vognNummer= (String) request.getParameter("vognNummer");
@@ -190,7 +187,7 @@ public class BilController {
     }
     @GetMapping("/SaelgBil") //Todo: ændre navnet her så det passer med metoden
     public String saelgBil(HttpServletRequest request, Model model){
-        HttpSession session = faaSession(request, model, "forretning");// Hvem der har Rettighed til at bruge metoden.
+        HttpSession session = faaSession(request, model, Bruger.Stilling.FORRETNING);// Hvem der har Rettighed til at bruge metoden.
         if(session == null) return "redirect:/Logind";
 
 
