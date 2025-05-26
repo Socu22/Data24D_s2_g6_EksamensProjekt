@@ -51,11 +51,8 @@
                 <button type="submit">Opret Leje Aftale</button>
             </form>
             <div th:if="${aftale != null}" style="display: inline-flex">
-                <form th:if="${aktivBruger.erStilling('data') && !aftale.erBegyndt()}" th:action="@{SletLejeAftale}" method="get">
+                <form th:if="${aktivBruger.erStilling('data') && !aftale.erBegyndt()}" th:action="@{AflysLejeAftale}" method="get">
                     <button type="submit" class="annuller">Annullér Aftale</button>
-                </form>
-                <form th:if="${aktivBruger.erStilling('data') && bil.erStatus('UNLIMITED')}" th:action="@{UpdaterUnlimitedLejeAftale}" method="get">
-                    <button type="submit">Forlæng Lejeperiode</button>
                 </form>
                 <form th:if="${aktivBruger.erStilling('data', 'skade') && bil.erStatus('LIMITED', 'UNLIMITED') && aftale.erBegyndt()}" th:action="@{OpdaterBil}" method="get">
                     <button type="submit" name="status" value="TILBAGELEVERET">Markér Tilbageleveret</button>
@@ -63,6 +60,15 @@
                 <form th:if="${aktivBruger.erStilling('data', 'skade') && bil.erStatus('TILBAGELEVERET')}" th:action="@{SaelgBil}" method="get">
                     <button type="submit">Markér Skade</button>
                 </form>
+                <section th:if="${ (aktivBruger.erStilling('data')  && aftale.erUnlimited())}">
+                    <form th:action="@{UpdaterUnlimitedLejeAftale}" method="get">
+                        <div>
+                            <label for="forlaeng_Maaneder">forlæng n måneder:</label>
+                            <input type="number" id="forlaeng_Maaneder" name="forlaeng_Maaneder" th:value="${forlaeng_Maaneder}" placeholder="Indtast n måneder" required autofocus>
+                        </div>
+                        <button type="submit">Opdater</button>
+                    </form>
+                </section>
             </div>
         </section>
         <section>

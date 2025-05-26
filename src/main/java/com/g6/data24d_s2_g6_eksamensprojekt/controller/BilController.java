@@ -136,6 +136,7 @@ public class BilController {
         {
             aftale.setBil(bil);
             session.setAttribute("aftaleId",aftale.getAftale_Id());
+            session.setAttribute("lejeAftale",aftale);
         }
         for (Notation notation : notationer)
         {
