@@ -62,10 +62,12 @@
         <button th:if="${medarbejderId != null}" type="submit" >Opdater</button>
 
     </form>
-</section>
-<!-- en knap der omdirigere til soegBruger, skal kun være der hvis man ikke allerede har valgt en bruger -->
-<form  th:if="${medarbejderId == null}"  th:action="@{/OmdirigerSoegBruger}" method="get">
+    <!-- en knap der omdirigere til soegBruger, skal kun være der hvis man ikke allerede har valgt en bruger -->
+    <form  th:if="${medarbejderId == null}"  th:action="@{/OmdirigerSoegBruger}" method="get">
     <button type="submit">Rediger Eksisterende Bruger</button>
 </form>
+</section>
+
+
 </body>
 </html>
