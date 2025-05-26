@@ -2,7 +2,7 @@ package com.g6.data24d_s2_g6_eksamensprojekt.model;
 
 public class Notation
 {
-    private final Integer id, aftaleId;
+    private final Integer id, aftaleId; // aftaleId er ikke primitiv da denne kan være null
     private final String vognNummer;
     private String beskrivelse;
     private double pris;
@@ -25,6 +25,4 @@ public class Notation
 
     public void setBeskrivelse(String beskrivelse) {this.beskrivelse = beskrivelse;}
     public void setPris(double pris) {this.pris = pris;}
-
-    public String toString() {return "Aftale " + aftaleId + ": " + beskrivelse;}
 }

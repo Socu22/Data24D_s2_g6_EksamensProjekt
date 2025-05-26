@@ -15,7 +15,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @Controller
-public class BrugerController {
+public class BrugerController
+{
     //Alle Repositories autowired igennem springFramework
     @Autowired
     BrugerRepository brugerRepository;
@@ -28,6 +29,7 @@ public class BrugerController {
         if(session == null) return "redirect:/Logind";
         return "redirect:/VisBiler";
     }
+
     // fra alle andre getmappings, hvis der ikke er nogen session bliver de omdirigeret til denne getmapping ("/Logind")
     // returnerer logind html siden
     @GetMapping("/Logind")
@@ -42,6 +44,7 @@ public class BrugerController {
 
         return "logind";
     }
+
     // bliver sendt her til fra logind html siden, den tager imod 2 parametre, navn og adgangskode.
     // den kalder metoden hentbruger som henter brugeren i databasen som har det navn og adgangskode.
     // hvis brugeren eksistere og derved er i databasen, så laver den en session for at indikere at man er logget ind.
@@ -62,6 +65,7 @@ public class BrugerController {
         }
         return "redirect:/Logind";
     }
+
     // man bliver sendt her til fra knappen i headeren, som hedder log Ud.
     // stopper sessionen, hvilket er måden vi har valgt at indikere om man er logget ind eller ej.
     // derefter omdirigere den en til logind siden.
@@ -70,6 +74,7 @@ public class BrugerController {
         request.getSession().invalidate(); // slå fra den her session
         return "redirect:/Logind";
     }
+
     // man bliver sendt her til fra knappen i headeren, som hedder Register Ny Bruger.
     // den får bare en masse variabler fra sessionen som bliver givet af omdirigerRegistrer metoden før den omdirigere hertil
     // den sætter dem ind i modelen og fjerner dem fra session igen og sender en hen til registrer html siden.
@@ -111,6 +116,7 @@ public class BrugerController {
 
         return "registrer";
     }
+
     // man bliver sendt hertil fra registrer html siden
     // den får en masse parametre som den sætter i sessionen som bruges i "/Registrer" getmappingen
     // hvis den ikke får et medarbejder id så skal den lave en ny bruger.
@@ -166,33 +172,78 @@ public class BrugerController {
 
         return "redirect:/Registrer";
     }
+
     // man bliver sendt her til fra knappen på registrer html siden, som hedder Rediger Eksisterende Bruger.
     // den giver en liste med alle medarbejdere og sender en hen til soegBruger html siden.
     @GetMapping("/SoegBruger")
-    public String soegBruger(HttpServletRequest request, Model model) {
+    public String soegBruger(HttpServletRequest request, Model model)
+    {
         HttpSession session = faaSession(request, model, Bruger.Stilling.FORRETNING);// Hvem der har Rettighed til at bruge metoden.
         if(session == null) return "redirect:/Logind";
 
         // sender til attributter fra html elementer med (name,value)
         model.addAttribute("medarbejdere", brugerRepository.hentBrugere());
         model.addAttribute("medarbejderNavn", session.getAttribute("medarbejderNavn"));
+
         // sletter ekstra Attributter så session ikke bliver fyldt op med disse attributter
         session.removeAttribute("medarbejderNavn");
 
         return "soegBruger";
     }
+
     // man bliver sendt her til fra soegBruger html siden.
     // den får parameteret medarbejderNavn som er den der skal bruges til at søges efter og omdirigere til "/SoegBruger"
     @GetMapping("/OmdirigerSoegBruger")
-    public String omdirigerSoegBruger(HttpServletRequest request, Model model) {
+    public String omdirigerSoegBruger(HttpServletRequest request, Model model)
+    {
         HttpSession session = faaSession(request, model, Bruger.Stilling.FORRETNING);// Hvem der har Rettighed til at bruge metoden.
         if(session == null) return "redirect:/Logind";
+
         // sætter session attributter, som muligvis bruges til omdirigering
         session.setAttribute("medarbejderNavn", request.getParameter("medarbejderNavn"));
 
         return "redirect:/SoegBruger";
     }
 
+    // metoden kaldes efter man er logget ind, den laver en ny session og giver den en bruger,
+    // som er den bruger der er logget ind
+    private void saetSession(HttpServletRequest request, Bruger bruger, Model model)
+    {
+        HttpSession session = request.getSession(); // hent aktiv session eller skab ny hvis ingen eksisterer
+        session.setMaxInactiveInterval(1200); // sæt session til at udløbe efter 5 minutter uden aktivitet
+
+        // sætter session attributter, som bruges til at se om der er en bruger i session
+        session.setAttribute("aktivBruger", bruger);
+
+        // sender til attributter fra html elementer med (name,value)
+        model.addAttribute("aktivBruger", bruger);
+    }
+
+    // metoden kaldes i starten af alle getmappings,
+    // den behandler request'en fra client, checker om aktive bruger er gyldig og tilføjer valuta-valg og bruger til modellen
+    // De tilladte stillinger for brugerens gyldighed defineres i kaldende metode.
+    // Bemærk at kald uden specificerede stillinger, betragtes som alle brugere har adgang
+    static public HttpSession faaSession(HttpServletRequest request, Model model, Bruger.Stilling... tilladteStillinger)
+    {
+        HttpSession session = request.getSession(false); // henter session relateret til request, UDEN at oprette en ny
+        if(session != null)
+        {
+            Bruger bruger = (Bruger) session.getAttribute("aktivBruger");
+
+            // selv med en gyldig session, returneres 'null' i stedet hvis brugerens stilling ikke er gyldig
+            if(!bruger.erStilling(tilladteStillinger)) return null;
+
+            // sender til attributter fra html elementer med (name,value)
+            model.addAttribute("aktivBruger",bruger);
+            model.addAttribute("valuta", session.getAttribute("valuta"));
+        }
+
+        return session;
+    }
+
+    // RequestMapping for 'dkk/eur'-checkmærket i sidens header
+    // sender ikke ny url eller html til client,
+    // men lader i stedet javascript opdatere den tilstedeværende html
     @PostMapping("/saetValuta")
     @ResponseStatus(HttpStatus.RESET_CONTENT)
     public void saetValuta(HttpServletRequest request, Model model)
@@ -200,30 +251,7 @@ public class BrugerController {
         HttpSession session = faaSession(request, model);
         assert session != null;
         // sætter session attributter, som bruges til at se om det er dkk eller euro der skal vises
+        // dette gøres så valget 'huskes' (gennem 'faaSession') når brugeren går til en ny side.
         session.setAttribute("valuta", request.getParameter("valutaCheck"));
-    }
-    // metoden kaldes efter man er logget ind, den laver en ny session og giver den en bruger,
-    // som er den bruger der er logget ind
-    private void saetSession(HttpServletRequest request, Bruger bruger, Model model) {
-        HttpSession session = request.getSession();
-        session.setMaxInactiveInterval(1200);
-        // sætter session attributter, som bruges til at se om der er en bruger i session
-        session.setAttribute("aktivBruger", bruger);
-        // sender til attributter fra html elementer med (name,value)
-        model.addAttribute("aktivBruger", bruger);
-    }
-    // metoden kaldes i starten af alle getmappings,
-    // den tager imod sessionen og tilføjer valuta og bruger til modelen
-    static public HttpSession faaSession(HttpServletRequest request, Model model, Bruger.Stilling... tilladteStillinger){
-        HttpSession session = request.getSession(false);
-        if(session != null){
-            Bruger bruger = (Bruger) session.getAttribute("aktivBruger");
-            if(!bruger.erStilling(tilladteStillinger)) return null;
-            // sender til attributter fra html elementer med (name,value)
-            model.addAttribute("aktivBruger",bruger);
-            model.addAttribute("valuta", session.getAttribute("valuta"));
-        }
-
-        return session;
     }
 }

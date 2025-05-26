@@ -15,8 +15,8 @@ import java.util.List;
 import static com.g6.data24d_s2_g6_eksamensprojekt.controller.BrugerController.faaSession;
 
 @Controller
-public class BilTypeController {
-
+public class BilTypeController
+{
     //Alle Repositories autowired igennem springFramework
     @Autowired
     BilTypeRepository bilTypeRepository;

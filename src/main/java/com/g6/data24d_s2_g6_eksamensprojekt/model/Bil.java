@@ -8,12 +8,12 @@ public class Bil
 {
     public enum Status
     {
-        TILGAENGELIG,
-        LIMITED, UNLIMITED,
-        TILBAGELEVERET,
-        SKADET,
-        AFHENTNINGSKLAR, // Denne status indikerer at bilen er klar til transport/afhentning
-        SOLGT;
+        TILGAENGELIG,       // uden aftale for udlejning
+        LIMITED, UNLIMITED, // udlejet/reserveret til udleje på limited/unlimited aftale
+        TILBAGELEVERET,     // tilbageleveret fra udlejning og afventer/undergår gennemgang
+        SKADET,             // skadet og afventer reperation
+        AFHENTNINGSKLAR,    // klar til transport/afhentning af køber
+        SOLGT;              // betalt af køber & ikke længere i bilabonnoments besiddelse
 
         public static List<String> getNames()
         {
@@ -32,9 +32,7 @@ public class Bil
     private Status status;
     private double kørteKm;
     private Lager lager;
-    private List<Notation> notationer;
     private LejeAftale lejeAftale;
-    private LejeAftale koebsAftale; // todo:
 
 
     public Bil(String vognNummer, String stelNummer, BilType type, int lager_Id, String status,double kørteKm) {
@@ -104,10 +102,7 @@ public class Bil
         return false;
     }
 
-    public boolean erTilgaengelig()
-    {
-        return erStatus("TILGAENGELIG");
-    }
+    public boolean erTilgaengelig() {return erStatus("TILGAENGELIG");}
 
     public int getBilType_Id(){
         return type.getBilType_Id();
@@ -131,6 +126,7 @@ public class Bil
         return lejeAftale;
     }
 
+    // returnere en konventionelt udskrevet nummerplade med bilens vognNummer eg 'AB 42 101'
     public String toString()
     {
         StringBuilder s = new StringBuilder(vognNummer);

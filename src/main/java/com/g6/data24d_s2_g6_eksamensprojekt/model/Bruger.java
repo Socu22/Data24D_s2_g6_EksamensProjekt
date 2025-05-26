@@ -4,10 +4,10 @@ public class Bruger extends Person
 {
     public enum Stilling
     {
-        DEMO,
-        DATA,
-        SKADE,
-        FORRETNING;
+        DEMO,        // demonstrations-stilling, som giver adgang til alle funktioner
+        DATA,        // dataregistrering
+        SKADE,       // skade&udbedring
+        FORRETNING;  // forretningsudvikling
     }
 
     private String adgangskode;
@@ -37,6 +37,7 @@ public class Bruger extends Person
         this.stilling =  Stilling.valueOf(stilling.toUpperCase());
     }
 
+    // metoder chekker om brugerens stilling er en af de givne argumenter
     public boolean erStilling(Stilling... tilladteStillinger)
     {
         if (this.stilling == Stilling.DEMO || tilladteStillinger.length == 0) return true;
@@ -47,6 +48,7 @@ public class Bruger extends Person
         return false;
     }
 
+    // metoder chekker om brugerens stilling er en af de givne argumenter
     public boolean erStilling(String... tilladteStillinger)
     {
         if (this.stilling == Stilling.DEMO || tilladteStillinger.length == 0) return true;

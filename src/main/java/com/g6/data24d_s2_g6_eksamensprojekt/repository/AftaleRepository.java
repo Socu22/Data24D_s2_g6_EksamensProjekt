@@ -43,7 +43,7 @@ public class AftaleRepository {
     //Laver en ny aftale og opdaterer databasen
     public void gemLejeAftale(LejeAftale lejeAftale){
         String sql = "INSERT into lejeAftaler (kunde_Navn, vognNummer, startDato, slutDato, detaljer ) values (?,?,?,?,?)";
-        jdbcTemplate.update(sql, lejeAftale.getKunde_Id(),lejeAftale.getVognNummer(),lejeAftale.getStartDato(),lejeAftale.getSlutDato(),lejeAftale.getDetaljer());
+        jdbcTemplate.update(sql, lejeAftale.getKunde_Navn(),lejeAftale.getVognNummer(),lejeAftale.getStartDato(),lejeAftale.getSlutDato(),lejeAftale.getDetaljer());
     }
 
     //Samler alle lejeAftale objekter sammen i en liste.

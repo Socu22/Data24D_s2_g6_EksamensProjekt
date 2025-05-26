@@ -51,9 +51,6 @@ public class LejeAftale {
     public String    getKunde_Navn() {return kunde_Navn;}
     public void      setKunde_Navn(String kunde_Navn) {this.kunde_Navn = kunde_Navn;}
 
-    public String    getKunde_Id() {return getKunde_Navn();}// todo: den her metode skal ændres alle steder
-    public void      setKunde_Id(String kunde_Navn) {this.kunde_Navn = kunde_Navn;}
-
     public String    getVognNummer() {return vognNummer;}
     public void      setVognNummer(String vognNummer) {this.vognNummer = vognNummer;}
 
@@ -86,6 +83,8 @@ public class LejeAftale {
     public void      setNotationPris(double notationPris) {this.notationPris = notationPris;}
 
     public boolean   erBetalt() {return betalingsDato != null;}
+
+    // metode sammenreger og returnere aftalens pris ud fra afgift periode og notationer
     public double    getSamletPris()
     {
         double samletPris = notationPris; // !OBS er faktisk 'skadeomkostning'

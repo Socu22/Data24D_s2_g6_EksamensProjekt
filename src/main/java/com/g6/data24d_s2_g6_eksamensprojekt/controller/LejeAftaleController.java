@@ -22,18 +22,12 @@ import java.util.List;
 import static com.g6.data24d_s2_g6_eksamensprojekt.controller.BrugerController.faaSession;
 
 @Controller
-public class LejeAftaleController {
-
-
+public class LejeAftaleController
+{
     //Alle Repositories autowired igennem springFramework
-    @Autowired
-    AftaleRepository aftaleRepository;
-    @Autowired
-    BilRepository bilRepository;
-    @Autowired
-    KundeRepository kundeRepository;
-    @Autowired
-    NotationRepository notationRepository;
+    @Autowired AftaleRepository   aftaleRepository;
+    @Autowired BilRepository      bilRepository;
+    @Autowired NotationRepository notationRepository;
 
     // man bliver sendt her til fra knappen i headeren, som hedder Se Lejeaftaler.
     // den henter en liste med alle lejeaftaler og giver det til modelen og omdirigere hen til vislejeaftaler html siden.
@@ -52,6 +46,7 @@ public class LejeAftaleController {
         model.addAttribute("kundeNavn", session.getAttribute("kundeNavn"));
         model.addAttribute("tjekkerStartDato", session.getAttribute("tjekkerStartDato"));
         model.addAttribute("tjekkerSlutDato", session.getAttribute("tjekkerSlutDato"));
+
         // sletter ekstra Attributter så session ikke bliver fyldt op med disse attributter
         session.removeAttribute("vognNummer");
         session.removeAttribute("periodeNummer");
@@ -61,6 +56,7 @@ public class LejeAftaleController {
         session.removeAttribute("kundeNavn");
         session.removeAttribute("tjekkerStartDato");
         session.removeAttribute("tjekkerSlutDato");
+
         // De her sletter ekstra attributter så de ikke forstyre andre metoder
         session.removeAttribute("lejeAftale");
         session.removeAttribute("lejeAftale_id");
@@ -68,30 +64,34 @@ public class LejeAftaleController {
         session.removeAttribute("bil");
         session.removeAttribute("vognNummer");
 
-        // den samlede afgift logik som samler notationPris i et lejeAftaleKort, som sker i visLejeAftaler.html
+        // optæller til sammenregning af indtjeningen af alle igangværende lejeaftaler
         double samletAfgift = 0;
-        LocalDate now = LocalDate.now();
+        LocalDate now = LocalDate.now(); // lille effektivisering - undgår adskillige kald i løkke
 
+        // hent alle lejeaftale fra database
         List<LejeAftale> aftaler = aftaleRepository.hentLejeAftaler();
 
         for (LejeAftale aftale: aftaler)
         {
             if (aftale.getStartDato().isBefore(now))
             {
+                // noter samlet pris af notationer på hver aftale
                 aftale.setNotationPris(notationRepository.hentSumfor(aftale.getVognNummer()));
-                if (aftale.getSlutDato() == null || aftale.getSlutDato().isAfter(now))
+
+                if (aftale.getSlutDato().isAfter(now)) // hvis aftalen stadig er i gang medregnes dens forventede intægt i den samlede indtægt
                 {
-                    samletAfgift += aftale.getNotationPris();
+                    samletAfgift += aftale.getSamletPris();
                 }
             }
         }
+
         // sender til attributter fra html elementer med (name,value)
         model.addAttribute("samletIndkomst", samletAfgift); //
         model.addAttribute("lejeAftaler", aftaler);
 
-
         return "visLejeAftaler";
     }
+
     // man bliver sendt her til fra visLejeAftaler html siden.
     // den tager imod parametre og tilføjer dem til sessionen som skal bruges "/VisLejeAftaler" getmappingen
     // det gøres sådan så det ikke står i url'en i "/VisLejeAftaler"
@@ -157,7 +157,6 @@ public class LejeAftaleController {
         model.addAttribute("notationer", notationRepository.hentNotationer(aftale.getAftale_Id()));
         model.addAttribute("forlaeng_Maaneder", session.getAttribute("forlaeng_Maaneder"));
 
-
         //Finder ud af om en aftale ikke er startet i html vha. de her model.addAttribute
         LocalDate now = LocalDate.now();
         if (now.isBefore(aftale.getStartDato())) model.addAttribute("foerAftaleStart", true);
@@ -204,8 +203,6 @@ public class LejeAftaleController {
         HttpSession session = BrugerController.faaSession(request, model, Bruger.Stilling.DATA);// Hvem der har Rettighed til at bruge metoden.
         if(session == null) return "redirect:/Logind";
 
-
-
         // Få fat i lejeAftale
         LejeAftale lejeAftale = (LejeAftale) session.getAttribute("lejeAftale");
         // sender til attributter fra html elementer med (name,value)
@@ -226,7 +223,6 @@ public class LejeAftaleController {
         HttpSession session = faaSession(request, model, Bruger.Stilling.DATA);// Hvem der har Rettighed til at bruge metoden.
         if(session == null) return "redirect:/Logind";
 
-
         // bilkort dukker frem efter valg af bil.
         List<Bil> bilList = bilRepository.hentEksisteredeBiler();
 
@@ -240,6 +236,7 @@ public class LejeAftaleController {
         if ((String) session.getAttribute("kunde_Navn")!=null){
             kunde_Navn=(String) session.getAttribute("kunde_Navn");
         }
+
         // omdirigeret attributter fra html form->input (name,value)
         model.addAttribute("kunde_Navn",kunde_Navn);
         model.addAttribute("startDato", session.getAttribute("startDato"));
@@ -257,7 +254,6 @@ public class LejeAftaleController {
         session.removeAttribute("startDato");
         session.removeAttribute("slutDato");
         session.removeAttribute("detaljer");
-
 
         return "nyLejeAftale";
     }
