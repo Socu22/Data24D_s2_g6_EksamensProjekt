@@ -23,9 +23,12 @@ public class BilController {
     BilRepository bilRepository;
     @Autowired
     BilTypeRepository bilTypeRepository;
-
     @Autowired
     LagerRepository lagerRepository;
+    @Autowired
+    AftaleRepository aftaleRepository;
+    @Autowired
+    NotationRepository notationRepository;
 
     @Autowired
     AftaleRepository aftaleRepository;
@@ -47,8 +50,8 @@ public class BilController {
         //til bilkort
         if(session.getAttribute("biler")!=null){
             biler = (List<Bil>) session.getAttribute("biler");
-
         }
+
         // sender til attributter fra html elementer med (name,value)
         //dropdown, og list
         model.addAttribute("biler",biler);
@@ -74,9 +77,9 @@ public class BilController {
         session.removeAttribute("bil");
         session.removeAttribute("vognNummer");
 
-
         return "visBiler";
     }
+
     @GetMapping("OmdirigerVisBiler")
     public String Omdirigerbil(HttpServletRequest request, Model model) {
         HttpSession session = faaSession(request, model);// Hvem der har Rettighed til at bruge metoden.);
@@ -113,6 +116,7 @@ public class BilController {
         session.setAttribute("biler", bilList);
         return "redirect:/VisBiler";
     }
+
     @GetMapping("VisBilerReset")
     public String omdirigerVisBilerReset(HttpServletRequest request, Model model){
         HttpSession session = faaSession(request, model);// Hvem der har Rettighed til at bruge metoden.
@@ -122,7 +126,6 @@ public class BilController {
 
         return "redirect:/VisBiler";
     }
-
 
     @GetMapping("/VisBil")
     public String visBil(HttpServletRequest request, Model model){
@@ -158,6 +161,22 @@ public class BilController {
         return "visBil";
     }
 
+    @GetMapping("/OpdaterBil")
+    public String opdaterBil(HttpServletRequest request, Model model)
+    {
+        HttpSession session = faaSession(request, model, "forretning");
+        if(session == null) return "redirect:/Logind";
+
+        String status     = request.getParameter("status");
+        String vognNummer = (String) session.getAttribute("vognNummer");
+        int aftaleId      = (int) session.getAttribute("aftaleId");
+
+        if (status.equals("BETALT")) {aftaleRepository.saetBetalt(aftaleId);}
+        else                         {bilRepository.saetStatus(vognNummer, status);}
+
+        return "redirect:/VisBil?vognNummer=" + vognNummer;
+    }
+
     @GetMapping("/NyBil")
     public String nyBil(HttpServletRequest request, Model model){
         HttpSession session = faaSession(request, model, Bruger.Stilling.FORRETNING);// Hvem der har Rettighed til at bruge metoden.
@@ -173,9 +192,9 @@ public class BilController {
         model.addAttribute("bilTypeList",bilTypeList);
         model.addAttribute("statusList",statusList);
 
-
         return "nyBil";
     }
+
     @GetMapping("/GemNyBil")
     public String gemNyBil(HttpServletRequest request, Model model){
         HttpSession session = faaSession(request, model, Bruger.Stilling.FORRETNING);// Hvem der har Rettighed til at bruge metoden.
@@ -205,10 +224,10 @@ public class BilController {
 
         //Tjekker om bil rent faktisk bliver slettet
         boolean bool = bilRepository.solgtBil(vognNummer);
-       if (!bool){
-           System.out.println("Fangede ikke en bil(sælgBil)");
-       }
-        return "redirect:/VisBil?vognNummer="+vognNummer;
+        if (!bool){
+            System.out.println("Fangede ikke en bil(sletBil)");
+        }
+        return "redirect:/";
     }
 
 }
