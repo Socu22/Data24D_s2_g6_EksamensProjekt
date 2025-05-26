@@ -40,15 +40,9 @@
 
     <!-- Kundevisning -->
     <section th:if="${kunde_Navn != null && kunde_Navn.isEmpty()==false}">
-        <h2>Kunde</h2>
-        <table>
-            <tr>
-                <th>Kunde Navn</th>
-            </tr>
-            <tr>
-                <td th:text="${kunde_Navn}"></td>
-            </tr>
-        </table>
+        <div class="kort">
+            <label th:text="${'Kunde Navn: '+kunde_Navn}"></label>
+        </div>
     </section>
 
     <!-- Lejeaftaleformular -->
