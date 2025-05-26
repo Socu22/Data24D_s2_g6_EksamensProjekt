@@ -216,7 +216,7 @@ public class LejeAftaleController {
         // sætter session attributter, som bruges til omdirigering
         session.setAttribute("forlaeng_Maaneder",forlaeng_Maaneder);
 
-        return "redirect:/VisLejeAftale?aftaleId="+lejeAftale.getAftale_Id();
+        return "redirect:/VisBil?aftaleId="+lejeAftale.getVognNummer();
     }
 
 

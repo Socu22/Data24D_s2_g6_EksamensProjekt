@@ -127,7 +127,7 @@ public class BilController {
         if(session == null) return "redirect:/Logind";
 
         // Requester efter en parameter fra tidligere html form-> input ('name')
-        double notationsPris = 0;
+        double notationsPris = 0, skadePris = 0;
         String vognNummer = request.getParameter("vognNummer");
         Bil bil           = bilRepository.hentBil(vognNummer);
         List<Notation> notationer = notationRepository.hentNotationer(vognNummer);
@@ -137,11 +137,14 @@ public class BilController {
             aftale.setBil(bil);
             session.setAttribute("aftaleId",aftale.getAftale_Id());
             session.setAttribute("lejeAftale",aftale);
+
+            List<Notation> skader = notationRepository.hentSkader(aftale.getAftale_Id());
+            model.addAttribute("skader", skader);
+
+            for (Notation skade : skader) {skadePris += skade.getPris();}
+            model.addAttribute("skadePris", skadePris);
         }
-        for (Notation notation : notationer)
-        {
-            notationsPris += notation.getPris();
-        }
+        for (Notation notation : notationer) {notationsPris += notation.getPris();}
         // sender til attributter fra html elementer med (name,value)
         // sætter session attributter, som muligvis bruges til omdirigering
 

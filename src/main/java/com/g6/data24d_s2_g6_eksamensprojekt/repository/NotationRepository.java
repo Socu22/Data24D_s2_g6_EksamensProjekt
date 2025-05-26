@@ -43,6 +43,14 @@ public class NotationRepository
         return hentNotationer("vognNummer", vognNummer);
     }
 
+    public List<Notation> hentSkader(int aftaleId)
+    {
+        String sql = "SELECT * FROM notationer WHERE aftale_Id = ?;";
+        List<Map<String, Object>> list = jdbcTemplate.queryForList(sql, aftaleId);
+
+        return bygNotationer(list);
+    }
+
     public Double hentSumfor(int aftaleId)
     {
         List<Double> liste = hent("pris", double.class, "aftale_Id", aftaleId);
@@ -57,7 +65,7 @@ public class NotationRepository
 
     private List<Notation> hentNotationer(String keyType, Object identifier)
     {
-        String sql = "SELECT * FROM notationer WHERE "+keyType+" = ?;";
+        String sql = "SELECT * FROM notationer WHERE "+keyType+" = ? AND aftale_Id IS NULL;";
         List<Map<String, Object>> list = jdbcTemplate.queryForList(sql, identifier);
 
         return bygNotationer(list);

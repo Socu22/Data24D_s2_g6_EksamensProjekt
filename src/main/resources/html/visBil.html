@@ -19,7 +19,7 @@
         </form>
     </header>
     <aside>
-        <section>
+        <section title="LejeAftale Sektion">
             <div th:if="${aftale != null}">
                 <div style="display: inline-flex; width: 100%; justify-content: space-between">
                     <div>
@@ -35,43 +35,50 @@
                 <p th:text="${aftale.getDetaljer()}"></p>
                 <div style="display: inline-flex; width: 100%; justify-content: space-between">
                     <div>
-                        <p th:unless="${valuta}">Samlet Bekostning: <span class="valuta" th:title="${aftale.getSamletPris()}" th:text="${aftale.getSamletPris()} + 'kr'"></span></p>
-                        <p th:if=    "${valuta}">Samlet Bekostning: <span class="valuta" th:title="${aftale.getSamletPris()}" th:text="${aftale.getSamletPris()}*0.13 + '€'"></span></p>
+                        <p th:unless="${valuta}">Samlet Bekostning: <span class="valuta" th:title="${aftale.getSamletPris() + skadePris}" th:text="${aftale.getSamletPris() + skadePris} + 'kr'"></span></p>
+                        <p th:if=    "${valuta}">Samlet Bekostning: <span class="valuta" th:title="${aftale.getSamletPris() + skadePris}" th:text="${aftale.getSamletPris() + skadePris}*0.13 + '€'"></span></p>
                         <p th:unless="${aftale.erBetalt()}" style="font-weight: bold; color: red  ">Mangler Afbetaling</p>
                         <p th:if    ="${aftale.erBetalt()}" th:text="'Afbetalt ' + ${aftale.getBetalingsDato()}" style="font-weight: bold; color: green">Afbetalt</p>
                     </div>
                     <div>
-                        <form th:if="${aktivBruger.erStilling('data') && !aftale.erBetalt()}" th:action="@{OpdaterBil}" method="get">
+                        <form th:if="${aktivBruger.erStilling('data') && !aftale.erBetalt()}" th:action="@{/OpdaterBil}" method="get">
                             <button type="submit" name="status" value="BETALT">Markér Betalt</button>
                         </form>
                     </div>
                 </div>
             </div>
-            <form th:if="${aktivBruger.erStilling('data') && aftale == null}" th:action="@{NyLejeAftale}" method="get">
+            <form th:if="${aktivBruger.erStilling('data') && aftale == null}" th:action="@{/NyLejeAftale}" method="get">
                 <button type="submit">Opret Leje Aftale</button>
             </form>
             <div th:if="${aftale != null}" style="display: inline-flex">
-                <form th:if="${aktivBruger.erStilling('data') && !aftale.erBegyndt()}" th:action="@{AflysLejeAftale}" method="get">
+                <form th:if="${aktivBruger.erStilling('data') && !aftale.erBegyndt()}" th:action="@{/AflysLejeAftale}" method="get">
                     <button type="submit" class="annuller">Annullér Aftale</button>
                 </form>
-                <form th:if="${aktivBruger.erStilling('data', 'skade') && bil.erStatus('LIMITED', 'UNLIMITED') && aftale.erBegyndt()}" th:action="@{OpdaterBil}" method="get">
+                <form th:if="${aktivBruger.erStilling('data', 'skade') && bil.erStatus('LIMITED', 'UNLIMITED') && aftale.erBegyndt()}" th:action="@{/OpdaterBil}" method="get">
                     <button type="submit" name="status" value="TILBAGELEVERET">Markér Tilbageleveret</button>
                 </form>
-                <form th:if="${aktivBruger.erStilling('data', 'skade') && bil.erStatus('TILBAGELEVERET')}" th:action="@{SaelgBil}" method="get">
-                    <button type="submit">Markér Skade</button>
+                <form th:if="${aktivBruger.erStilling('data', 'skade') && bil.erStatus('TILBAGELEVERET')}" th:action="@{/NyNotation}" method="get">
+                    <button type="submit" name="aftaleId" th:value="${aftale.getAftale_Id()}">Markér Skade</button>
                 </form>
                 <section th:if="${ (aktivBruger.erStilling('data')  && aftale.erUnlimited())}">
                     <form th:action="@{UpdaterUnlimitedLejeAftale}" method="get">
                         <div>
-                            <label for="forlaeng_Maaneder">forlæng n måneder:</label>
-                            <input type="number" id="forlaeng_Maaneder" name="forlaeng_Maaneder" th:value="${forlaeng_Maaneder}" placeholder="Indtast n måneder" required autofocus>
+                            <label for="forlaeng_Maaneder">Forlæng med:</label>
+                            <input type="number" id="forlaeng_Maaneder" name="forlaeng_Maaneder" th:value="${forlaeng_Maaneder}" placeholder="Antal Måneder" required>
                         </div>
                         <button type="submit">Opdater</button>
                     </form>
                 </section>
             </div>
+            <div th:each="Skade : ${skader}" class="liste">
+                <div th:insert="~{fragments :: notationListeKort (
+                                beskrivelse=${Skade.getBeskrivelse()},
+                                omkostning= ${Skade.getPris()}
+                                )}">
+                </div>
+            </div>
         </section>
-        <section>
+        <section title="KøbsAftale Section">
             <div style="display: inline-flex">
                 <form th:if="${aktivBruger.erStilling('data')}" th:action="@{/SaelgBil}" th:method="get">
                     <button type="submit" name="vognNummer" th:value="${bil.getVognNummer()}" style="background-color: white; border-style: dot-dash">Opret Købs Aftale</button>
@@ -94,7 +101,7 @@
                 <span class="valuta" th:title="${bil.getType().getStaalPris() - notationsPris}" th:text="${bil.getType().getStaalPris() - notationsPris}*0.13 + '€'"></span>
             </p>
             <form th:if="${aktivBruger.erStilling('data', 'skade') && !bil.erStatus('SOLGT')}" th:action="@{/NyNotation}" th:method="get">
-                <button type="submit" name="vognNummer" th:value="${bil.getVognNummer()}">Registrér Fejl & Mangler</button>
+                <button type="submit" name="aftaleId" value="0">Registrér Fejl & Mangler</button>
             </form>
             <div th:insert="~{fragments :: notationListe}" style="width: 100%; max-width: max-content;"></div>
         </section>

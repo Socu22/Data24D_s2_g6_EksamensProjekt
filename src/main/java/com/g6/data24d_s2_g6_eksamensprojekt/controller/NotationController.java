@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class NotationController
@@ -32,12 +33,17 @@ public class NotationController
         if(session == null) return "redirect:/Logind";
 
         // bruger tidligere lavet session attribute
+        int aftaleId  = Integer.parseInt(request.getParameter("aftaleId"));
+        session.setAttribute("aftaleId", aftaleId);
+
         LejeAftale aftale = (LejeAftale) session.getAttribute("lejeAftale");
         Bil bil           = (Bil) session.getAttribute("bil");
 
         // logik til så notation ved om man kommer fra en bil eller lejeAftale
-        if (aftale != null)
+        if (aftaleId != 0)
         {
+
+
             bil = bilRepository.hentBil(aftale.getVognNummer());
             // sætter session attributter, som muligvis bruges til omdirigering
             session.setAttribute("bil", bil);
@@ -56,11 +62,9 @@ public class NotationController
     {
         HttpSession session = BrugerController.faaSession(request, model, Bruger.Stilling.DATA, Bruger.Stilling.SKADE);// Hvem der har Rettighed til at bruge metoden.
 
-        // bruger tidligere lavet session attribute
-        LejeAftale aftale = (LejeAftale) session.getAttribute("lejeAftale");
         Bil bil           = (Bil)        session.getAttribute("bil");
 
-        if (aftale != null) return "redirect:/VisLejeAftale?aftaleId=" + aftale.getAftale_Id();
+        if (bil == null) return "redirect:/VisBiler";
         return "redirect:/VisBil?vognNummer=" + bil.getVognNummer();
     }
 
@@ -70,6 +74,7 @@ public class NotationController
         HttpSession session = BrugerController.faaSession(request, model, Bruger.Stilling.DATA, Bruger.Stilling.SKADE);// Hvem der har Rettighed til at bruge metoden.
 
         // bruger tidligere lavet session attribute
+        Integer aftaleId  = (Integer)    session.getAttribute("aftaleId");
         LejeAftale aftale = (LejeAftale) session.getAttribute("lejeAftale");
         Bil bil           = (Bil)        session.getAttribute("bil");
 
@@ -78,15 +83,14 @@ public class NotationController
         double pris       = Double.parseDouble(request.getParameter("pris"));
 
         // logik til så notation ved om man kommer fra en bil eller lejeAftale, og derfor kommer tilbage til enten lejeaftalen eller bilen.
-        if (aftale != null)
+        if (aftaleId != 0)
         {
-            notationRepository.gemNotation(aftale.getVognNummer(), aftale.getAftale_Id(), notation, pris);
-            return "redirect:/VisLejeAftale?aftaleId=" + aftale.getAftale_Id();
+            notationRepository.gemNotation(aftale.getVognNummer(), aftaleId, notation, pris);
         }
         else
         {
             notationRepository.gemNotation(bil.getVognNummer(), null, notation, pris);
-            return "redirect:/VisBil?vognNummer=" + bil.getVognNummer();
         }
+        return "redirect:/VisBil?vognNummer=" + bil.getVognNummer();
     }
 }

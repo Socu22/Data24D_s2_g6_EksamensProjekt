@@ -123,8 +123,8 @@ INSERT INTO lejeAftaler (kunde_Navn, vognNummer, startDato, slutDato, detaljer) 
 
 -- Notationer - kun bil (NULL i aftale_Id)
 INSERT INTO notationer (aftale_Id, vognNummer, beskrivelse, pris) VALUES
-    (NULL, 'AB12345', 'Serviceeftersyn udført', 2500),
-    (NULL, 'CD67890', 'Ny vinterdæk monteret' , 3200),
+    (NULL, 'AB12345', 'Slidmærke i læder', 2500),
+    (NULL, 'CD67890', 'manglende hjulkapsel' , 3200),
     (NULL, 'EF56789', 'Lakskade på bagskærm'  , 4500);
 
 -- Notationer - tilknyttet lejeaftaler (aftale_Id + vognNummer)
@@ -136,13 +136,13 @@ INSERT INTO notationer (aftale_Id, vognNummer, beskrivelse, pris) VALUES
 INSERT INTO notationer (aftale_Id, vognNummer, beskrivelse, pris) VALUES
 
 -- Udlejet biler notationer:
-    (1, 'BH10475', 'Rengøring efter lejeperiode', 500),
+    (1, 'BH10475', 'UDFØRLIG Rengøring efter lejeperiode', 1000),
     -- (2, 'KU73190', 'Ekstra kilometer afregnet'  , 1200),
-    (3, 'ZA87364', 'Forsinkelse i aflevering'   , 800),
-    (4, 'MW28374', 'Småskader repareret'        , 2200),
+    (3, 'ZA87364', 'Balret rude i passagerdør'   , 800),
+    (NULL, 'MW28374', 'Småskader i interiør'        , 2200),
 
 -- Solgte biler notationer:
     (5, 'LD98430', 'Stenslag på forrude'        , 1500),
-    (6, 'RP19383', 'Ridser i højre dør'         , 2000),
+    (NULL, 'RP19383', 'Ridser i højre dør'         , 2000),
     (7, 'TE48923', 'Bule på bagklap'            , 3500),
-    (8, 'CG57492', 'Mindre lakskade på kofanger', 1800);
+    (NULL, 'CG57492', 'Mindre lakskade på kofanger', 1800);
