@@ -97,6 +97,7 @@ public class NotationController
         if (aftaleId != 0)
         {
             notationRepository.gemNotation(aftale.getVognNummer(), aftaleId, notation, pris);
+            bilRepository.saetStatus(bil.getVognNummer(), "SKADET");
         }
         else // ellers skrives tilskrives notationen null, og betragtes som en fejl&mangler
         {
