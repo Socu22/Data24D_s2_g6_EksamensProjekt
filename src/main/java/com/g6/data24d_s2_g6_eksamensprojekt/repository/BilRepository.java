@@ -73,6 +73,7 @@ public class BilRepository
 
     public List<Bil> hentBilerUdFraVognNummer(String vognNummer){
         List<Bil> bilList = jdbcTemplate.query("select * from bil where status!='solgt'",rowMapper);
+        //  regner med et incomplete vognNummer og finde alle bilers vognnumre som ligner input
         bilList.removeIf(bil -> !bil.getVognNummer().contains(vognNummer));
         return bygBiler(bilList);
     }
@@ -80,6 +81,7 @@ public class BilRepository
 
     public List<Bil> hentBilerUdFraStelNummer(String stelNummer) {
         List<Bil> bilList = jdbcTemplate.query("select * from bil where status!='solgt'",rowMapper);
+        //  regner med et incomplete stelNummer og finde alle bilers stelNummer som ligner input
         bilList.removeIf(bil -> !bil.getStelNummer().contains(stelNummer));
         return bygBiler(bilList);
 
@@ -100,7 +102,7 @@ public class BilRepository
 
     public List<Bil> hentEksisteredeBilerSoegFunktion(String lager_Id, String maerke, String status) {
         List<Bil> bilList = hentEksisteredeBiler();
-
+        //Filtrer en list ud fra input fra 3 dropdown menuer, navne beskriver funktionalitet
         bilList = filtrerEfterLagerId(bilList, lager_Id);
         bilList = filtrerEfterMaerke(bilList, maerke);
         bilList = filtrerEfterStatus(bilList, status);
