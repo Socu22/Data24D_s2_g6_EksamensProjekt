@@ -28,7 +28,7 @@ public class LagerRepository
         jdbcTemplate.update(sql, nytLager.getNavn(),nytLager.getAdresse());
     }
 
-    //Samler alle lager objekter sammen i en liste. ?brugbart?
+    //Samler alle lager objekter sammen i en liste.
    public List<Lager> hentLager(){
         List<Lager> lagerList = jdbcTemplate.query("select * from lager",rowMapper);
         return lagerList;
