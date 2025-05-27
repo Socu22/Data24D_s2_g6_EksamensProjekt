@@ -22,6 +22,10 @@
             setup/demoSetup,
                 a. kun struktur + brugere: 3 demo1-2-3
                 b. struktur + brugere: 3 demo1-2-3 + alt andet
+                    Du kan teste funktionaliteten med "BH10475
+                                                       KU73190
+                                                       ZA87364
+                                                       MW28374" kig i demoSetup insert lejeAftaler for info
         ✅ Når dette er kørt, findes databasen bilAbonnementDatabase, og du kan nu tilføje den til JDBC-linket.
 
     🌍 3. Indstil miljøvariabler i projektet

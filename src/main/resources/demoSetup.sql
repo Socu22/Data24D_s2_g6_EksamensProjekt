@@ -107,12 +107,12 @@ INSERT INTO bil (vognNummer, stelNummer, bilType_Id, lager_Id, status, kørteKm)
 -- UNLIMITED aftaler (udlejet biler)
 INSERT INTO lejeAftaler (kunde_Navn, vognNummer, startDato, slutDato, detaljer) VALUES
     ('Anders Hansen', 'BH10475', '2025-02-01', '2025-12-01', 'Unlimited aftale - minimum 3 måneder- test Tilføj måneder'),
-    ('Mette Jensen' , 'KU73190', '2025-09-12', '2025-12-12', 'Unlimited aftale - minimum 3 måneder- Test Aflys = bil tilgængelig '  ),
-    ('Peter Nielsen', 'ZA87364', '2025-01-01', '2025-04-01', 'Unlimited aftale - minimum 3 måneder-  test afslut = bil tilbageleveret');
+    ('Mette Jensen' , 'KU73190', '2025-09-12', '2025-12-12', 'Unlimited aftale - minimum 3 måneder- Test Annuller = bil tilgængelig '  ),
+    ('Peter Nielsen', 'ZA87364', '2025-01-01', '2025-04-01', 'Unlimited aftale - minimum 3 måneder-  test Markér tilbageleveret = bil tilbageleveret...Test betal ...Test Markér skade');
 
 -- LIMITED aftaler (udlejet biler)
 INSERT INTO lejeAftaler (kunde_Navn, vognNummer, startDato, slutDato, detaljer) VALUES
-    ('Lone Sørensen', 'MW28374', '2024-11-01', '2025-04-01', 'Limited 5 måneder - test afslut = bil tilbageleveret');
+    ('Lone Sørensen', 'MW28374', '2024-11-01', '2025-04-01', 'Limited 5 måneder  test Markér tilbageleveret = bil tilbageleveret...Test betal ...Test Markér skade');
 
 -- SOLGTE aftaler (status 'solgt')
 INSERT INTO lejeAftaler (kunde_Navn, vognNummer, startDato, slutDato, detaljer) VALUES
