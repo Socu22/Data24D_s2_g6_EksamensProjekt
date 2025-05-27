@@ -63,10 +63,10 @@ public class NotationRepository
         return sum(liste.toArray(new Double[0]));
     }
 
-    private List<Notation> hentNotationer(String keyType, Object identifier)
+    private List<Notation> hentNotationer(String kolonne, Object kritirie)
     {
-        String sql = "SELECT * FROM notationer WHERE "+keyType+" = ? AND aftale_Id IS NULL;";
-        List<Map<String, Object>> list = jdbcTemplate.queryForList(sql, identifier);
+        String sql = "SELECT * FROM notationer WHERE "+kolonne+" = ? AND aftale_Id IS NULL;";
+        List<Map<String, Object>> list = jdbcTemplate.queryForList(sql, kritirie);
 
         return bygNotationer(list);
     }
