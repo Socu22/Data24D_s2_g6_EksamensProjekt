@@ -22,7 +22,7 @@ public class BilTypeController
     BilTypeRepository bilTypeRepository;
 
     @GetMapping("/NyBilType")
-    public String getNyBilType(HttpServletRequest request, Model model){
+    public String nyBilType(HttpServletRequest request, Model model){
         HttpSession session = faaSession(request, model, Bruger.Stilling.FORRETNING);// Hvem der har Rettighed til at bruge metoden.
         if(session == null) return "redirect:/Logind";
 
