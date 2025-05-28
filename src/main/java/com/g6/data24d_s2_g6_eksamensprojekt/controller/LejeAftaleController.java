@@ -154,7 +154,7 @@ public class LejeAftaleController
         // sender til attributter fra html elementer med (name,value)
         model.addAttribute("lejeAftale", aftale);
         model.addAttribute("bil", bil);
-        model.addAttribute("notationer", notationRepository.hentNotationer(aftale.getAftale_Id()));
+        model.addAttribute("notationer", notationRepository.hentSkader(aftale.getAftale_Id()));
         model.addAttribute("forlaeng_Maaneder", session.getAttribute("forlaeng_Maaneder"));
 
         //Finder ud af om en aftale ikke er startet i html vha. de her model.addAttribute
