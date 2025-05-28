@@ -62,10 +62,13 @@
                 </select>
             </div>
             <div>
-                <label>
-                    Limited(5m), Unlimited(3m-36m)
+                <label th:if="${checkBox==true}">
+                    Limited(5m)
                 </label>
-                <input type="checkbox" name="checkBox" value="true" checked="checked" />
+                <label th:if="${checkBox==false}">
+                    Unlimited(5m-36m)
+                </label>
+                <input type="checkbox" th:name="checkBox" th:value="true" checked="checked" />
             </div>
 
               <div>

@@ -231,7 +231,7 @@ public class LejeAftaleController
             bil = bilRepository.hentBil((String) session.getAttribute("vognNummer"));
         }
 
-        // bilkort dukker frem efter valg af bil.
+        // Kundekort dukker frem efter valg af bil.
         String kunde_Navn = null;
         if ((String) session.getAttribute("kunde_Navn")!=null){
             kunde_Navn=(String) session.getAttribute("kunde_Navn");
@@ -244,6 +244,7 @@ public class LejeAftaleController
         model.addAttribute("detaljer", session.getAttribute("detaljer"));
         model.addAttribute("bilList",bilList); // undtagen den her.
         model.addAttribute("bil", bil);
+        model.addAttribute("checkBox",session.getAttribute("checkBox"));
 
         // sætter session attributter, som muligvis bruges til omdirigering
         session.setAttribute("bil",bil);
@@ -349,6 +350,7 @@ public class LejeAftaleController
         session.setAttribute("startDato",startDato);
         session.setAttribute("slutDato",slutDato);
         session.setAttribute("detaljer",detaljer);
+        session.setAttribute("checkBox",checkBoxBool);
         return "redirect:/NyLejeAftale";
     }
 }
